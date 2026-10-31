@@ -24,6 +24,7 @@ const FONTES = [
 const LIGACAO = "text-sm text-secondary-foreground/80 underline-offset-4 transition-opacity hover:opacity-70 hover:underline";
 
 export function SiteFooter() {
+  const [mensagem, setMensagem] = useState("");
   return (
     <footer className="border-t border-border bg-secondary text-secondary-foreground">
       <div className="mx-auto max-w-6xl px-6 py-12 lg:py-14">
