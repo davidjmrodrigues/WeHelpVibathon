@@ -74,20 +74,26 @@ const FILTROS_VAZIOS: Filtros = {
 };
 const CAMPO = "w-full rounded-xl border border-input bg-card px-4 py-3 text-base text-foreground";
 
+function AzulejoPadrao({ id, className }: { id: string; className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" className={className}>
+      <defs>
+        <pattern id={id} width="28" height="28" patternUnits="userSpaceOnUse">
+          <path d="M14 1 27 14 14 27 1 14Z" fill="none" stroke="currentColor" strokeWidth="1.2" />
+          <circle cx="14" cy="14" r="2.2" fill="currentColor" />
+          <circle cx="0" cy="0" r="2" fill="currentColor" />
+          <circle cx="28" cy="28" r="2" fill="currentColor" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill={`url(#${id})`} />
+    </svg>
+  );
+}
+
 function Azulejo() {
   return (
     <div className="azulejo-band" aria-hidden="true">
-      <svg xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <pattern id="azulejo" width="28" height="28" patternUnits="userSpaceOnUse">
-            <path d="M14 1 27 14 14 27 1 14Z" fill="none" stroke="currentColor" strokeWidth="1.2" />
-            <circle cx="14" cy="14" r="2.2" fill="currentColor" />
-            <circle cx="0" cy="0" r="2" fill="currentColor" />
-            <circle cx="28" cy="28" r="2" fill="currentColor" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#azulejo)" />
-      </svg>
+      <AzulejoPadrao id="azulejo" />
     </div>
   );
 }
@@ -553,17 +559,25 @@ function Index() {
 
           <section
             aria-labelledby="duvidas-heading"
-            className="mt-10 rounded-xl border border-border bg-card p-6"
+            className="relative mt-10 overflow-hidden rounded-xl border border-border bg-card p-6"
           >
-            <h2 id="duvidas-heading" className="text-lg font-semibold">
-              {t("duvidasTitulo")}
-            </h2>
-            <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
-              {t("duvidasDesc")}
-            </p>
-            <Button asChild className="mt-4">
-              <Link to="/faq">{t("duvidasBotao")}</Link>
-            </Button>
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 opacity-[0.1] [color:var(--detail)]"
+            >
+              <AzulejoPadrao id="azulejo-card" className="h-full w-full" />
+            </div>
+            <div className="relative">
+              <h2 id="duvidas-heading" className="text-lg font-semibold">
+                {t("duvidasTitulo")}
+              </h2>
+              <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                {t("duvidasDesc")}
+              </p>
+              <Button asChild className="mt-4">
+                <Link to="/faq">{t("duvidasBotao")}</Link>
+              </Button>
+            </div>
           </section>
         </main>
         </div>
