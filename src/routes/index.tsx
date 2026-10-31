@@ -96,11 +96,9 @@ function Index() {
   const [filtrosAbertos, setFiltrosAbertos] = useState(false);
   const [infoAberto, setInfoAberto] = useState(false);
   const [tema, setTema] = useState<Tema>(() => temaAtual());
-  const [sincronizando, setSincronizando] = useState(false);
   const [dadosOficiais, setDadosOficiais] = useState<Record<string, DadosOficiaisExtraidos>>({});
   const [apoiosDescobertos, setApoiosDescobertos] = useState<ApoioDescoberto[]>([]);
   const [temaSelecionado, setTemaSelecionado] = useState<string>("Todos");
-  const [estadoSincronizacao, setEstadoSincronizacao] = useState<string>("");
   const [termoGov, setTermoGov] = useState("");
   const [pesquisandoGov, setPesquisandoGov] = useState(false);
   const [resultadosGov, setResultadosGov] = useState<ResultadoPesquisaGov[]>([]);
@@ -115,25 +113,14 @@ function Index() {
   };
 
   const sincronizarComFontes = async (forcar = false) => {
-    setSincronizando(true);
     try {
       const res = await fetch(`/api/sincronizar-apoios${forcar ? "?forcar=1" : ""}`);
       if (!res.ok) throw new Error("Falha ao sincronizar");
       const json = (await res.json()) as RespostaSincronizacao;
       setDadosOficiais(json.apoios ?? {});
-      const descobertos = json.apoiosDescobertos ?? [];
-      setApoiosDescobertos(descobertos);
-      setEstadoSincronizacao(
-        `Sincronizado em ${json.sincronizadoEm} · ${json.fontesComSucesso} fichas verificadas + ${descobertos.length} apoios oficiais em tempo real de gov.pt.`,
-      );
+      setApoiosDescobertos(json.apoiosDescobertos ?? []);
     } catch {
-      if (forcar) {
-        setEstadoSincronizacao(
-          "Não foi possível contactar os portais oficiais neste momento. A apresentar o catálogo local verificado.",
-        );
-      }
-    } finally {
-      setSincronizando(false);
+      // Falha silenciosa: o catálogo local verificado continua disponível.
     }
   };
 
@@ -524,11 +511,6 @@ function Index() {
               </div>
             </div>
 
-            {estadoSincronizacao && (
-              <p role="status" className="mb-4 text-xs text-detail">
-                {estadoSincronizacao}
-              </p>
-            )}
 
             {temasDisponiveis.length > 2 && (
               <div className="mb-6 flex flex-wrap gap-2" aria-label="Filtrar por área temática">
