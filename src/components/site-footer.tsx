@@ -94,7 +94,9 @@ export function SiteFooter() {
                 Enviar por email
               </button>
               <p className="mt-2 text-xs leading-relaxed text-secondary-foreground/60">
-                Abre o seu programa de email com a mensagem pronta a enviar.
+                Abre o seu programa de email com a mensagem pronta a enviar 
+                                 ou 
+entre em contacto connosco através de contacto@wehelp.pt.
               </p>
             </form>
             <h2 className="mt-8 text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">Siga-nos</h2>
