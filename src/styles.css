@@ -137,4 +137,17 @@
 .support-row summary svg:last-child { transition: transform 250ms cubic-bezier(.2,.8,.2,1); }
 .support-row[open] summary svg:last-child { transform: rotate(180deg); }
 @keyframes row-enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+/* Keep full old/new theme snapshots intact; only the incoming snapshot is revealed. */
+html[data-theme-transition]::view-transition-group(root) { animation: none; }
+html[data-theme-transition]::view-transition-old(root),
+html[data-theme-transition]::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+html[data-theme-transition]::view-transition-old(root) { z-index: 1; }
+html[data-theme-transition]::view-transition-new(root) { z-index: 2; }
+html[data-theme-transition]::view-transition { pointer-events: none; }
+html[data-theme-transition] #wehelp-root *,
+html[data-theme-transition] #wehelp-root *::before,
+html[data-theme-transition] #wehelp-root *::after { transition: none !important; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; } }

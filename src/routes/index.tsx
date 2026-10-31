@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
+import { flushSync } from "react-dom";
 import { CircleHelp, ChevronDown, ArrowUpRight, LockKeyhole, Moon, Sun, SlidersHorizontal, X, RotateCcw, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { IasFaq } from "@/components/ias-faq";
@@ -30,13 +31,12 @@ function Index() {
   const [filtros, setFiltros] = useState<Filtros>(FILTROS_VAZIOS);
   const [filtrosAbertos, setFiltrosAbertos] = useState(false);
   const [tema, setTema] = useState<Tema>(() => temaAtual());
-  const circuloRef = useRef<HTMLDivElement>(null);
   const escuro = tema === "escuro";
   const aoCarregarTema = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const circulo = circuloRef.current;
-    if (!circulo) return;
     const r = e.currentTarget.getBoundingClientRect();
-    alternarTemaComCirculo(r.left + r.width / 2, r.top + r.height / 2, circulo, setTema);
+    void alternarTemaComCirculo(r.left + r.width / 2, r.top + r.height / 2, novoTema => {
+      flushSync(() => setTema(novoTema));
+    });
   };
   const perfil: Perfil = useMemo(() => ({
     idade: filtros.idade === "" ? null : Number(filtros.idade), distrito: filtros.distrito,
@@ -68,7 +68,6 @@ function Index() {
   </details>)}</div>;
 
   return <div id="wehelp-root" className={escuro ? "dark" : ""}><div className="min-h-screen bg-background text-foreground">
-    <div ref={circuloRef} aria-hidden="true" className="pointer-events-none fixed left-0 top-0 z-50 size-11 rounded-full" style={{ transform: "translate(-50%, -50%) scale(0)", opacity: 0 }}/>
     <header className="sticky top-0 z-20 border-b border-border bg-background"><div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-6 py-4"><a href="/" aria-label="WeHelp — início" className="flex items-center gap-2.5"><span className="brand-mark" aria-hidden="true"/><span className="text-xl font-semibold">WeHelp</span></a><div className="flex items-center gap-2"><span className="mr-2 flex items-center gap-1.5 text-xs font-medium text-muted-foreground"><LockKeyhole aria-hidden="true" className="size-3.5"/>Anónimo</span><Button variant="ghost" size="icon" aria-label={escuro ? "Ativar modo claro" : "Ativar modo escuro"} title={escuro ? "Modo claro" : "Modo escuro"} onClick={aoCarregarTema}>{escuro ? <Sun aria-hidden="true"/> : <Moon aria-hidden="true"/>}</Button><Button variant="outline" size="icon" className="lg:hidden" aria-label={filtrosAbertos ? "Fechar filtros" : "Abrir filtros"} title="Filtros" aria-expanded={filtrosAbertos} aria-controls="filtros-mobile" onClick={() => setFiltrosAbertos(v => !v)}>{filtrosAbertos ? <X aria-hidden="true"/> : <SlidersHorizontal aria-hidden="true"/>}</Button></div></div></header>
     <Azulejo/>
     {filtrosAbertos && <section id="filtros-mobile" aria-label="Filtros" className="border-b border-border px-6 py-8 lg:hidden"><h2 className="mb-6 text-xl font-semibold">Um pouco sobre si</h2>{painel("mobile")}<Button className="mt-6 h-14 w-full" onClick={() => setFiltrosAbertos(false)}>Ver apoios <Check aria-hidden="true"/></Button></section>}
