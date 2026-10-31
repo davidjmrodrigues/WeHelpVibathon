@@ -55,7 +55,7 @@ Para garantir que a aplicação nunca fica bloqueada por lentidão ou indisponib
         ▼
 [Endpoints em src/server.ts]
         │
-        ├──► [Cache em Memória (TTL 15 min)] ──► Resposta instantânea se recente
+        ├──► [Cache em Memória (TTL 24 h)] ──► Resposta instantânea se recente
         │
         ▼ (se expirada ou forçada)
 [Promise.all concorrente com timeout estrito]
@@ -69,8 +69,8 @@ Para garantir que a aplicação nunca fica bloqueada por lentidão ou indisponib
    * Cada pedido de rede a uma fonte oficial tem um limite estrito de **6000 ms**.
    * Se um portal do Estado demorar a responder ou cair, o `AbortController` cancela imediatamente a requisição sem congelar os restantes recursos nem a experiência do utilizador.
 
-2. **Cache em Memória com TTL de 15 Minutos (`CACHE_TTL_MS`):**
-   * Os resultados consolidados da sincronização são mantidos em memória no servidor durante 15 minutos.
+2. **Cache em Memória com TTL de 24 Horas (`CACHE_TTL_MS`):**
+   * Os resultados consolidados da sincronização são mantidos em memória no servidor durante 24 horas (atualização diária).
    * Reduz drasticamente o consumo de banda e evita chamadas repetitivas ou agressivas contra a infraestrutura do Estado.
 
 3. **Desduplicação Inteligente de URLs:**
@@ -138,7 +138,7 @@ A fiabilidade e robustez do código foram comprovadas com uma suite exaustiva de
 
 A arquitetura do scraper cumpre todos os requisitos definidos:
 - **Totalmente Legal e Ética:** apenas dados abertos públicos, sem PII, respeitosa dos servidores do Estado.
-- **Resiliente e Rápida:** descobre **168+ apoios em < 700ms**, protegida por timeouts de 6s e cache de 15 min.
+- **Resiliente e Rápida:** descobre **168+ apoios em < 700ms**, protegida por timeouts de 6s e cache de 24 h.
 - **Fallback à Prova de Falhas:** degrada graciosamente desde JSON estruturado até ao catálogo estático local.
 - **Testes Abrangentes:** 100% dos cenários de sucesso, erro, sanitização e fallback cobertos por testes automáticos.
 
