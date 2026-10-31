@@ -32,6 +32,7 @@ import {
   adicionarApoio,
   criarWishlist,
   guardarWishlistLocal,
+  carregarWishlistLocal,
   limparWishlist,
   removerApoio,
   validarCompatibilidadeWishlist,
