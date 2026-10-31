@@ -2,7 +2,7 @@ export function LogoWeHelp({ className }: { className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 1000 562"
+      viewBox="190 152 640 244"
       className={className}
       role="img"
       aria-label="WeHelp — Apoios ao seu alcance"
