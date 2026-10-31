@@ -9,14 +9,8 @@ const SOCIAIS = [
 const EXPLORAR = [
   { rotulo: "Apoios a explorar", href: "#apoios" },
   { rotulo: "Perguntas e respostas", href: "/faq" },
+  { rotulo: "Fontes oficiais", href: "/fontes" },
   { rotulo: "Política de Privacidade", href: "/privacidade" },
-];
-
-const FONTES = [
-  { rotulo: "Segurança Social", href: "https://seg-social.pt" },
-  { rotulo: "gov.pt", href: "https://www.gov.pt" },
-  { rotulo: "Portal do Cidadão", href: "https://www.portaldocidadao.pt" },
-  { rotulo: "DGES — Bolsas de estudo", href: "https://www.dges.gov.pt/pt/pagina/bolsas-de-estudo" },
 ];
 
 const LIGACAO = "text-sm text-secondary-foreground/80 underline-offset-4 transition-opacity hover:opacity-70 hover:underline";
@@ -47,16 +41,6 @@ export function SiteFooter() {
               <h2 className="text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">Explorar</h2>
               <ul className="mt-4 space-y-3">
                 {EXPLORAR.map(l => <li key={l.rotulo}><a href={l.href} className={LIGACAO}>{l.rotulo}</a></li>)}
-              </ul>
-            </nav>
-            <nav aria-label="Fontes oficiais">
-              <h2 className="text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">Fontes oficiais</h2>
-              <ul className="mt-4 space-y-3">
-                {FONTES.map(l => (
-                  <li key={l.rotulo}>
-                    <a href={l.href} target="_blank" rel="noopener noreferrer" className={LIGACAO}>{l.rotulo}</a>
-                  </li>
-                ))}
               </ul>
             </nav>
           </div>

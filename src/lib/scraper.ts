@@ -1,12 +1,12 @@
 export interface DadosOficiaisExtraidos {
   id: string;
   fonteUrl: string;
-  tituloOficial?: string;
-  resumoOficial?: string;
-  entidadeOficial?: string;
-  atualizadoEm?: string;
-  condicoesExtraidas?: string[];
-  linkCandidatura?: string;
+  tituloOficial?: string | undefined;
+  resumoOficial?: string | undefined;
+  entidadeOficial?: string | undefined;
+  atualizadoEm?: string | undefined;
+  condicoesExtraidas?: string[] | undefined;
+  linkCandidatura?: string | undefined;
   consultadoEm: string;
   sucesso: boolean;
 }
@@ -467,13 +467,13 @@ export function extrairResultadosPesquisaGov(payloadJson: unknown): ResultadoPes
   for (const item of lista) {
     const src = item?._source;
     if (!src) continue;
-    const titulo = limparTextoOficial(typeof src.title === "string" ? src.title : "");
+    const titulo = limparTextoOficial(typeof src["title"] === "string" ? src["title"] : "");
     const descricao = limparTextoOficial(
-      typeof src.description === "string" ? src.description : "",
+      typeof src["description"] === "string" ? src["description"] : "",
     );
-    const rawUrl = typeof src.url === "string" ? src.url : "";
+    const rawUrl = typeof src["url"] === "string" ? src["url"] : "";
     const categoria = limparTextoOficial(
-      typeof src.category === "string" ? src.category : "Serviços",
+      typeof src["category"] === "string" ? src["category"] : "Serviços",
     );
     if (!titulo || !rawUrl) continue;
     const url = rawUrl.startsWith("http")
