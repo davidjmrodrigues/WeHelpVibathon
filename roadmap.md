@@ -11,7 +11,7 @@
 
 # Modo escuro com animação
 - [x] Círculo que expande do botão e troca claro/escuro (verificado no ecrã, ida e volta).
-- [ ] Corrigir a revelação circular de todo o conteúdo em ambos os sentidos e verificar movimento reduzido e cliques repetidos.
+- [x] Corrigir a revelação circular de todo o conteúdo em ambos os sentidos e verificar movimento reduzido e cliques repetidos (testes e capturas no navegador).
 
 # Links oficiais errados (reportados pelo utilizador)
 - [x] Corrigir links de: Bolsa DGES, RSI, Tarifa social eletricidade, Tarifa social gás, Abono de família, Abono pré-natal, Garantia para a Infância, PSI, Complemento Solidário para Idosos, Pensão Social de Velhice.
