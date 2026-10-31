@@ -170,7 +170,7 @@ function Index() {
             <p className="text-sm font-medium text-primary">O seu feed de apoios</p>
             <h2 className="font-display mt-1 text-2xl font-bold text-foreground sm:text-3xl">
               {totalElegiveis > 0
-                ? `${totalElegiveis} apoio${totalElegiveis > 1 ? "s" : ""} elegível${totalElegiveis > 1 ? "eis" : ""} para si`
+                ? `${totalElegiveis} ${totalElegiveis > 1 ? "apoios elegíveis" : "apoio elegível"} para si`
                 : "Nenhum apoio elegível de momento"}
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
