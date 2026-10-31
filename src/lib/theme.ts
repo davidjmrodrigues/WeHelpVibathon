@@ -45,9 +45,10 @@ export async function alternarTemaComCirculo(
     const transicao = document.startViewTransition(aplicar);
     // Também cobre falhas na captura, sem deixar uma rejeição por tratar.
     const terminado = transicao.finished.catch(() => undefined);
+    let animacao: Animation | undefined;
     try {
       await transicao.ready;
-      const animacao = document.documentElement.animate(
+      animacao = document.documentElement.animate(
         { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${distanciaAteCanto(x, y)}px at ${x}px ${y}px)`] },
         { duration: 750, easing: "cubic-bezier(.65,0,.35,1)", fill: "both", pseudoElement: "::view-transition-new(root)" },
       );
@@ -56,6 +57,7 @@ export async function alternarTemaComCirculo(
       transicao.skipTransition();
     }
     await terminado;
+    animacao?.cancel();
   } catch {
     aplicar();
   } finally {
