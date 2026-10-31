@@ -75,10 +75,10 @@ function Index() {
     <div className="mx-auto grid max-w-6xl gap-12 px-6 py-10 lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-16 lg:py-12">
       <aside className="hidden lg:block"><div className="sticky top-24"><h2 className="mb-6 text-xl font-semibold">Um pouco sobre si</h2>{painel("desktop")}</div></aside>
       <main className="min-w-0"><p className="mb-3 text-sm font-medium text-detail">Guia de Apoios Sociais</p><h1 className="max-w-xl text-[32px] font-semibold leading-[1.12]">{elegiveis.length > 0 ? `${elegiveis.length} ${elegiveis.length === 1 ? "apoio que pode" : "apoios que podem"} aplicar-se ao seu caso.` : "Veja outros apoios e as suas condições."}</h1><p className="mb-6 mt-4 max-w-lg text-base leading-relaxed text-muted-foreground">Informação de fontes oficiais. As respostas orientam a pesquisa, mas não confirmam o direito aos apoios.</p>
-        <IasFaq/>
         <h2 className="mb-4 text-xl font-semibold">Apoios a explorar</h2>
         {lista(elegiveis, true)}
         {outros.length > 0 && <section className="mt-10"><h2 className="mb-4 text-xl font-semibold">Outros apoios</h2>{lista(outros, false)}</section>}
+        <div className="mt-10"><IasFaq/></div>
         <footer className="mt-10 border-t border-border pt-6"><p className="max-w-xl text-sm leading-relaxed text-muted-foreground">Esta orientação não é uma decisão de atribuição. Os montantes dependem das condições de cada apoio. Confirme a informação e eventuais alterações na fonte oficial antes de pedir.</p><p className="mt-3 flex items-center gap-2 text-xs text-muted-foreground"><LockKeyhole aria-hidden="true" className="size-3.5"/>Não pedimos nome, email nem login. Não guardamos as suas respostas.</p></footer>
       </main>
     </div>
