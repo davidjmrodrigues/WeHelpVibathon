@@ -513,14 +513,14 @@ function Index() {
               </label>
               <input
                 id="f-idade"
-                type="number"
-                min={0}
+                type="text"
                 inputMode="numeric"
+                pattern="[0-9]*"
                 placeholder={t("idadePlaceholder")}
                 aria-label={t("fIdade")}
                 value={filtros.idade}
-                onChange={(e) => set({ idade: e.target.value })}
-                className="numero-pill min-h-9 w-auto min-w-20 rounded-full border border-input/60 bg-card/40 px-4 text-xs font-medium text-muted-foreground backdrop-blur-sm transition-colors [field-sizing:content] placeholder:text-muted-foreground"
+                onChange={(e) => set({ idade: e.target.value.replace(/\D/g, "") })}
+                className="min-h-9 w-auto min-w-20 rounded-full border border-input/60 bg-card/40 px-4 text-xs font-medium text-muted-foreground backdrop-blur-sm transition-colors [field-sizing:content] placeholder:text-muted-foreground"
               />
               {SITUACOES.map((s) => (
                 <button
