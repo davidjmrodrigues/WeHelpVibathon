@@ -15,6 +15,77 @@ import {
 } from "@/lib/wishlist";
 
 describe("Motor de Wishlist e Validação de Compatibilidade entre Apoios", () => {
+  it.each([
+    ["subsidiodoenca", "desempregosocial"],
+    ["subsidiodoenca", "pensaoinvalidez"],
+    ["subsidiodoenca", "pensaosocial"],
+    ["subsidiodoenca", "parentalinicial"],
+    ["subsidiodoenca", "parentalsocial"],
+    ["cuidador", "desemprego"],
+    ["cuidador", "desempregosocial"],
+    ["cuidador", "csi"],
+    ["cuidador", "pensaosocial"],
+    ["psi", "pensaosocial"],
+    ["parentalinicial", "desemprego"],
+    ["parentalinicial", "desempregosocial"],
+  ])("impede pagamentos simultâneos oficialmente excluídos: %s + %s", (a, b) => {
+    const res = validarCompatibilidadeWishlist([a, b]);
+    expect(res.valida).toBe(false);
+    expect(res.conflitos).toHaveLength(1);
+    expect(res.conflitos[0]?.tipo).toBe("incompatibilidade_legal");
+    expect(res.conflitos[0]?.fontes?.length).toBeGreaterThan(0);
+    expect(validarCompatibilidadeWishlist([b, a]).conflitos).toEqual(res.conflitos);
+  });
+
+  it("não exclui invalidez relativa do cuidador sem conhecer o subtipo", () => {
+    const res = validarCompatibilidadeWishlist(["cuidador", "pensaoinvalidez"]);
+    expect(res.conflitos).toHaveLength(0);
+    expect(res.paresPorConfirmar).toHaveLength(1);
+  });
+
+  it("não usa tarifa elétrica como prova suficiente de acesso à tarifa de gás", () => {
+    const res = validarCompatibilidadeWishlist(["tarifaeletricidade", "tarifagas"]);
+    expect(res.dependenciasEmFalta.map((d) => d.apoioId)).toEqual(["tarifagas"]);
+    expect(res.acumulacaoConfirmada).toBe(false);
+  });
+
+  it.each(["irsjovem", "sub23", "porta65"])("bloqueia pensão social de velhice com %s para o mesmo titular", (id) => {
+    for (const ids of [["pensaosocial", id], [id, "pensaosocial"]]) {
+      const res = validarCompatibilidadeWishlist(ids);
+      expect(res.valida).toBe(false);
+      expect(res.conflitos).toHaveLength(1);
+      expect(res.conflitos[0]?.tipo).toBe("incompatibilidade_perfil");
+      expect(res.conflitos[0]?.fontes).toHaveLength(2);
+      expect(res.acumulacaoConfirmada).toBe(false);
+    }
+  });
+
+  it("não transforma CSI com via de invalidez em incompatibilidade etária com IRS Jovem", () => {
+    const res = validarCompatibilidadeWishlist(["csi", "irsjovem"]);
+    expect(res.conflitos).toHaveLength(0);
+    expect(res.paresPorConfirmar).toEqual([{ apoioA: "csi", apoioB: "irsjovem" }]);
+    expect(res.acumulacaoConfirmada).toBe(false);
+  });
+
+  it("não aplica idade do requerente aos benefícios dos filhos", () => {
+    const res = validarCompatibilidadeWishlist(["pensaosocial", "abono"]);
+    expect(res.conflitos).toHaveLength(0);
+    expect(res.paresPorConfirmar).toHaveLength(1);
+  });
+
+  it("não confirma acumulação de apoios descobertos ou IDs desconhecidos", () => {
+    const res = validarCompatibilidadeWishlist(["gov-novo-apoio", "irsjovem"]);
+    expect(res.acumulacaoConfirmada).toBe(false);
+    expect(res.paresPorConfirmar).toEqual([{ apoioA: "gov-novo-apoio", apoioB: "irsjovem" }]);
+  });
+
+  it("enumera todos os pares sem duplicados, separando os três conflitos etários", () => {
+    const res = validarCompatibilidadeWishlist(["pensaosocial", "irsjovem", "sub23", "porta65", "porta65"]);
+    expect(res.conflitos).toHaveLength(3);
+    expect(res.paresPorConfirmar).toHaveLength(3);
+    expect(res.totalApoios).toBe(4);
+  });
+
   it("cria uma wishlist vazia e adiciona apoios de forma idempotente", () => {
     let wishlist = criarWishlist();
     expect(wishlist.itens).toHaveLength(0);

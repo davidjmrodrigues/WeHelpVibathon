@@ -493,6 +493,14 @@ export const MOTIVOS_EN: Record<string, string> = {
   "Destina-se a residentes nos Açores/Madeira ou estudantes deslocados elegíveis":
     "For residents of the Azores/Madeira or eligible displaced students",
   // Motivos do motor de compatibilidade (src/lib/wishlist.ts)
+  "O guia oficial exclui o pagamento simultâneo destes dois apoios ao mesmo titular no mesmo período.":
+    "The official guide excludes simultaneous payment of these two benefits to the same beneficiary in the same period.",
+  "O pagamento da prestação de desemprego fica suspenso durante o subsídio parental inicial. Podem existir em períodos sucessivos, mas não ser somados no mesmo período.":
+    "Unemployment benefit payments are suspended during the initial parental benefit. These may apply in successive periods, but cannot be added together for the same period.",
+  "A tarifa social de eletricidade não comprova acesso à tarifa social de gás. É necessário confirmar uma prestação elegível, o escalão ou regime aplicável e as condições do contrato.":
+    "The social electricity tariff does not prove eligibility for the social gas tariff. An eligible benefit, the applicable bracket or scheme, and contract conditions must be confirmed.",
+  "Os limites de idade destes apoios não se sobrepõem: a mesma pessoa não pode reunir ambos no mesmo período. A pensão social de velhice exige 66 anos e 9 meses em 2026; IRS Jovem vai até 35 anos, passe jovem até 23 e Porta 65 Jovem até 35 (37 na exceção para casais).":
+    "These age limits do not overlap: the same person cannot qualify for both in the same period. The social old-age pension requires age 66 years and 9 months in 2026; IRS Jovem is for ages up to 35, the youth pass up to 23, and Porta 65 Jovem up to 35 (37 under the couples exception).",
   "A Prestação Social para a Inclusão (PSI) e a Bonificação por Deficiência do abono de família não podem ser acumuladas pelo mesmo titular.":
     "The Social Inclusion Benefit (PSI) and the family allowance disability supplement cannot be received by the same person.",
   "A Pensão Social de Velhice é incompatível com o Subsídio de Desemprego. Atingida a idade legal de velhice, cessa o subsídio de desemprego.":
@@ -543,6 +551,10 @@ export function traduzMotivo(lingua: Lingua, motivo: string): string {
 
 /** Tradução das sugestões do motor de compatibilidade (chave = texto exato em português). */
 export const SUGESTOES_EN: Record<string, string> = {
+  "A doença deve ser comunicada aos serviços competentes; não implica atribuição automática de subsídio de doença. Confirme o regime aplicável.":
+    "Illness must be reported to the relevant services; it does not automatically entitle you to sickness benefit. Confirm the applicable scheme.",
+  "Esta verificação considera o mesmo titular e período. Apoios de pessoas diferentes da casa ou de períodos diferentes precisam de análise separada.":
+    "This check considers the same beneficiary and period. Benefits for different household members or periods need a separate assessment.",
   "Geralmente a PSI oferece um montante de referência mais abrangente para a autonomia; consulte o serviço competente para optar pela mais vantajosa.":
     "The PSI generally offers a broader reference amount for independence; ask the competent service which option is more advantageous.",
   "Se tiver idade de reforma e não reunir carreira contributiva, a Pensão Social de Velhice acompanhada do CES é a prestação de destino.":

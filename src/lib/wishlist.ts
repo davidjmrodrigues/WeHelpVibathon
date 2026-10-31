@@ -8,15 +8,17 @@
  * - Fornece suporte a "Packs de Apoios" (conjuntos populares, consistentes e pré-validados).
  */
 
-export type TipoConflito = "incompatibilidade_legal" | "dependencia_em_falta";
+export type TipoConflito = "incompatibilidade_legal" | "incompatibilidade_perfil" | "dependencia_em_falta";
 
 export interface ConflitoApoio {
-  tipo: "incompatibilidade_legal";
+  tipo: "incompatibilidade_legal" | "incompatibilidade_perfil";
   apoioA: string;
   apoioB: string;
   motivo: string;
   baseLegal?: string;
   sugestao: string;
+  fontes?: string[];
+  verificadoEm?: string;
 }
 
 export interface DependenciaEmFalta {
@@ -32,6 +34,9 @@ export interface ResultadoValidacaoWishlist {
   dependenciasEmFalta: DependenciaEmFalta[];
   totalApoios: number;
   apoiosIdentificados: string[];
+  /** Absence of a conflict is not proof of legal cumulation. */
+  acumulacaoConfirmada: false;
+  paresPorConfirmar: { apoioA: string; apoioB: string }[];
 }
 
 export interface ItemWishlist {
@@ -61,7 +66,29 @@ interface RegraIncompatibilidade {
   motivo: string;
   baseLegal?: string;
   sugestao: string;
+  tipo?: ConflitoApoio["tipo"];
+  fontes?: string[];
+  verificadoEm?: string;
 }
+
+// Only unconditional age limits for the SAME beneficiary. CSI has an invalidity
+// route, and child/household benefits must not inherit the applicant's age.
+export const LIMITES_ETARIOS_ACUMULACAO: Record<string, { min: number; max: number; fonte: string }> = {
+  pensaosocial: { min: 66.75, max: Infinity, fonte: "https://www.gov.pt/servicos/requerer-a-pensao-social-de-velhice" },
+  irsjovem: { min: 18, max: 35, fonte: "https://www.gov.pt/servicos/pedir-o-irs-jovem" },
+  sub23: { min: 0, max: 23, fonte: "https://www.gov.pt/noticias/jovens-ate-aos-23-anos-ja-podem-usar-passe-gratuito" },
+  porta65: { min: 18, max: 37, fonte: "https://www.portaldahabitacao.pt/porta-65-jovem1" },
+};
+
+const MOTIVO_IDADES = "Os limites de idade destes apoios não se sobrepõem: a mesma pessoa não pode reunir ambos no mesmo período. A pensão social de velhice exige 66 anos e 9 meses em 2026; IRS Jovem vai até 35 anos, passe jovem até 23 e Porta 65 Jovem até 35 (37 na exceção para casais).";
+const SUGESTAO_TITULAR = "Esta verificação considera o mesmo titular e período. Apoios de pessoas diferentes da casa ou de períodos diferentes precisam de análise separada.";
+
+const FONTE_DOENCA = "https://www.seg-social.pt/ptss/pssd/documento/cmrxnsbwd0003ht3wzdfsh8rk";
+const FONTE_CUIDADOR = "https://www.seg-social.pt/storage1/files/8004-EstatutoCuidadorInformalPrincipalCuidadorInformalNaoPrincipal-v1-25-ugQiTzkgzlR4GrjulqrDsw.pdf";
+const regraLegal = (idA: string, idB: string, fonte: string, motivo = "O guia oficial exclui o pagamento simultâneo destes dois apoios ao mesmo titular no mesmo período."): RegraIncompatibilidade => ({
+  idA, idB, motivo, sugestao: SUGESTAO_TITULAR,
+  fontes: [fonte], verificadoEm: "31/10/2026",
+});
 
 interface RegraDependencia {
   apoioId: string;
@@ -73,6 +100,12 @@ interface RegraDependencia {
  * Matriz oficial de regras de exclusividade / incompatibilidade legal na Segurança Social e Estado Português
  */
 export const REGRAS_INCOMPATIBILIDADE: RegraIncompatibilidade[] = [
+  ...["desempregosocial", "pensaoinvalidez", "pensaosocial", "parentalinicial", "parentalsocial"].map((id) => regraLegal("subsidiodoenca", id, FONTE_DOENCA)),
+  ...["desemprego", "desempregosocial", "csi", "pensaosocial"].map((id) => regraLegal("cuidador", id, FONTE_CUIDADOR)),
+  regraLegal("psi", "pensaosocial", "https://www.seg-social.pt/ptss/pssd/documento/cmc1zy5i500n7kl2ynj8bh0nm"),
+  ...["desemprego", "desempregosocial"].map((id) => regraLegal("parentalinicial", id,
+    "https://www.seg-social.pt/ptss/pssd/menu/familia/maternidade-paternidade/subsidio-parental-inicial",
+    "O pagamento da prestação de desemprego fica suspenso durante o subsídio parental inicial. Podem existir em períodos sucessivos, mas não ser somados no mesmo período.")),
   {
     idA: "psi",
     idB: "bonificacaodeficiencia",
@@ -132,11 +165,14 @@ export const REGRAS_INCOMPATIBILIDADE: RegraIncompatibilidade[] = [
       "O Subsídio de Doença pleno não é acumulável com o Subsídio de Desemprego para o mesmo período de ausência de trabalho.",
     baseLegal: "Decreto-Lei n.º 28/2004 e Decreto-Lei n.º 220/2006.",
     sugestao:
-      "Durante o período de doença clinicamente certificada com baixa médica, o subsídio de desemprego suspende-se e vigora a proteção na doença.",
+      "A doença deve ser comunicada aos serviços competentes; não implica atribuição automática de subsídio de doença. Confirme o regime aplicável.",
+    fontes: [FONTE_DOENCA],
+    verificadoEm: "31/10/2026",
   },
   {
     idA: "bolsadges",
     idB: "bolsasegsocial",
+    tipo: "incompatibilidade_perfil",
     motivo:
       "A Bolsa de Estudo DGES destina-se exclusivamente ao Ensino Superior, enquanto a Bolsa da Segurança Social se destina ao Ensino Secundário.",
     baseLegal: "Regulamento de Atribuição de Bolsas a Estudantes do Ensino Superior e Guia da Segurança Social.",
@@ -168,9 +204,9 @@ export const REGRAS_DEPENDENCIA: RegraDependencia[] = [
   },
   {
     apoioId: "tarifagas",
-    requerApoios: ["tarifaeletricidade", "csi", "rsi", "desemprego", "desempregosocial", "abono", "psi"],
+    requerApoios: ["csi", "rsi", "desemprego", "desempregosocial", "abono", "psi", "pensaoinvalidez"],
     motivo:
-      "A Tarifa Social de Gás Natural requer que o titular seja beneficiário de uma prestação social elegível ou da Tarifa Social de Eletricidade.",
+      "A tarifa social de eletricidade não comprova acesso à tarifa social de gás. É necessário confirmar uma prestação elegível, o escalão ou regime aplicável e as condições do contrato.",
   },
 ];
 
@@ -300,12 +336,14 @@ export function validarCompatibilidadeWishlist(apoioIds: string[]): ResultadoVal
 
     if (temA && temB) {
       conflitos.push({
-        tipo: "incompatibilidade_legal",
+        tipo: regra.tipo ?? "incompatibilidade_legal",
         apoioA: regra.idA,
         apoioB: regra.idB,
         motivo: regra.motivo,
         ...(regra.baseLegal !== undefined ? { baseLegal: regra.baseLegal } : {}),
         sugestao: regra.sugestao,
+        ...(regra.fontes !== undefined ? { fontes: regra.fontes } : {}),
+        ...(regra.verificadoEm !== undefined ? { verificadoEm: regra.verificadoEm } : {}),
       });
     }
   }
@@ -318,9 +356,30 @@ export function validarCompatibilidadeWishlist(apoioIds: string[]): ResultadoVal
         dependenciasEmFalta.push({
           tipo: "dependencia_em_falta",
           apoioId: regra.apoioId,
-          requerApoioId: regra.requerApoios[0]!,
+          requerApoioId: regra.requerApoios[0] ?? "",
           motivo: regra.motivo,
         });
+      }
+    }
+  }
+
+  const paresPorConfirmar: ResultadoValidacaoWishlist["paresPorConfirmar"] = [];
+  for (let i = 0; i < idsUnicos.length; i++) {
+    const apoioA = idsUnicos[i];
+    if (!apoioA) continue;
+    for (const apoioB of idsUnicos.slice(i + 1)) {
+      const jaTemConflito = conflitos.some((c) =>
+        (c.apoioA === apoioA && c.apoioB === apoioB) || (c.apoioA === apoioB && c.apoioB === apoioA));
+      if (jaTemConflito) continue;
+      const a = LIMITES_ETARIOS_ACUMULACAO[apoioA];
+      const b = LIMITES_ETARIOS_ACUMULACAO[apoioB];
+      if (a && b && Math.max(a.min, b.min) > Math.min(a.max, b.max)) {
+        conflitos.push({ tipo: "incompatibilidade_perfil", apoioA, apoioB,
+          motivo: MOTIVO_IDADES, sugestao: SUGESTAO_TITULAR,
+          fontes: [a.fonte, b.fonte], verificadoEm: "31/10/2026" });
+      } else {
+        // Includes scraped and unknown IDs: no evidence must never mean allowed.
+        paresPorConfirmar.push({ apoioA, apoioB });
       }
     }
   }
@@ -333,6 +392,8 @@ export function validarCompatibilidadeWishlist(apoioIds: string[]): ResultadoVal
     dependenciasEmFalta,
     totalApoios: idsUnicos.length,
     apoiosIdentificados: idsUnicos,
+    acumulacaoConfirmada: false,
+    paresPorConfirmar,
   };
 }
 
