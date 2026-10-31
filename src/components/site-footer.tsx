@@ -9,7 +9,7 @@ const SOCIAIS = [
 const EXPLORAR = [
   { rotulo: "Início", href: "/" },
   { rotulo: "Apoios a explorar", href: "#apoios" },
-  { rotulo: "IAS e dúvidas frequentes", href: "#ias-faq" },
+  { rotulo: "Perguntas e respostas", href: "/faq" },
   { rotulo: "Política de Privacidade", href: "/privacidade" },
 ];
 
