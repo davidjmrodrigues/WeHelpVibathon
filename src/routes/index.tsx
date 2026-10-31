@@ -329,11 +329,11 @@ function Index() {
           {t("notaRendimentoSufixo")}
         </p>
       </div>
-      {temasDisponiveis.length > 2 && (
+      {temasDisponiveis.length > 1 && (
         <div className="sm:col-span-2">
           <p className="mb-2 text-base font-semibold">{t("fTemas")}</p>
           <div className="flex flex-wrap gap-2">
-            {temasDisponiveis.map((temaFiltro) => (
+            {temasDisponiveis.filter((temaFiltro) => temaFiltro !== "Todos").map((temaFiltro) => (
               <button
                 key={temaFiltro}
                 type="button"
