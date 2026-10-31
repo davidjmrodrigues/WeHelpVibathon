@@ -140,13 +140,19 @@ function CartaoApoio({
         onClick={() => setAberto((v) => !v)}
         className="flex w-full cursor-pointer items-start gap-3 py-6 text-left focus-visible:rounded-md"
       >
-        {disponivel ? (
-          <CircleHelp aria-hidden="true" className="mt-1 size-5 shrink-0 text-detail" />
-        ) : (
-          <span aria-hidden="true" className="mt-1 size-5 shrink-0 text-muted-foreground">
-            —
-          </span>
-        )}
+        <div className="flex shrink-0 flex-col items-center gap-2">
+          {disponivel ? (
+            <CircleHelp aria-hidden="true" className="size-5 text-detail" />
+          ) : (
+            <span aria-hidden="true" className="size-5 text-muted-foreground">
+              —
+            </span>
+          )}
+          <ChevronDown
+            aria-hidden="true"
+            className={`apoio-seta size-4 text-muted-foreground transition-transform duration-300 ease-in-out ${aberto ? "rotate-180" : ""}`}
+          />
+        </div>
         <div className="min-w-0 flex-1">
           <h3 className="text-xl font-semibold leading-tight">{texto.titulo}</h3>
           <p className="mt-1 text-sm text-muted-foreground">{texto.entidade}</p>
@@ -164,10 +170,6 @@ function CartaoApoio({
           </p>
           <span className="text-xs text-muted-foreground">{t("valorEstimado")}</span>
         </div>
-        <ChevronDown
-          aria-hidden="true"
-          className={`apoio-seta mt-1 size-4 shrink-0 text-muted-foreground transition-transform duration-300 ease-in-out ${aberto ? "rotate-180" : ""}`}
-        />
       </button>
       <div
         className={`apoio-conteudo grid transition-all duration-300 ease-in-out ${aberto ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
