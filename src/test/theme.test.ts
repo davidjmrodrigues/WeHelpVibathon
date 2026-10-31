@@ -39,13 +39,16 @@ describe("theme snapshot coordination", () => {
     expect(document.documentElement.hasAttribute("data-theme-transition")).toBe(false);
   });
 
-  it("switches immediately for reduced motion", async () => {
+  it("keeps the circular reveal even with reduced motion", async () => {
     preparar(false, true);
-    const start = vi.fn();
+    const start = vi.fn((callback: () => void) => {
+      callback();
+      return { ready: Promise.resolve(), finished: Promise.resolve(), skipTransition: vi.fn() };
+    });
     Object.defineProperty(document, "startViewTransition", { configurable: true, value: start });
     const estado = vi.fn();
     await alternarTemaComCirculo(100, 40, estado);
-    expect(start).not.toHaveBeenCalled();
+    expect(start).toHaveBeenCalledTimes(1);
     expect(temaAtual()).toBe("escuro");
     expect(estado).toHaveBeenCalledExactlyOnceWith("escuro");
   });
