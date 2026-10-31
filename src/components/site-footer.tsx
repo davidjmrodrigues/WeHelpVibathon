@@ -2,6 +2,7 @@ import { Instagram, Linkedin, Send } from "lucide-react";
 import { useState } from "react";
 import { useIdioma } from "@/lib/idioma";
 import { tx } from "@/lib/textos";
+import { LogoWeHelp } from "@/components/logo-wehelp";
 
 const SOCIAIS = [
   { nome: "LinkedIn", href: "https://www.linkedin.com/company/wehelp", Icone: Linkedin },
@@ -26,9 +27,8 @@ export function SiteFooter() {
       <div className="mx-auto max-w-6xl px-6 py-12 lg:py-14">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_auto] lg:gap-14">
           <div>
-            <a href="/" className="inline-flex items-center gap-2.5" aria-label="WeHelp — início">
-              <span className="brand-mark" aria-hidden="true" />
-              <span className="text-xl font-semibold">WeHelp</span>
+            <a href="/" className="inline-flex" aria-label="WeHelp — início">
+              <LogoWeHelp className="h-24 w-auto" />
             </a>
             <div className="mt-7">
               <h2 className="text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">{t("sigaNos")}</h2>
