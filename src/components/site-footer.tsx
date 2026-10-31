@@ -97,7 +97,7 @@ export function SiteFooter() {
                     title={nome}
                     className="flex size-11 items-center justify-center rounded-lg border border-secondary-foreground/25 text-secondary-foreground/80 transition-opacity hover:opacity-70"
                   >
-                    <Icone aria-hidden="true" className="size-3.5" />
+                    <Icone aria-hidden="true" className="size-5" />
                   </a>
                 </li>
               ))}
