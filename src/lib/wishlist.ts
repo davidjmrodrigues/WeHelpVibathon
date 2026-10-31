@@ -255,7 +255,7 @@ export function adicionarApoio(
     id: idNormalizado,
     adicionadoEm: new Date().toISOString(),
     origem,
-    packOrigemId,
+    ...(packOrigemId !== undefined ? { packOrigemId } : {}),
   };
 
   return {
@@ -304,7 +304,7 @@ export function validarCompatibilidadeWishlist(apoioIds: string[]): ResultadoVal
         apoioA: regra.idA,
         apoioB: regra.idB,
         motivo: regra.motivo,
-        baseLegal: regra.baseLegal,
+        ...(regra.baseLegal !== undefined ? { baseLegal: regra.baseLegal } : {}),
         sugestao: regra.sugestao,
       });
     }
@@ -318,7 +318,7 @@ export function validarCompatibilidadeWishlist(apoioIds: string[]): ResultadoVal
         dependenciasEmFalta.push({
           tipo: "dependencia_em_falta",
           apoioId: regra.apoioId,
-          requerApoioId: regra.requerApoios[0],
+          requerApoioId: regra.requerApoios[0]!,
           motivo: regra.motivo,
         });
       }
