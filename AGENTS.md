@@ -10,6 +10,7 @@
 <!-- LOVABLE:END -->
 
 ## Regras de Arquitetura e Engenharia
+- Keep cumulation separate from eligibility: wishlist rules distinguish same-person profile contradictions from legal exclusions; unreviewed pairs (including scraped IDs) remain unconfirmed, never approved by absence of a conflict.
 - Keep eligibility rules in the browser-only support engine (`src/lib/apoios.ts`); presentation changes must not change matching rules.
 - Define visual roles centrally in `src/styles.css` and use the shared `Button` (`@/components/ui/button`) for controls so the supplied identity remains consistent across views.
 - Coordinate filter clearing with an outgoing/incoming results fade and measured container-height animation; keep the existing icon animation and eligibility engine independent.

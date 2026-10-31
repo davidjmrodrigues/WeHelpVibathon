@@ -850,8 +850,9 @@ function Index() {
                           className="rounded-lg border-l-2 border-destructive bg-destructive/10 px-3 py-2"
                         >
                           <p className="text-sm font-semibold text-destructive">
-                            {t("stackConflitoTitulo")}
+                            {t(c.tipo === "incompatibilidade_perfil" ? "stackPerfilTitulo" : "stackConflitoTitulo")}
                           </p>
+                          <p className="mt-1 text-xs font-medium">{tituloDe(c.apoioA)} · {tituloDe(c.apoioB)}</p>
                           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                             {traduzMotivo(lingua, c.motivo)}
                           </p>
@@ -860,6 +861,11 @@ function Index() {
                               {t("stackBaseLegal")}: {c.baseLegal}
                             </p>
                           )}
+                          {c.fontes?.map((url, i) => (
+                            <a key={url} href={url} target="_blank" rel="noopener noreferrer" className="mr-3 text-xs text-primary underline">
+                              {t("stackFonte")} {i + 1} · {c.verificadoEm}
+                            </a>
+                          ))}
                           <p className="mt-1 text-xs leading-relaxed text-detail">
                             <span className="font-semibold">{t("stackSugestao")}:</span>{" "}
                             {traduzSugestao(lingua, c.sugestao)}
@@ -878,6 +884,14 @@ function Index() {
                         </div>
                       ))}
                     </>
+                  )}
+                  {validacaoStack.paresPorConfirmar.length > 0 && (
+                    <details className="text-sm text-muted-foreground">
+                      <summary className="cursor-pointer">{t("stackPorConfirmar")} · {validacaoStack.paresPorConfirmar.length}</summary>
+                      <ul className="mt-2 space-y-1">
+                        {validacaoStack.paresPorConfirmar.map((p) => <li key={`${p.apoioA}-${p.apoioB}`}>{tituloDe(p.apoioA)} + {tituloDe(p.apoioB)}</li>)}
+                      </ul>
+                    </details>
                   )}
                 </div>
                 <p className="mt-3 text-xs leading-relaxed text-muted-foreground">

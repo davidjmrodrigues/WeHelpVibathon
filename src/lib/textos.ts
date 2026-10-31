@@ -281,17 +281,20 @@ export const TEXTOS: Record<string, { pt: string; en: string }> = {
   stackLimpar: { pt: "Limpar seleção", en: "Clear selection" },
   stackRemoverChip: { pt: "Remover da seleção", en: "Remove from selection" },
   stackTudoOk: {
-    pt: "Em princípio, estes apoios podem ser acumulados entre si.",
-    en: "In principle, these benefits can be combined with each other.",
+    pt: "Não foram detetadas incompatibilidades nas regras verificadas. Isto não confirma que estes apoios possam ser acumulados.",
+    en: "No incompatibilities were found in the checked rules. This does not confirm that these benefits can be combined.",
   },
+  stackPerfilTitulo: { pt: "Incompatíveis para a mesma pessoa", en: "Incompatible for the same person" },
+  stackPorConfirmar: { pt: "Combinações por confirmar junto das entidades competentes", en: "Combinations to confirm with the relevant authorities" },
+  stackFonte: { pt: "Fonte oficial", en: "Official source" },
   stackConflitoTitulo: { pt: "Não podem ser acumulados", en: "These cannot be combined" },
   stackDependenciaTitulo: { pt: "Requer outro apoio primeiro", en: "Requires another benefit first" },
   stackSugestao: { pt: "Sugestão", en: "Suggestion" },
   stackBaseLegal: { pt: "Base legal", en: "Legal basis" },
   stackForaPerfil: { pt: "fora do seu perfil atual", en: "outside your current profile" },
   stackAviso: {
-    pt: "Verificação orientativa com base em regras de acumulação conhecidas. A decisão final cabe sempre à entidade que concede o apoio.",
-    en: "Indicative check based on known accumulation rules. The granting body always makes the final decision.",
+    pt: "Verificação para a mesma pessoa e o mesmo período. Apoios de outros membros da casa podem ter regras diferentes. Selecionar um apoio não prova que já o recebe; a decisão final cabe à entidade competente.",
+    en: "Check for the same person and period. Benefits for other household members may follow different rules. Selecting a benefit does not prove you receive it; the relevant authority makes the final decision.",
   },
 };
 
