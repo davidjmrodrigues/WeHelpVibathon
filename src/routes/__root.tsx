@@ -78,10 +78,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "WeHelp" },
+      { title: "Guia de Apoios Sociais" },
       { name: "description", content: "Descubra os apoios do Estado a que tem direito." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "WeHelp" },
+      { property: "og:title", content: "Guia de Apoios Sociais" },
       { property: "og:description", content: "Descubra os apoios do Estado a que tem direito." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
