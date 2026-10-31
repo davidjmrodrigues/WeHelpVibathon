@@ -1,4 +1,5 @@
-import { Github, Instagram, Linkedin, LockKeyhole, Twitter } from "lucide-react";
+import { Github, Instagram, Linkedin, LockKeyhole, Send, Twitter } from "lucide-react";
+import { useState } from "react";
 
 const SOCIAIS = [
   { nome: "LinkedIn", href: "https://www.linkedin.com/company/wehelp", Icone: Linkedin },
@@ -23,6 +24,7 @@ const FONTES = [
 const LIGACAO = "text-sm text-secondary-foreground/80 underline-offset-4 transition-opacity hover:opacity-70 hover:underline";
 
 export function SiteFooter() {
+  const [mensagem, setMensagem] = useState("");
   return (
     <footer className="border-t border-border bg-secondary text-secondary-foreground">
       <div className="mx-auto max-w-6xl px-6 py-12 lg:py-14">
@@ -64,7 +66,38 @@ export function SiteFooter() {
             </nav>
           </div>
           <div>
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">Siga-nos</h2>
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">Fale connosco</h2>
+            <form
+              className="mt-4"
+              onSubmit={(e) => {
+                e.preventDefault();
+                const destino = `mailto:contacto@wehelp.pt?subject=${encodeURIComponent("Contacto WeHelp")}&body=${encodeURIComponent(mensagem)}`;
+                window.location.href = destino;
+                setMensagem("");
+              }}
+            >
+              <label htmlFor="footer-mensagem" className="sr-only">A sua mensagem</label>
+              <textarea
+                id="footer-mensagem"
+                value={mensagem}
+                onChange={(e) => setMensagem(e.target.value)}
+                required
+                rows={3}
+                placeholder="Escreva a sua mensagem…"
+                className="w-full resize-none rounded-lg border border-secondary-foreground/25 bg-transparent px-3 py-2.5 text-sm text-secondary-foreground placeholder:text-secondary-foreground/50 focus:outline-none focus:ring-2 focus:ring-secondary-foreground/40"
+              />
+              <button
+                type="submit"
+                className="mt-2.5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-secondary-foreground/25 text-sm font-medium text-secondary-foreground transition-opacity hover:opacity-70"
+              >
+                <Send aria-hidden="true" className="size-4" />
+                Enviar por email
+              </button>
+              <p className="mt-2 text-xs leading-relaxed text-secondary-foreground/60">
+                Abre o seu programa de email com a mensagem pronta a enviar.
+              </p>
+            </form>
+            <h2 className="mt-8 text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">Siga-nos</h2>
             <ul className="mt-4 flex gap-2.5">
               {SOCIAIS.map(({ nome, href, Icone }) => (
                 <li key={nome}>
