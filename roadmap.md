@@ -10,7 +10,7 @@
 - [x] Testar valores, limites e utilização dos filtros e FAQ: dezasseis testes e verificação em computador e telemóvel.
 
 # Modo escuro com animação
-- [ ] Restaurar a expansão circular nos navegadores sem suporte à animação de pseudo-elementos e verificar ambos os sentidos.
+- [x] Restaurar a expansão circular nos navegadores sem suporte à animação de pseudo-elementos e verificar ambos os sentidos (cinco testes e capturas no navegador).
 - [x] Círculo que expande do botão e troca claro/escuro (verificado no ecrã, ida e volta).
 - [x] Corrigir a revelação circular de todo o conteúdo em ambos os sentidos e verificar movimento reduzido e cliques repetidos (testes e capturas no navegador).
 
