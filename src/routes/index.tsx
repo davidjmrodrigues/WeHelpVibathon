@@ -800,10 +800,10 @@ function Index() {
             <section
               aria-live="polite"
               inert={stack.itens.length === 0}
-              className={`stack-painel md:pointer-events-none md:fixed md:inset-x-0 md:bottom-0 md:z-40 ${stack.itens.length === 0 ? "stack-painel-fechado" : ""}`}
+              className={`stack-painel pointer-events-none fixed inset-x-0 bottom-0 z-40 ${stack.itens.length === 0 ? "stack-painel-fechado" : ""}`}
             >
               <div className="stack-painel-interior">
-                <div className="mb-6 rounded-xl border border-border bg-card p-4 md:pointer-events-auto md:mx-auto md:max-h-[70vh] md:max-w-3xl md:overflow-y-auto md:shadow-xl">
+                <div className="mx-4 mb-6 rounded-xl border border-border bg-card p-4 shadow-xl pointer-events-auto sm:mx-auto sm:max-h-[70vh] sm:max-w-3xl sm:overflow-y-auto">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <h3 className="text-base font-semibold">
                     {t("stackTitulo")} · {stack.itens.length}
