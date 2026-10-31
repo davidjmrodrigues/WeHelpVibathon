@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { APOIOS, avaliarApoios, type Perfil } from "@/lib/apoios";
+import { multiplicarIAS } from "@/lib/ias";
 
 const base: Perfil = { idade: null, distrito: "", situacao: null, agregado: null, rendimento: null };
 function resultado(id: string, patch: Partial<Perfil>) {
@@ -32,7 +33,7 @@ describe("Catálogo oficial e triagem conservadora", () => {
   it("IRS Jovem termina aos 35 anos e 55 IAS não é poupança de imposto", () => {
     expect(resultado("irsjovem", { idade: 35 })).toBe(true);
     expect(resultado("irsjovem", { idade: 36 })).toBe(false);
-    expect(APOIOS.find(a => a.id === "irsjovem")?.valor).toContain("29");
+    expect(multiplicarIAS(55)).toBe(29542.15);
   });
   it("não aplica os limites fictícios de idade e rendimento à bolsa DGES", () => {
     expect(resultado("bolsadges", { idade: 40, situacao: "Estudante", rendimento: 10000 })).toBe(true);
