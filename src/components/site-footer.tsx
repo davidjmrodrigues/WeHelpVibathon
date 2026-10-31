@@ -31,7 +31,7 @@ export function SiteFooter() {
             <p className="max-w-sm text-sm leading-relaxed text-secondary-foreground/80">
               Um guia rápido e anónimo para descobrir os apoios do Estado português.
             </p>
-            <a href="/" className="mt-5 inline-flex items-center gap-2.5" aria-label="WeHelp — início">
+            <a href="/" className="mt-7 inline-flex items-center gap-2.5" aria-label="WeHelp — início">
               <span className="brand-mark" aria-hidden="true" />
               <span className="text-xl font-semibold">WeHelp</span>
             </a>
