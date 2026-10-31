@@ -520,7 +520,7 @@ function Index() {
                 aria-label={t("fIdade")}
                 value={filtros.idade}
                 onChange={(e) => set({ idade: e.target.value })}
-                className="numero-pill min-h-9 w-20 rounded-full border border-input/60 bg-card/40 px-3 text-xs font-medium text-foreground backdrop-blur-sm transition-colors placeholder:text-muted-foreground"
+                className="numero-pill min-h-9 w-16 rounded-full border border-input/60 bg-card/40 px-3 text-xs font-medium text-foreground backdrop-blur-sm transition-colors placeholder:text-muted-foreground"
               />
               {SITUACOES.map((s) => (
                 <button
