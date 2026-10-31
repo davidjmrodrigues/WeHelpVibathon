@@ -531,7 +531,11 @@ function Index() {
                   size="icon"
                   aria-label={t("limparFiltros")}
                   title={t("limparFiltros")}
-                  className="size-[34px] rounded-full border border-input/60 bg-card/40 text-detail backdrop-blur-sm transition-colors hover:bg-card/70"
+                  className={`size-[34px] rounded-full border border-input/60 bg-card/40 text-detail backdrop-blur-sm transition-all duration-300 ease-in hover:bg-card/70 ${
+                    limpando
+                      ? "pointer-events-none -rotate-[360deg] scale-0 border-transparent opacity-0"
+                      : ""
+                  }`}
                   onClick={() => {
                     if (limpando) return;
                     setLimpando(true);
@@ -541,12 +545,7 @@ function Index() {
                     }, 350);
                   }}
                 >
-                  <RotateCcw
-                    aria-hidden="true"
-                    className={`size-3.5 transition-all duration-300 ease-in ${
-                      limpando ? "-rotate-[360deg] scale-0 opacity-0" : ""
-                    }`}
-                  />
+                  <RotateCcw aria-hidden="true" className="size-3.5" />
                 </Button>
               )}
               <button

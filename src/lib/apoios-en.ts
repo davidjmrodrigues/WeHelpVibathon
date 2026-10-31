@@ -417,6 +417,10 @@ export const MOTIVOS_EN: Record<string, string> = {
     "Intended for households with children or dependents",
   "Fora das idades previstas, incluindo a exceção para casais":
     "Outside the applicable ages, including the exception for couples",
+  "Destina-se a jovens (18 a 35 anos), incompatível com a situação de reformado":
+    "Intended for young people (18 to 35 years old), incompatible with being retired",
+  "Destina-se a jovens até aos 23 anos, incompatível com a situação de reformado":
+    "Intended for young people up to 23 years old, incompatible with being retired",
   "Idade superior a 23 anos": "Older than 23",
   "O IRS Jovem destina-se a jovens entre os 18 e os 35 anos":
     "IRS Jovem is for young people between 18 and 35",

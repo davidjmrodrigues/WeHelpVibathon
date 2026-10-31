@@ -73,10 +73,14 @@ const REGISTOS: Registo[] = [
       "A renda não pode ultrapassar 60% do rendimento médio mensal bruto da casa. Aplicam-se limites de rendimento mensal corrigido ligados à renda máxima de referência e à retribuição mínima mensal garantida, não ao IAS.",
       "É possível candidatar-se sem contrato, sujeito à celebração no prazo previsto após aprovação.",
     ],
-    elegivel: (p) =>
-      p.idade !== null && (p.idade < 18 || p.idade > 37)
+    elegivel: (p) => {
+      if (p.situacao === "Reformado") {
+        return fora("Destina-se a jovens (18 a 35 anos), incompatível com a situação de reformado");
+      }
+      return p.idade !== null && (p.idade < 18 || p.idade > 37)
         ? fora("Fora das idades previstas, incluindo a exceção para casais")
-        : possivel(),
+        : possivel();
+    },
   },
   {
     id: "sub23",
@@ -93,7 +97,11 @@ const REGISTOS: Registo[] = [
       "Comprovar a idade e pedir ou ativar o passe junto do operador. Confirmar os serviços e a área abrangidos.",
     ],
     elegivel: (p) =>
-      p.idade !== null && p.idade > 23 ? fora("Idade superior a 23 anos") : possivel(),
+      p.situacao === "Reformado"
+        ? fora("Destina-se a jovens até aos 23 anos, incompatível com a situação de reformado")
+        : p.idade !== null && p.idade > 23
+          ? fora("Idade superior a 23 anos")
+          : possivel(),
   },
   {
     id: "irsjovem",
@@ -111,6 +119,9 @@ const REGISTOS: Registo[] = [
       "55 IAS = 29 542,15 € em 2026. A poupança efetiva depende do rendimento e do IRS que seria devido; não corresponde a receber esse valor.",
     ],
     elegivel: (p) => {
+      if (p.situacao === "Reformado") {
+        return fora("Destina-se a jovens (18 a 35 anos), incompatível com a situação de reformado");
+      }
       if (p.idade !== null && (p.idade < 18 || p.idade > 35)) {
         return fora("O IRS Jovem destina-se a jovens entre os 18 e os 35 anos");
       }

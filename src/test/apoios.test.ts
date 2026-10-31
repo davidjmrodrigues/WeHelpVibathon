@@ -107,4 +107,9 @@ describe("Catálogo oficial e triagem conservadora", () => {
       expect(resultado(id, { rendimento: 50000 })).toBe(true);
     }
   });
+  it("exclui apoios de jovens para reformados mesmo sem idade indicada", () => {
+    expect(resultado("porta65", { situacao: "Reformado" })).toBe(false);
+    expect(resultado("sub23", { situacao: "Reformado" })).toBe(false);
+    expect(resultado("irsjovem", { situacao: "Reformado" })).toBe(false);
+  });
 });
