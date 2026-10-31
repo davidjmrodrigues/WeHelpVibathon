@@ -86,6 +86,7 @@ export const TEXTOS: Record<string, { pt: string; en: string }> = {
   situacaoEstudante: { pt: "Estudante", en: "Student" },
   situacaoTrabalhador: { pt: "Trabalhador", en: "Worker" },
   situacaoDesempregado: { pt: "Desempregado", en: "Unemployed" },
+  situacaoReformado: { pt: "Reformado", en: "Retired" },
   temaTodos: { pt: "Todos", en: "All" },
   temaCatalogo: { pt: "Catálogo Principal", en: "Main catalogue" },
   "temaSubsídios e Prestações": { pt: "Subsídios e Prestações", en: "Benefits and Allowances" },

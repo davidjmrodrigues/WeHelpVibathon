@@ -65,6 +65,8 @@ interface Filtros {
   situacao: Situacao | "";
   agregado: string;
   rendimento: string;
+  habitacao: "" | "arrendada" | "propria";
+  filhos: "" | "sim" | "nao" | "monoparental";
 }
 const FILTROS_VAZIOS: Filtros = {
   idade: "",
@@ -72,6 +74,8 @@ const FILTROS_VAZIOS: Filtros = {
   situacao: "",
   agregado: "",
   rendimento: "",
+  habitacao: "",
+  filhos: "",
 };
 const CAMPO = "w-full rounded-xl border border-input bg-card px-4 py-3 text-base text-foreground";
 
@@ -141,6 +145,8 @@ function Index() {
       situacao: filtros.situacao === "" ? null : filtros.situacao,
       agregado: filtros.agregado === "" ? null : Number(filtros.agregado),
       rendimento: filtros.rendimento === "" ? null : Number(filtros.rendimento),
+      habitacao: filtros.habitacao === "" ? null : filtros.habitacao,
+      filhos: filtros.filhos === "" ? null : filtros.filhos,
     }),
     [filtros],
   );
@@ -184,14 +190,22 @@ function Index() {
   const outros = todosApoios.filter((a) => !a.resultado.ok);
   const set = (patch: Partial<Filtros>) => setFiltros((f) => ({ ...f, ...patch }));
 
-  const avancadosAtivos = [
-    filtros.idade,
-    filtros.distrito,
-    filtros.agregado,
-    filtros.rendimento,
-  ].filter((v) => v !== "").length;
+  const avancadosAtivos =
+    [
+      filtros.distrito,
+      filtros.agregado,
+      filtros.rendimento,
+      filtros.habitacao,
+      filtros.filhos,
+    ].filter((v) => v !== "").length + (temaSelecionado !== "Todos" ? 1 : 0);
 
-  const temFiltrosAtivos = filtros.situacao !== "" || avancadosAtivos > 0;
+  const temFiltrosAtivos =
+    filtros.situacao !== "" || filtros.idade !== "" || avancadosAtivos > 0;
+
+  const limparTudo = () => {
+    setFiltros(FILTROS_VAZIOS);
+    setTemaSelecionado("Todos");
+  };
 
   const textoApoio = (a: ApoioAvaliado) => {
     const en = lingua === "en" ? APOIOS_EN[a.id] : undefined;
