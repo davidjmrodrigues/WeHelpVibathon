@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, LockKeyhole } from "lucide-react";
+import { BotaoIdioma } from "@/components/botao-idioma";
 import { SiteFooter } from "@/components/site-footer";
+import { useIdioma } from "@/lib/idioma";
+import { tx } from "@/lib/textos";
 
 export const Route = createFileRoute("/privacidade")({
   component: PaginaPrivacidade,
@@ -25,34 +28,16 @@ export const Route = createFileRoute("/privacidade")({
 });
 
 const SECCOES = [
-  {
-    titulo: "Triagem anónima",
-    texto:
-      "As respostas que dá no questionário (idade, distrito, situação profissional, agregado familiar e rendimento) são usadas apenas no seu navegador para calcular os apoios que podem aplicar-se. Não são enviadas para nenhum servidor nem guardadas por nós.",
-  },
-  {
-    titulo: "Sem contas nem identificação",
-    texto:
-      "O WeHelp não pede nome, email, login nem qualquer dado de identificação. Não usamos cookies de rastreamento nem ferramentas de análise que o identifiquem pessoalmente.",
-  },
-  {
-    titulo: "Contacto por email",
-    texto:
-      "Se nos contactar através da caixa \"Fale connosco\", a mensagem é enviada a partir do seu próprio programa de email para contacto@wehelp.pt. Nesse caso, ficamos com o seu endereço de email apenas para responder ao seu pedido.",
-  },
-  {
-    titulo: "Ligações externas",
-    texto:
-      "Os cartões de apoio e as fontes oficiais ligam a sites externos (por exemplo Segurança Social, gov.pt e DGES). Esses sites têm as suas próprias políticas de privacidade, que deve consultar.",
-  },
-  {
-    titulo: "Alterações a esta política",
-    texto:
-      "Se esta política mudar, a versão atualizada fica disponível nesta página. Última atualização: outubro de 2026.",
-  },
+  { chaveTitulo: "priv1Titulo", chaveTexto: "priv1Texto" },
+  { chaveTitulo: "priv2Titulo", chaveTexto: "priv2Texto" },
+  { chaveTitulo: "priv3Titulo", chaveTexto: "priv3Texto" },
+  { chaveTitulo: "priv4Titulo", chaveTexto: "priv4Texto" },
+  { chaveTitulo: "priv5Titulo", chaveTexto: "priv5Texto" },
 ];
 
 function PaginaPrivacidade() {
+  const { lingua } = useIdioma();
+  const t = (chave: string) => tx(lingua, chave);
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border">
@@ -61,32 +46,32 @@ function PaginaPrivacidade() {
             <span className="brand-mark" aria-hidden="true" />
             <span className="text-xl font-semibold">WeHelp</span>
           </Link>
-          <Link
-            to="/"
-            className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border px-4 text-sm font-medium transition-opacity hover:opacity-70"
-          >
-            <ArrowLeft aria-hidden="true" className="size-4" />
-            Voltar
-          </Link>
+          <div className="flex items-center gap-2">
+            <BotaoIdioma />
+            <Link
+              to="/"
+              className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border px-4 text-sm font-medium transition-opacity hover:opacity-70"
+            >
+              <ArrowLeft aria-hidden="true" className="size-4" />
+              {t("voltar")}
+            </Link>
+          </div>
         </div>
       </header>
 
       <main className="mx-auto max-w-3xl px-6 py-12 lg:py-16">
         <p className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground">
           <LockKeyhole aria-hidden="true" className="size-3.5" />
-          Privacidade em primeiro lugar
+          {t("privBadge")}
         </p>
-        <h1 className="mt-4 text-3xl font-semibold tracking-tight lg:text-4xl">Política de Privacidade</h1>
-        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-          O WeHelp foi desenhado para ser anónimo desde o primeiro clique. Esta página explica, de forma simples,
-          como tratamos (e sobretudo como não tratamos) os seus dados.
-        </p>
+        <h1 className="mt-4 text-3xl font-semibold tracking-tight lg:text-4xl">{t("privTitulo")}</h1>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{t("privDesc")}</p>
 
         <div className="mt-10 space-y-8">
           {SECCOES.map((s) => (
-            <section key={s.titulo}>
-              <h2 className="text-lg font-semibold">{s.titulo}</h2>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.texto}</p>
+            <section key={s.chaveTitulo}>
+              <h2 className="text-lg font-semibold">{t(s.chaveTitulo)}</h2>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t(s.chaveTexto)}</p>
             </section>
           ))}
         </div>
