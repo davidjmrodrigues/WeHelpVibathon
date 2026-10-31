@@ -543,7 +543,7 @@ function Index() {
                   size="icon"
                   aria-label={t("limparFiltros")}
                   title={t("limparFiltros")}
-                  className="size-9 rounded-full text-detail"
+                  className="size-9 rounded-full border border-input/60 bg-card/40 text-detail backdrop-blur-sm transition-colors hover:bg-card/70"
                   onClick={limparTudo}
                 >
                   <RotateCcw aria-hidden="true" className="size-3.5" />
