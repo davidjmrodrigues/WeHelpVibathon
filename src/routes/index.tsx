@@ -348,7 +348,7 @@ function Index() {
     if (limpando) return;
     setLimpando(true);
     const resultados = resultadosRef.current;
-    resultados?.classList.add("resultados-em-transicao");
+    resultados?.classList.add("resultados-em-transicao", "resultados-animados");
     const saida = resultados?.animate(
       [{ opacity: 1, transform: "translateY(0)" }, { opacity: 0, transform: "translateY(-8px)" }],
       { duration: 300, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" },
