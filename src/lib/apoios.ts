@@ -77,7 +77,7 @@ const REGISTOS: Registo[] = [
       if (p.situacao === "Reformado") {
         return fora("Destina-se a jovens (18 a 35 anos), incompatível com a situação de reformado");
       }
-      return p.idade !== null && (p.idade < 18 || p.idade > 37)
+      return p.idade !== null && (p.idade < 18 || p.idade > 35)
         ? fora("Fora das idades previstas, incluindo a exceção para casais")
         : possivel();
     },
@@ -173,6 +173,11 @@ const REGISTOS: Registo[] = [
       if (p.situacao === "Trabalhador") {
         return fora(
           "O subsídio destina-se a situações de desemprego; os apoios parciais têm regras próprias",
+        );
+      }
+      if (p.situacao === "Reformado") {
+        return fora(
+          "Destina-se a situações de desemprego involuntário, incompatível com a situação de reformado",
         );
       }
       if (p.idade !== null && p.idade >= 67) {
@@ -355,6 +360,11 @@ const REGISTOS: Registo[] = [
           "Destina-se a quem não tem atividade profissional e carece de proteção contributiva",
         );
       }
+      if (p.situacao === "Reformado") {
+        return fora(
+          "Destina-se a quem não tem proteção contributiva; quem está reformado já recebe pensão",
+        );
+      }
       return possivel();
     },
   },
@@ -375,6 +385,11 @@ const REGISTOS: Registo[] = [
       "Verificar rendimentos ponderados, remunerações incompatíveis, dependência e prestações da pessoa cuidada.",
     ],
     elegivel: (p) => {
+      if (p.situacao === "Reformado") {
+        return fora(
+          "O subsídio de cuidador informal principal aplica-se até à idade legal da pensão de velhice",
+        );
+      }
       if (p.idade !== null && (p.idade < 18 || p.idade >= 67)) {
         return fora("Fora do intervalo entre 18 anos e a idade legal de velhice");
       }
@@ -401,6 +416,11 @@ const REGISTOS: Registo[] = [
     elegivel: (p) => {
       if (p.situacao === "Trabalhador") {
         return fora("Destina-se a situações de desemprego involuntário");
+      }
+      if (p.situacao === "Reformado") {
+        return fora(
+          "Destina-se a situações de desemprego involuntário, incompatível com a situação de reformado",
+        );
       }
       if (p.idade !== null && p.idade >= 67) {
         return fora(
@@ -577,11 +597,15 @@ const REGISTOS: Registo[] = [
       "Cumprimento do prazo de garantia de descontos (3 ou 5 anos conforme o tipo de invalidez).",
     ],
     elegivel: (p) =>
-      p.idade !== null && p.idade >= 67
+      p.situacao === "Reformado"
         ? fora(
-            "A partir da idade legal de reforma a pensão de invalidez converte-se em pensão de velhice",
+            "A pensão de invalidez converte-se em pensão de velhice na idade legal de reforma",
           )
-        : possivel(),
+        : p.idade !== null && p.idade >= 67
+          ? fora(
+              "A partir da idade legal de reforma a pensão de invalidez converte-se em pensão de velhice",
+            )
+          : possivel(),
   },
   {
     id: "subsidiodoenca",
@@ -596,6 +620,12 @@ const REGISTOS: Registo[] = [
       "Certificado de Incapacidade Temporária emitido pelos serviços de saúde (SNS) e prazo de garantia de 6 meses com registo de remunerações.",
       "Cumprimento do índice de profissionalidade quando aplicável e dos deveres de permanência no domicílio.",
     ],
+    elegivel: (p) =>
+      p.situacao === "Reformado"
+        ? fora(
+            "Destina-se a compensar a perda de remuneração por impedimento temporário para o trabalho",
+          )
+        : possivel(),
   },
   {
     id: "isencaotaxas",

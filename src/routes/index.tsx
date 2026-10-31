@@ -77,6 +77,7 @@ const FILTROS_VAZIOS: Filtros = {
   filhos: "",
 };
 const CAMPO = "w-full rounded-xl border border-input bg-card px-4 py-3 text-base text-foreground";
+const LIMITE_INICIAL = 20;
 
 function AzulejoPadrao({ id, className }: { id: string; className?: string }) {
   return (
@@ -109,6 +110,7 @@ function Index() {
   const [filtrosAbertos, setFiltrosAbertos] = useState(false);
   const [infoAberto, setInfoAberto] = useState(false);
   const [limpando, setLimpando] = useState(false);
+  const [verTodos, setVerTodos] = useState(false);
   const [tema, setTema] = useState<Tema>(() => temaAtual());
   const [dadosOficiais, setDadosOficiais] = useState<Record<string, DadosOficiaisExtraidos>>({});
   const [apoiosDescobertos, setApoiosDescobertos] = useState<ApoioDescoberto[]>([]);
@@ -202,9 +204,13 @@ function Index() {
   const temFiltrosAtivos =
     filtros.situacao !== "" || filtros.idade !== "" || avancadosAtivos > 0;
 
+  const visiveis =
+    temFiltrosAtivos || verTodos ? elegiveis : elegiveis.slice(0, LIMITE_INICIAL);
+
   const limparTudo = () => {
     setFiltros(FILTROS_VAZIOS);
     setTemaSelecionado("Todos");
+    setVerTodos(false);
   };
 
   const textoApoio = (a: ApoioAvaliado) => {
@@ -593,7 +599,21 @@ function Index() {
               </p>
             </div>
 
-            {lista(elegiveis, true)}
+            {lista(visiveis, true)}
+            {!temFiltrosAtivos && elegiveis.length > LIMITE_INICIAL && (
+              <div className="mt-6 flex justify-center">
+                <button
+                  type="button"
+                  aria-expanded={verTodos}
+                  onClick={() => setVerTodos((v) => !v)}
+                  className={classePilula(verTodos)}
+                >
+                  {verTodos
+                    ? t("verMenos")
+                    : `${t("verTodos")} (${elegiveis.length})`}
+                </button>
+              </div>
+            )}
             {lingua === "en" && apoiosDescobertos.length > 0 && (
               <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
                 {t("notaConteudoOficial")}

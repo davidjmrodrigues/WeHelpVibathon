@@ -60,6 +60,8 @@ export const TEXTOS: Record<string, { pt: string; en: string }> = {
     pt: "Ver apoios descartados pelos filtros",
     en: "Show benefits excluded by the filters",
   },
+  verTodos: { pt: "Todos", en: "All" },
+  verMenos: { pt: "Mostrar menos", en: "Show less" },
   descartadosNota: {
     pt: "Estes apoios não são compatíveis com a sua idade, situação profissional ou composição da casa.",
     en: "These benefits are not compatible with your age, work situation or household composition.",
