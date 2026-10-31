@@ -12,6 +12,7 @@
 ## Regras de Arquitetura e Engenharia
 - Keep eligibility rules in the browser-only support engine (`src/lib/apoios.ts`); presentation changes must not change matching rules.
 - Define visual roles centrally in `src/styles.css` and use the shared `Button` (`@/components/ui/button`) for controls so the supplied identity remains consistent across views.
+- Coordinate filter clearing with an outgoing/incoming results fade and measured container-height animation; keep the existing icon animation and eligibility engine independent.
 - Store dated official sources and unverified mandatory conditions with every benefit; matching is conservative discovery, never a legal entitlement decision, because the five profile fields cannot establish full eligibility.
 - Keep IAS and cent-rounded conversions in `src/lib/ias.ts` as the single monetary reference for the catalogue and FAQ.
 - Theme changes use full-page View Transition snapshots with a CSS circular incoming reveal; synchronize React inside the capture callback and suppress child transitions. Browsers without View Transitions use a separate incoming-theme layer; the reveal runs regardless of reduced-motion (user-triggered), and animation does not depend on Web Animations pseudo-element support.
