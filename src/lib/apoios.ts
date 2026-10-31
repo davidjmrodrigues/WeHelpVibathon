@@ -666,9 +666,28 @@ export interface ApoioAvaliado extends Apoio {
 }
 /** True means not ruled out by known fields, NEVER verified entitlement. */
 export const avaliarApoios = (p: Perfil): ApoioAvaliado[] =>
-  APOIOS.map((a) => ({ ...a, resultado: a.elegivel(p) })).sort(
+  APOIOS.map((a) => ({ ...a, resultado: avaliarComFiltrosExtras(a, p) })).sort(
     (a, b) => Number(b.resultado.ok) - Number(a.resultado.ok),
   );
+
+/**
+ * Conservative post-filters for the housing and dependent-children quick fields.
+ * They only rule supports out; they never confirm entitlement.
+ */
+function avaliarComFiltrosExtras(a: Apoio, p: Perfil): ResultadoElegibilidade {
+  const base = a.elegivel(p);
+  if (!base.ok) return base;
+  if (p.habitacao === "propria" && a.condicoes.some((c) => /arrend/i.test(c))) {
+    return fora("Exige habitação arrendada com contrato");
+  }
+  if (
+    p.filhos === "nao" &&
+    a.condicoes.some((c) => /filhos?|crianças?|descendentes?|progenitor/i.test(c))
+  ) {
+    return fora("Destina-se a agregados com filhos ou dependentes a cargo");
+  }
+  return base;
+}
 
 /**
  * Browser-only conservative evaluation for additional benefits discovered live by the scraper.
