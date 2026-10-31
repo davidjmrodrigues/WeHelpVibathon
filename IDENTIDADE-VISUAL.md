@@ -1,6 +1,6 @@
-# Meus Apoios — Identidade visual
+# WeHelp — Identidade visual
 
-> **Meus Apoios** é um nome de trabalho. Pode ser trocado sem mexer no resto.
+> **WeHelp** é um nome de trabalho. Pode ser trocado sem mexer no resto.
 
 Plataforma web, anónima e sem login, que cruza cinco respostas rápidas com as regras do Estado e mostra os apoios sociais a que a pessoa pode ter direito.
 
@@ -103,7 +103,7 @@ Nome provisório do conjunto: **verde**. Os valores em HSL estão em `tokens.css
 ## Logótipo e padrão de azulejo
 
 - **Logótipo (`logo.svg`):** um losango com um círculo vazado ao centro, em verde profundo. Aparece a 20px antes do nome.
-- **Nome:** "Meus Apoios", Roboto 600, 20px.
+- **Nome:** "WeHelp", Roboto 600, 20px.
 - **Padrão (`azulejo-tile.svg`):** mosaico de 28×28 com um losango em traço e pontos nos cantos, a repetir. Aparece como **uma faixa no topo** da página inicial (132px de altura) e dos resultados (44px). Nunca mais do que uma faixa por ecrã e nunca atrás de texto.
 
 ## Movimento
