@@ -59,7 +59,7 @@ export function SiteFooter() {
           <div className="flex flex-col gap-9">
             <nav aria-label={t("explorarTitulo")}>
               <h2 className="text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">{t("explorarTitulo")}</h2>
-              <ul className="mt-4 space-y-3">
+              <ul className="mt-4 space-y-2">
                 {EXPLORAR.map(l => <li key={l.chave}><a href={l.href} className={LIGACAO}>{t(l.chave)}</a></li>)}
               </ul>
             </nav>
