@@ -26,10 +26,7 @@ export function SiteFooter() {
       <div className="mx-auto max-w-6xl px-6 py-12 lg:py-14">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_auto] lg:gap-14">
           <div>
-            <p className="max-w-sm text-sm leading-relaxed text-secondary-foreground/80">
-              {t("footerTagline")}
-            </p>
-            <a href="/" className="mt-7 inline-flex items-center gap-2.5" aria-label="WeHelp — início">
+            <a href="/" className="inline-flex items-center gap-2.5" aria-label="WeHelp — início">
               <span className="brand-mark" aria-hidden="true" />
               <span className="text-xl font-semibold">WeHelp</span>
             </a>
