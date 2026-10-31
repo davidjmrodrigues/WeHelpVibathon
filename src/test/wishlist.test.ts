@@ -15,6 +15,40 @@ import {
 } from "@/lib/wishlist";
 
 describe("Motor de Wishlist e Validação de Compatibilidade entre Apoios", () => {
+  it.each([
+    ["subsidiodoenca", "desempregosocial"],
+    ["subsidiodoenca", "pensaoinvalidez"],
+    ["subsidiodoenca", "pensaosocial"],
+    ["subsidiodoenca", "parentalinicial"],
+    ["subsidiodoenca", "parentalsocial"],
+    ["cuidador", "desemprego"],
+    ["cuidador", "desempregosocial"],
+    ["cuidador", "csi"],
+    ["cuidador", "pensaosocial"],
+    ["psi", "pensaosocial"],
+    ["parentalinicial", "desemprego"],
+    ["parentalinicial", "desempregosocial"],
+  ])("impede pagamentos simultâneos oficialmente excluídos: %s + %s", (a, b) => {
+    const res = validarCompatibilidadeWishlist([a, b]);
+    expect(res.valida).toBe(false);
+    expect(res.conflitos).toHaveLength(1);
+    expect(res.conflitos[0]?.tipo).toBe("incompatibilidade_legal");
+    expect(res.conflitos[0]?.fontes?.length).toBeGreaterThan(0);
+    expect(validarCompatibilidadeWishlist([b, a]).conflitos).toEqual(res.conflitos);
+  });
+
+  it("não exclui invalidez relativa do cuidador sem conhecer o subtipo", () => {
+    const res = validarCompatibilidadeWishlist(["cuidador", "pensaoinvalidez"]);
+    expect(res.conflitos).toHaveLength(0);
+    expect(res.paresPorConfirmar).toHaveLength(1);
+  });
+
+  it("não usa tarifa elétrica como prova suficiente de acesso à tarifa de gás", () => {
+    const res = validarCompatibilidadeWishlist(["tarifaeletricidade", "tarifagas"]);
+    expect(res.dependenciasEmFalta.map((d) => d.apoioId)).toEqual(["tarifagas"]);
+    expect(res.acumulacaoConfirmada).toBe(false);
+  });
+
   it.each(["irsjovem", "sub23", "porta65"])("bloqueia pensão social de velhice com %s para o mesmo titular", (id) => {
     for (const ids of [["pensaosocial", id], [id, "pensaosocial"]]) {
       const res = validarCompatibilidadeWishlist(ids);

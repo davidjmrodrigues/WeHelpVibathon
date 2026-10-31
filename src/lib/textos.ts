@@ -288,7 +288,7 @@ export const TEXTOS: Record<string, { pt: string; en: string }> = {
   stackPorConfirmar: { pt: "Combinações por confirmar junto das entidades competentes", en: "Combinations to confirm with the relevant authorities" },
   stackFonte: { pt: "Fonte oficial", en: "Official source" },
   stackConflitoTitulo: { pt: "Não podem ser acumulados", en: "These cannot be combined" },
-  stackDependenciaTitulo: { pt: "Requer outro apoio primeiro", en: "Requires another benefit first" },
+  stackDependenciaTitulo: { pt: "Pré-requisito por confirmar", en: "Prerequisite to confirm" },
   stackSugestao: { pt: "Sugestão", en: "Suggestion" },
   stackBaseLegal: { pt: "Base legal", en: "Legal basis" },
   stackForaPerfil: { pt: "fora do seu perfil atual", en: "outside your current profile" },
