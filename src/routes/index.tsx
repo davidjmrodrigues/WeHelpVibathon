@@ -537,12 +537,24 @@ function Index() {
                   )}
                 </button>
               ))}
+              {temFiltrosAtivos && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label={t("limparFiltros")}
+                  title={t("limparFiltros")}
+                  className="size-9 rounded-full text-detail"
+                  onClick={limparTudo}
+                >
+                  <RotateCcw aria-hidden="true" className="size-3.5" />
+                </Button>
+              )}
               <button
                 type="button"
                 aria-expanded={filtrosAbertos}
                 aria-controls="filtros-avancados"
                 onClick={() => setFiltrosAbertos((v) => !v)}
-                className={classePilula(filtrosAbertos || avancadosAtivos > 0)}
+                className={`${classePilula(filtrosAbertos || avancadosAtivos > 0)} ml-auto`}
               >
                 {filtrosAbertos ? (
                   <X aria-hidden="true" className="size-3.5" />
@@ -556,16 +568,6 @@ function Index() {
                   </span>
                 )}
               </button>
-              {temFiltrosAtivos && (
-                <Button
-                  variant="ghost"
-                  className="min-h-9 rounded-full px-3 text-xs text-detail"
-                  onClick={limparTudo}
-                >
-                  <RotateCcw aria-hidden="true" className="size-3.5" />
-                  {t("limparFiltros")}
-                </Button>
-              )}
             </div>
 
             {filtrosAbertos && (
