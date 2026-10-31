@@ -41,9 +41,9 @@ export function SiteFooter() {
                       rel="noopener noreferrer"
                       aria-label={nome}
                       title={nome}
-                      className="flex size-11 items-center justify-center rounded-lg border border-secondary-foreground/25 text-secondary-foreground/80 transition-opacity hover:opacity-70"
+                      className="flex size-9 items-center justify-center rounded-lg border border-secondary-foreground/25 text-secondary-foreground/80 transition-opacity hover:opacity-70"
                     >
-                      <Icone aria-hidden="true" className="size-5" />
+                      <Icone aria-hidden="true" className="size-4" />
                     </a>
                   </li>
                 ))}
