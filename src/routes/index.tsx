@@ -4,6 +4,7 @@ import { flushSync } from "react-dom";
 import { CircleHelp, ChevronDown, ArrowUpRight, LockKeyhole, Moon, Sun, SlidersHorizontal, X, RotateCcw, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { IasFaq } from "@/components/ias-faq";
+import { SiteFooter } from "@/components/site-footer";
 import { DISTRITOS, IAS_VALUE, SITUACOES, avaliarApoios, type Perfil, type Situacao } from "@/lib/apoios";
 import { alternarTemaComCirculo, temaAtual, type Tema } from "@/lib/theme";
 

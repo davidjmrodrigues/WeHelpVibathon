@@ -4,7 +4,7 @@ import { IAS_SOURCE, IAS_VALUE, IAS_YEAR, euros, multiplicarIAS } from "@/lib/ia
 
 export function IasFaq() {
   return (
-    <section aria-labelledby="ias-heading" className="mb-10 border-y border-border py-5">
+    <section id="ias-faq" aria-labelledby="ias-heading" className="mb-10 scroll-mt-24 border-y border-border py-5">
       <h2 id="ias-heading" className="mb-3 text-xl font-semibold">IAS e dúvidas frequentes</h2>
       <details open className="group">
         <summary className="flex cursor-pointer items-center justify-between gap-4 py-2 font-semibold">
