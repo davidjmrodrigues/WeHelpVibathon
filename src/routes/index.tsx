@@ -11,6 +11,8 @@ import {
   X,
   RotateCcw,
   Info,
+  Plus,
+  Check,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LogoWeHelp } from "@/components/logo-wehelp";
@@ -26,7 +28,17 @@ import {
   type Perfil,
   type Situacao,
 } from "@/lib/apoios";
-import { APOIOS_EN, traduzEntidade, traduzMotivo } from "@/lib/apoios-en";
+import {
+  adicionarApoio,
+  criarWishlist,
+  guardarWishlistLocal,
+  carregarWishlistLocal,
+  limparWishlist,
+  removerApoio,
+  validarCompatibilidadeWishlist,
+  type Wishlist,
+} from "@/lib/wishlist";
+import { APOIOS_EN, traduzEntidade, traduzMotivo, traduzSugestao } from "@/lib/apoios-en";
 import { useIdioma, type Lingua } from "@/lib/idioma";
 import { rotuloTema, tx } from "@/lib/textos";
 import type {
@@ -122,6 +134,8 @@ function CartaoApoio({
   texto,
   lingua,
   t,
+  naStack,
+  onAlternarStack,
 }: {
   a: ApoioAvaliado;
   disponivel: boolean;
@@ -130,47 +144,69 @@ function CartaoApoio({
   texto: TextoApoio;
   lingua: Lingua;
   t: (chave: string) => string;
+  naStack: boolean;
+  onAlternarStack: () => void;
 }) {
   const [aberto, setAberto] = useState(false);
   return (
     <div className={`support-row border-b border-border ${disponivel ? "" : "opacity-60"}`}>
-      <button
-        type="button"
-        aria-expanded={aberto}
-        onClick={() => setAberto((v) => !v)}
-        className="flex w-full cursor-pointer items-start gap-3 py-6 text-left focus-visible:rounded-md"
-      >
-        <div className="flex shrink-0 flex-col items-center gap-2">
-          {disponivel ? (
-            <CircleHelp aria-hidden="true" className="size-5 text-detail" />
+      <div className="flex items-start gap-2">
+        <button
+          type="button"
+          aria-expanded={aberto}
+          onClick={() => setAberto((v) => !v)}
+          className="flex min-w-0 flex-1 cursor-pointer items-start gap-3 py-6 text-left focus-visible:rounded-md"
+        >
+          <div className="flex shrink-0 flex-col items-center gap-2">
+            {disponivel ? (
+              <CircleHelp aria-hidden="true" className="size-5 text-detail" />
+            ) : (
+              <span aria-hidden="true" className="size-5 text-muted-foreground">
+                —
+              </span>
+            )}
+            <ChevronDown
+              aria-hidden="true"
+              className={`apoio-seta size-4 text-muted-foreground transition-transform duration-300 ease-in-out ${aberto ? "rotate-180" : ""}`}
+            />
+          </div>
+          <div className="min-w-0 flex-1">
+            <h3 className="text-xl font-semibold leading-tight">{texto.titulo}</h3>
+            <p className="mt-1 text-sm text-muted-foreground">{texto.entidade}</p>
+            <p className={`mt-2 text-sm ${disponivel ? "text-detail" : "text-muted-foreground"}`}>
+              {disponivel
+                ? t("podeAplicar")
+                : `${t("naoCorresponde")} · ${a.resultado.motivo ? traduzMotivo(lingua, a.resultado.motivo) : ""}`}
+            </p>
+          </div>
+          <div className="hidden max-w-48 shrink-0 text-right sm:block">
+            <p
+              className={`text-base font-semibold ${disponivel ? "text-primary" : "text-muted-foreground"}`}
+            >
+              {texto.valor}
+            </p>
+            <span className="text-xs text-muted-foreground">{t("valorEstimado")}</span>
+          </div>
+        </button>
+        <button
+          type="button"
+          aria-pressed={naStack}
+          aria-label={naStack ? t("stackRemoverAria") : t("stackAdicionarAria")}
+          title={naStack ? t("stackRemoverAria") : t("stackAdicionarAria")}
+          onClick={onAlternarStack}
+          className={`mt-6 flex size-9 shrink-0 items-center justify-center rounded-full border backdrop-blur-sm transition-all duration-200 active:scale-95 ${
+            naStack
+              ? "border-primary/70 bg-secondary/70 text-foreground"
+              : "border-input/60 bg-card/40 text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          {naStack ? (
+            <Check aria-hidden="true" className="size-4" />
           ) : (
-            <span aria-hidden="true" className="size-5 text-muted-foreground">
-              —
-            </span>
+            <Plus aria-hidden="true" className="size-4" />
           )}
-          <ChevronDown
-            aria-hidden="true"
-            className={`apoio-seta size-4 text-muted-foreground transition-transform duration-300 ease-in-out ${aberto ? "rotate-180" : ""}`}
-          />
-        </div>
-        <div className="min-w-0 flex-1">
-          <h3 className="text-xl font-semibold leading-tight">{texto.titulo}</h3>
-          <p className="mt-1 text-sm text-muted-foreground">{texto.entidade}</p>
-          <p className={`mt-2 text-sm ${disponivel ? "text-detail" : "text-muted-foreground"}`}>
-            {disponivel
-              ? t("podeAplicar")
-              : `${t("naoCorresponde")} · ${a.resultado.motivo ? traduzMotivo(lingua, a.resultado.motivo) : ""}`}
-          </p>
-        </div>
-        <div className="hidden max-w-48 shrink-0 text-right sm:block">
-          <p
-            className={`text-base font-semibold ${disponivel ? "text-primary" : "text-muted-foreground"}`}
-          >
-            {texto.valor}
-          </p>
-          <span className="text-xs text-muted-foreground">{t("valorEstimado")}</span>
-        </div>
-      </button>
+        </button>
+      </div>
       <div
         className={`apoio-conteudo grid transition-all duration-300 ease-in-out ${aberto ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
       >
@@ -248,6 +284,7 @@ function Index() {
   const [dadosOficiais, setDadosOficiais] = useState<Record<string, DadosOficiaisExtraidos>>({});
   const [apoiosDescobertos, setApoiosDescobertos] = useState<ApoioDescoberto[]>([]);
   const [temaSelecionado, setTemaSelecionado] = useState<string>("Todos");
+  const [stack, setStack] = useState<Wishlist>(() => criarWishlist());
   const escuro = tema === "escuro";
 
   const aoCarregarTema = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -271,6 +308,10 @@ function Index() {
 
   useEffect(() => {
     void sincronizarComFontes(false);
+  }, []);
+
+  useEffect(() => {
+    setStack(carregarWishlistLocal());
   }, []);
 
   const perfil: Perfil = useMemo(
@@ -417,6 +458,38 @@ function Index() {
     };
   };
 
+  const tituloDe = (id: string) => {
+    const a = todosApoios.find((x) => x.id === id);
+    if (!a) return id;
+    return textoApoio(a).titulo;
+  };
+
+  const validacaoStack = useMemo(
+    () => validarCompatibilidadeWishlist(stack.itens.map((i) => i.id)),
+    [stack],
+  );
+  const stackIds = useMemo(() => new Set(stack.itens.map((i) => i.id)), [stack]);
+  const okPorId = useMemo(
+    () => new Map(todosApoios.map((x) => [x.id, x.resultado.ok] as const)),
+    [todosApoios],
+  );
+
+  const alternarStack = (id: string) => {
+    setStack((atual) => {
+      const nova = atual.itens.some((i) => i.id === id)
+        ? removerApoio(atual, id)
+        : adicionarApoio(atual, id);
+      guardarWishlistLocal(nova);
+      return nova;
+    });
+  };
+
+  const limparStack = () => {
+    const nova = limparWishlist();
+    guardarWishlistLocal(nova);
+    setStack(nova);
+  };
+
   const rutiloDistrito = (nome: string): string => {
     if (lingua === "en" && nome === "Região Autónoma dos Açores") return t("distritoAcores");
     if (lingua === "en" && nome === "Região Autónoma da Madeira") return t("distritoMadeira");
@@ -557,6 +630,8 @@ function Index() {
             texto={textoApoio(a)}
             lingua={lingua}
             t={t}
+            naStack={stackIds.has(a.id)}
+            onAlternarStack={() => alternarStack(a.id)}
           />
         );
       })}
@@ -701,6 +776,90 @@ function Index() {
                   : `${todosApoios.length} ${t("contagemCatalogo")}`}
               </p>
             </div>
+
+            {stack.itens.length > 0 && (
+              <section
+                aria-live="polite"
+                className="mb-6 rounded-xl border border-border bg-card p-4"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <h3 className="text-base font-semibold">
+                    {t("stackTitulo")} · {stack.itens.length}
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={limparStack}
+                    className="text-xs font-medium text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"
+                  >
+                    {t("stackLimpar")}
+                  </button>
+                </div>
+                <ul className="mt-3 flex flex-wrap gap-2">
+                  {stack.itens.map((item) => (
+                    <li key={item.id}>
+                      <button
+                        type="button"
+                        title={t("stackRemoverChip")}
+                        onClick={() => alternarStack(item.id)}
+                        className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-primary/70 bg-secondary/70 px-3 text-xs font-medium text-foreground backdrop-blur-sm transition-opacity hover:opacity-80"
+                      >
+                        {tituloDe(item.id)}
+                        {okPorId.get(item.id) === false && (
+                          <span className="text-[10px] text-muted-foreground">
+                            · {t("stackForaPerfil")}
+                          </span>
+                        )}
+                        <X aria-hidden="true" className="size-3" />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-3 space-y-2">
+                  {validacaoStack.valida ? (
+                    <p className="text-sm font-medium text-primary">{t("stackTudoOk")}</p>
+                  ) : (
+                    <>
+                      {validacaoStack.conflitos.map((c) => (
+                        <div
+                          key={`${c.apoioA}-${c.apoioB}`}
+                          className="rounded-lg border-l-2 border-destructive bg-destructive/10 px-3 py-2"
+                        >
+                          <p className="text-sm font-semibold text-destructive">
+                            {t("stackConflitoTitulo")}
+                          </p>
+                          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                            {traduzMotivo(lingua, c.motivo)}
+                          </p>
+                          {c.baseLegal && (
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              {t("stackBaseLegal")}: {c.baseLegal}
+                            </p>
+                          )}
+                          <p className="mt-1 text-xs leading-relaxed text-detail">
+                            <span className="font-semibold">{t("stackSugestao")}:</span>{" "}
+                            {traduzSugestao(lingua, c.sugestao)}
+                          </p>
+                        </div>
+                      ))}
+                      {validacaoStack.dependenciasEmFalta.map((d) => (
+                        <div
+                          key={d.apoioId}
+                          className="rounded-lg border-l-2 border-border px-3 py-2"
+                        >
+                          <p className="text-sm font-semibold">{t("stackDependenciaTitulo")}</p>
+                          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                            {traduzMotivo(lingua, d.motivo)}
+                          </p>
+                        </div>
+                      ))}
+                    </>
+                  )}
+                </div>
+                <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                  {t("stackAviso")}
+                </p>
+              </section>
+            )}
 
             {lista(visiveis, true)}
             {!temFiltrosAtivos && elegiveis.length > LIMITE_INICIAL && (

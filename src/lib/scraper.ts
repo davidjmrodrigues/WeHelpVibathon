@@ -293,7 +293,8 @@ export function extrairDadosHtmlGenerico(
 }
 
 let cacheSincronizacao: { expiraEm: number; dados: RespostaSincronizacao } | null = null;
-const CACHE_TTL_MS = 15 * 60 * 1000;
+// Intervalo de atualização dos dados oficiais: uma vez por dia.
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
 async function rasparFonteUnica(
   id: string,

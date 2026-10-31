@@ -267,6 +267,32 @@ export const TEXTOS: Record<string, { pt: string; en: string }> = {
     pt: "Se esta política mudar, a versão atualizada fica disponível nesta página. Última atualização: outubro de 2026.",
     en: "If this policy changes, the updated version will be available on this page. Last updated: October 2026.",
   },
+
+  // ===== Verificação de acumulação (stack) =====
+  stackAdicionarAria: {
+    pt: "Adicionar à verificação de acumulação",
+    en: "Add to the stacking check",
+  },
+  stackRemoverAria: {
+    pt: "Remover da verificação de acumulação",
+    en: "Remove from the stacking check",
+  },
+  stackTitulo: { pt: "Verificação de acumulação", en: "Stacking check" },
+  stackLimpar: { pt: "Limpar seleção", en: "Clear selection" },
+  stackRemoverChip: { pt: "Remover da seleção", en: "Remove from selection" },
+  stackTudoOk: {
+    pt: "Em princípio, estes apoios podem ser acumulados entre si.",
+    en: "In principle, these benefits can be combined with each other.",
+  },
+  stackConflitoTitulo: { pt: "Não podem ser acumulados", en: "These cannot be combined" },
+  stackDependenciaTitulo: { pt: "Requer outro apoio primeiro", en: "Requires another benefit first" },
+  stackSugestao: { pt: "Sugestão", en: "Suggestion" },
+  stackBaseLegal: { pt: "Base legal", en: "Legal basis" },
+  stackForaPerfil: { pt: "fora do seu perfil atual", en: "outside your current profile" },
+  stackAviso: {
+    pt: "Verificação orientativa com base em regras de acumulação conhecidas. A decisão final cabe sempre à entidade que concede o apoio.",
+    en: "Indicative check based on known accumulation rules. The granting body always makes the final decision.",
+  },
 };
 
 /** Devolve o texto da chave no idioma ativo, com fallback para português. */
