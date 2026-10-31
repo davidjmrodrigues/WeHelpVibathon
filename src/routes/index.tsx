@@ -31,7 +31,7 @@ function Index() {
   const [form, setForm] = useState<Form>({ idade: "", distrito: "", situacao: "", agregado: "", rendimento: "" });
   const [perfil, setPerfil] = useState<Perfil | null>(null);
 
-  const atual = PASSOS[passo];
+  const atual = PASSOS[passo]!;
   const valor = form[atual.key];
   const valido = atual.tipo === "num" ? valor !== "" && Number(valor) >= (atual.key === "agregado" ? 1 : 0) : valor !== "";
 
