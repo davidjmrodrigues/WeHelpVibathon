@@ -112,4 +112,17 @@ describe("Catálogo oficial e triagem conservadora", () => {
     expect(resultado("sub23", { situacao: "Reformado" })).toBe(false);
     expect(resultado("irsjovem", { situacao: "Reformado" })).toBe(false);
   });
+  it("exclui apoios de desemprego, doença, invalidez e cuidador para reformados", () => {
+    for (const id of ["desemprego", "desempregosocial", "subsidiodoenca", "pensaoinvalidez", "cuidador", "pensaosocial"]) {
+      expect(resultado(id, { situacao: "Reformado" })).toBe(false);
+    }
+    expect(resultado("desemprego", { situacao: "Desempregado" })).toBe(true);
+    expect(resultado("desempregosocial", { situacao: "Desempregado" })).toBe(true);
+  });
+  it("aplica o limite real de 35 anos do Porta 65 Jovem", () => {
+    expect(resultado("porta65", { idade: 35 })).toBe(true);
+    expect(resultado("porta65", { idade: 36 })).toBe(false);
+    expect(resultado("porta65", { idade: 37 })).toBe(false);
+  });
 });
+
