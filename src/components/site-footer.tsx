@@ -93,7 +93,7 @@ export function SiteFooter() {
                 <Send aria-hidden="true" className="size-4" />
                 Enviar por email
               </button>
-              <p className="mt-2 text-xs leading-relaxed text-secondary-foreground/60">
+              <p className="mt-2 text-center text-xs leading-relaxed text-secondary-foreground/60">
                 Abre o seu programa de email com a mensagem pronta a enviar
                 <br />
                 <span className="font-semibold text-secondary-foreground">ou</span>
