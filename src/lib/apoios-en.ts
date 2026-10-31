@@ -412,6 +412,9 @@ export const APOIOS_EN: Record<string, ApoioTextoEn> = {
 
 /** Tradução dos motivos de exclusão (chave = texto exato em português). */
 export const MOTIVOS_EN: Record<string, string> = {
+  "Exige habitação arrendada com contrato": "Requires rented housing with a contract",
+  "Destina-se a agregados com filhos ou dependentes a cargo":
+    "Intended for households with children or dependents",
   "Fora das idades previstas, incluindo a exceção para casais":
     "Outside the applicable ages, including the exception for couples",
   "Idade superior a 23 anos": "Older than 23",
