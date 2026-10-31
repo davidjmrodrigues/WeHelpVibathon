@@ -15,6 +15,7 @@
 - Store dated official sources and unverified mandatory conditions with every benefit; matching is conservative discovery, never a legal entitlement decision, because the five profile fields cannot establish full eligibility.
 - Keep IAS and cent-rounded conversions in `src/lib/ias.ts` as the single monetary reference for the catalogue and FAQ.
 - Theme changes use full-page View Transition snapshots with a CSS circular incoming reveal; synchronize React inside the capture callback and suppress child transitions. Browsers without View Transitions use a separate incoming-theme layer; the reveal runs regardless of reduced-motion (user-triggered), and animation does not depend on Web Animations pseudo-element support.
+- Bilingual PT/EN: interface strings live in `src/lib/textos.ts` (`tx`, `rotuloTema`) and the language context in `src/lib/idioma.tsx`; English for the verified catalogue lives in the overlay `src/lib/apoios-en.ts` (texts, exclusion reasons and entities keyed by their exact Portuguese value). Filter values, support IDs and eligibility rules stay Portuguese in `src/lib/apoios.ts` so matching is untouched by language. Benefits discovered live from gov.pt keep their official Portuguese content.
 
 ## Mapa de Documentação e Fontes de Contexto para Agentes (Directório `context/`)
 Antes de implementar ou modificar qualquer funcionalidade, regra de negócio, estilo ou integração, consulta obrigatoriamente a pasta `context/`:
