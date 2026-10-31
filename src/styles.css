@@ -134,6 +134,8 @@
 .support-row:nth-child(4) { animation-delay: 420ms; }
 .resultados-em-transicao { overflow: hidden; overflow-anchor: none; }
 .resultados-animados .support-row { animation: none !important; }
+.pilula-selecionada { animation: pilula-pop 260ms cubic-bezier(.34,1.56,.64,1) both; }
+@keyframes pilula-pop { from { transform: scale(.93); } to { transform: scale(1); } }
 @keyframes row-enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 /* Keep full old/new theme snapshots intact; only the incoming snapshot is revealed. */
 html[data-theme-transition]::view-transition-group(root) { animation: none; }
@@ -175,4 +177,6 @@ html[data-theme-transition] #wehelp-root *::after { transition: none !important;
   .apoio-conteudo, .apoio-seta { transition-duration: 300ms !important; }
   /* The clear-filters pill spin-and-shrink is user-triggered and keeps its animation. */
   .limpar-pill { transition-duration: 300ms !important; }
+  /* The pill selection pop is user-triggered and keeps its animation. */
+  .pilula-selecionada { animation-duration: 260ms !important; }
 }
