@@ -33,7 +33,6 @@ import type {
   ApoioDescoberto,
   DadosOficiaisExtraidos,
   RespostaSincronizacao,
-  ResultadoPesquisaGov,
 } from "@/lib/scraper";
 import { alternarTemaComCirculo, temaAtual, type Tema } from "@/lib/theme";
 
