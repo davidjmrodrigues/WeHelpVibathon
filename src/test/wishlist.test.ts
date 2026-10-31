@@ -21,8 +21,8 @@ describe("Motor de Wishlist e Validação de Compatibilidade entre Apoios", () =
 
     wishlist = adicionarApoio(wishlist, "porta65");
     expect(wishlist.itens).toHaveLength(1);
-    expect(wishlist.itens[0]!..id).toBe("porta65");
-    expect(wishlist.itens[0]!..origem).toBe("individual");
+    expect(wishlist.itens[0]!.id).toBe("porta65");
+    expect(wishlist.itens[0]!.origem).toBe("individual");
 
     // Tentativa de adicionar o mesmo apoio não duplica
     wishlist = adicionarApoio(wishlist, "porta65");
@@ -33,7 +33,7 @@ describe("Motor de Wishlist e Validação de Compatibilidade entre Apoios", () =
 
     wishlist = removerApoio(wishlist, "porta65");
     expect(wishlist.itens).toHaveLength(1);
-    expect(wishlist.itens[0]!..id).toBe("irsjovem");
+    expect(wishlist.itens[0]!.id).toBe("irsjovem");
 
     wishlist = limparWishlist();
     expect(wishlist.itens).toHaveLength(0);
