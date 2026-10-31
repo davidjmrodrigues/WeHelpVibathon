@@ -471,9 +471,9 @@ export function extrairResultadosPesquisaGov(payloadJson: unknown): ResultadoPes
     const descricao = limparTextoOficial(
       typeof src.description === "string" ? src.description : "",
     );
-    const rawUrl = typeof src.url === "string" ? src.url : "";
+    const rawUrl = typeof src["url"] === "string" ? src["url"] : "";
     const categoria = limparTextoOficial(
-      typeof src.category === "string" ? src.category : "Serviços",
+      typeof src["category"] === "string" ? src["category"] : "Serviços",
     );
     if (!titulo || !rawUrl) continue;
     const url = rawUrl.startsWith("http")
