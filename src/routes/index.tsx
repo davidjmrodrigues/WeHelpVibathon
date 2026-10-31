@@ -338,6 +338,49 @@ function Index() {
   const visiveis =
     temFiltrosAtivos || verTodos ? elegiveis : elegiveis.slice(0, LIMITE_INICIAL);
 
+  const emTransicaoRef = useRef(false);
+
+  const transicaoResultados = (aplicar: () => void, duracaoSaida = 250) => {
+    if (emTransicaoRef.current) {
+      aplicar();
+      return;
+    }
+    emTransicaoRef.current = true;
+    const resultados = resultadosRef.current;
+    resultados?.classList.add("resultados-em-transicao", "resultados-animados");
+    const saida = resultados?.animate(
+      [{ opacity: 1, transform: "translateY(0)" }, { opacity: 0, transform: "translateY(-6px)" }],
+      { duration: duracaoSaida, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" },
+    );
+    window.setTimeout(() => {
+      if (!resultados?.isConnected) {
+        emTransicaoRef.current = false;
+        return;
+      }
+      const alturaAnterior = resultados.getBoundingClientRect().height;
+      flushSync(aplicar);
+      const alturaNova = resultados.getBoundingClientRect().height;
+      saida?.cancel();
+      resultados.animate(
+        [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "translateY(0)" }],
+        { duration: 450, easing: "cubic-bezier(.2,.8,.2,1)" },
+      );
+      const reposicionar = resultados.animate(
+        [{ height: `${alturaAnterior}px` }, { height: `${alturaNova}px` }],
+        { duration: 450, easing: "cubic-bezier(.2,.8,.2,1)" },
+      );
+      void reposicionar.finished
+        .then(() => {
+          resultados.classList.remove("resultados-em-transicao");
+          emTransicaoRef.current = false;
+        })
+        .catch(() => {
+          resultados.classList.remove("resultados-em-transicao");
+          emTransicaoRef.current = false;
+        });
+    }, duracaoSaida);
+  };
+
   const limparTudo = () => {
     setFiltros(FILTROS_VAZIOS);
     setTemaSelecionado("Todos");
@@ -347,36 +390,16 @@ function Index() {
   const limparComAnimacao = () => {
     if (limpando) return;
     setLimpando(true);
-    const resultados = resultadosRef.current;
-    resultados?.classList.add("resultados-em-transicao", "resultados-animados");
-    const saida = resultados?.animate(
-      [{ opacity: 1, transform: "translateY(0)" }, { opacity: 0, transform: "translateY(-8px)" }],
-      { duration: 300, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" },
-    );
     window.setTimeout(() => {
-      if (!resultados?.isConnected) return;
-      const alturaAnterior = resultados.getBoundingClientRect().height;
-      flushSync(() => {
-        limparTudo();
-        setLimpando(false);
-      });
-      const alturaNova = resultados.getBoundingClientRect().height;
-      saida?.cancel();
-      resultados.animate(
-        [{ opacity: 0, transform: "translateY(12px)" }, { opacity: 1, transform: "translateY(0)" }],
-        { duration: 450, easing: "cubic-bezier(.2,.8,.2,1)" },
-      );
-      const reposicionar = resultados.animate(
-        [{ height: `${alturaAnterior}px` }, { height: `${alturaNova}px` }],
-        { duration: 450, easing: "cubic-bezier(.2,.8,.2,1)" },
-      );
-      void reposicionar.finished.then(() => {
-        resultados.classList.remove("resultados-em-transicao");
-      }).catch(() => {
-        resultados.classList.remove("resultados-em-transicao");
-      });
-    }, 350);
+      setLimpando(false);
+      transicaoResultados(limparTudo, 250);
+    }, 300);
   };
+
+  const setComAnimacao = (patch: Partial<Filtros>) =>
+    transicaoResultados(() => set(patch));
+  const setTemaComAnimacao = (novoTema: string) =>
+    transicaoResultados(() => setTemaSelecionado(novoTema));
 
   const textoApoio = (a: ApoioAvaliado) => {
     const en = lingua === "en" ? APOIOS_EN[a.id] : undefined;
@@ -399,7 +422,7 @@ function Index() {
   };
 
   const classePilula = (ativo: boolean) =>
-    `inline-flex min-h-9 items-center gap-1.5 rounded-full border px-4 text-xs font-medium backdrop-blur-sm transition-colors ${ativo ? "border-primary/70 bg-secondary/70 text-foreground" : "border-input/60 bg-card/40 text-muted-foreground hover:text-foreground"}`;
+    `inline-flex min-h-9 items-center gap-1.5 rounded-full border px-4 text-xs font-medium backdrop-blur-sm transition-colors active:scale-95 ${ativo ? "border-primary/70 bg-secondary/70 text-foreground pilula-selecionada" : "border-input/60 bg-card/40 text-muted-foreground hover:text-foreground"}`;
 
   const painelAvancado = (
     <div className="grid gap-6 sm:grid-cols-2">
@@ -411,7 +434,7 @@ function Index() {
               key={h}
               type="button"
               aria-pressed={filtros.habitacao === h}
-              onClick={() => set({ habitacao: filtros.habitacao === h ? "" : h })}
+              onClick={() => setComAnimacao({ habitacao: filtros.habitacao === h ? "" : h })}
               className={classePilula(filtros.habitacao === h)}
             >
               {t(h === "arrendada" ? "habitacaoArrendada" : "habitacaoPropria")}
@@ -427,7 +450,7 @@ function Index() {
               key={f}
               type="button"
               aria-pressed={filtros.filhos === f}
-              onClick={() => set({ filhos: filtros.filhos === f ? "" : f })}
+              onClick={() => setComAnimacao({ filhos: filtros.filhos === f ? "" : f })}
               className={classePilula(filtros.filhos === f)}
             >
               {t(f === "sim" ? "filhosSim" : f === "nao" ? "filhosNao" : "filhosMonoparental")}
@@ -504,7 +527,7 @@ function Index() {
                 type="button"
                 aria-pressed={temaSelecionado === temaFiltro}
                 onClick={() =>
-                  setTemaSelecionado(temaSelecionado === temaFiltro ? "Todos" : temaFiltro)
+                  setTemaComAnimacao(temaSelecionado === temaFiltro ? "Todos" : temaFiltro)
                 }
                 className={classePilula(temaSelecionado === temaFiltro)}
               >
@@ -609,7 +632,7 @@ function Index() {
                   key={s}
                   type="button"
                   aria-pressed={filtros.situacao === s}
-                  onClick={() => set({ situacao: filtros.situacao === s ? "" : s })}
+                  onClick={() => setComAnimacao({ situacao: filtros.situacao === s ? "" : s })}
                   className={classePilula(filtros.situacao === s)}
                 >
                   {t(`situacao${s}`)}
