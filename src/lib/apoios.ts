@@ -1,4 +1,4 @@
-import { IAS_VALUE, euros, multiplicarIAS } from "./ias";
+import { euros, multiplicarIAS } from "./ias";
 export { IAS_VALUE } from "./ias";
 
 export type Situacao = "Estudante" | "Trabalhador" | "Desempregado";
