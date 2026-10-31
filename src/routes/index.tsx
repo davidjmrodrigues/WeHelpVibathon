@@ -27,7 +27,7 @@ import {
   type Situacao,
 } from "@/lib/apoios";
 import { APOIOS_EN, traduzEntidade, traduzMotivo } from "@/lib/apoios-en";
-import { useIdioma } from "@/lib/idioma";
+import { useIdioma, type Lingua } from "@/lib/idioma";
 import { rotuloTema, tx } from "@/lib/textos";
 import type {
   ApoioDescoberto,
@@ -99,6 +99,136 @@ function Azulejo() {
   return (
     <div className="azulejo-band" aria-hidden="true">
       <AzulejoPadrao id="azulejo" />
+    </div>
+  );
+}
+
+interface TextoApoio {
+  titulo: string;
+  entidade: string;
+  descricao: string;
+  valor: string;
+  periodo: string;
+  condicoes: string[];
+  link: string;
+  verificadoEm: string;
+}
+
+function CartaoApoio({
+  a,
+  disponivel,
+  extraido,
+  verificadoEm,
+  texto,
+  lingua,
+  t,
+}: {
+  a: ApoioAvaliado;
+  disponivel: boolean;
+  extraido: DadosOficiaisExtraidos | undefined;
+  verificadoEm: string;
+  texto: TextoApoio;
+  lingua: Lingua;
+  t: (chave: string) => string;
+}) {
+  const [aberto, setAberto] = useState(false);
+  return (
+    <div className={`support-row border-b border-border ${disponivel ? "" : "opacity-60"}`}>
+      <button
+        type="button"
+        aria-expanded={aberto}
+        onClick={() => setAberto((v) => !v)}
+        className="flex w-full cursor-pointer items-start gap-3 py-6 text-left focus-visible:rounded-md"
+      >
+        {disponivel ? (
+          <CircleHelp aria-hidden="true" className="mt-1 size-5 shrink-0 text-detail" />
+        ) : (
+          <span aria-hidden="true" className="mt-1 size-5 shrink-0 text-muted-foreground">
+            —
+          </span>
+        )}
+        <div className="min-w-0 flex-1">
+          <h3 className="text-xl font-semibold leading-tight">{texto.titulo}</h3>
+          <p className="mt-1 text-sm text-muted-foreground">{texto.entidade}</p>
+          <p className={`mt-2 text-sm ${disponivel ? "text-detail" : "text-muted-foreground"}`}>
+            {disponivel
+              ? t("podeAplicar")
+              : `${t("naoCorresponde")} · ${a.resultado.motivo ? traduzMotivo(lingua, a.resultado.motivo) : ""}`}
+          </p>
+        </div>
+        <div className="hidden max-w-48 shrink-0 text-right sm:block">
+          <p
+            className={`text-base font-semibold ${disponivel ? "text-primary" : "text-muted-foreground"}`}
+          >
+            {texto.valor}
+          </p>
+          <span className="text-xs text-muted-foreground">{t("valorEstimado")}</span>
+        </div>
+        <ChevronDown
+          aria-hidden="true"
+          className={`mt-1 size-4 shrink-0 text-muted-foreground transition-transform duration-300 ease-in-out ${aberto ? "rotate-180" : ""}`}
+        />
+      </button>
+      <div
+        className={`grid transition-all duration-300 ease-in-out ${aberto ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
+      >
+        <div className="overflow-hidden">
+          <div className="pb-6 pl-8">
+            <p className="max-w-xl text-base leading-relaxed text-muted-foreground">
+              {texto.descricao}
+            </p>
+            <p className="mt-3 font-semibold text-primary sm:hidden">{texto.valor}</p>
+            <h4 className="mt-4 text-sm font-semibold">{t("condicoesTitulo")}</h4>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm leading-relaxed text-muted-foreground">
+              {texto.condicoes.map((c) => (
+                <li key={c}>{c}</li>
+              ))}
+            </ul>
+            {extraido?.sucesso && extraido.resumoOficial && (
+              <div className="mt-4 border-l-2 border-primary pl-4">
+                <p className="text-xs font-semibold text-detail">
+                  {t("excertoOficial")} ({extraido.entidadeOficial ?? "gov.pt"}
+                  {extraido.atualizadoEm ? ` · ${t("atualizadoEm")} ${extraido.atualizadoEm}` : ""})
+                </p>
+                <p className="mt-1 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                  {extraido.resumoOficial}
+                </p>
+                {extraido.condicoesExtraidas && extraido.condicoesExtraidas.length > 0 && (
+                  <p className="mt-1.5 max-w-xl text-xs leading-relaxed text-muted-foreground">
+                    {extraido.condicoesExtraidas[0]}
+                  </p>
+                )}
+              </div>
+            )}
+            <p className="mt-4 text-xs leading-relaxed text-muted-foreground">{texto.periodo}</p>
+            <p className="mt-2 text-xs text-muted-foreground">
+              {t("fontePrefix")} {texto.entidade} · {t("consultadaEm")} {verificadoEm}
+            </p>
+            <div className="mt-3 flex flex-wrap items-center gap-4">
+              <Button
+                asChild
+                variant="link"
+                className="h-auto min-h-11 whitespace-normal px-0 text-detail"
+              >
+                <a href={texto.link} target="_blank" rel="noopener noreferrer">
+                  {t("saberMais")} <ArrowUpRight aria-hidden="true" />
+                </a>
+              </Button>
+              {extraido?.sucesso && extraido.fonteUrl !== texto.link && (
+                <Button
+                  asChild
+                  variant="link"
+                  className="h-auto min-h-11 whitespace-normal px-0 text-detail"
+                >
+                  <a href={extraido.fonteUrl} target="_blank" rel="noopener noreferrer">
+                    {t("fichaGov")} <ArrowUpRight aria-hidden="true" />
+                  </a>
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
