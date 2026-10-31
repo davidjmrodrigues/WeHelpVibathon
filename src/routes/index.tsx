@@ -523,20 +523,6 @@ function Index() {
                     : `${todosApoios.length} apoios no catálogo total`}
                 </p>
               </div>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => void sincronizarComFontes(true)}
-                disabled={sincronizando}
-                className="bg-card text-xs"
-              >
-                <RefreshCw
-                  aria-hidden="true"
-                  className={`size-3.5 ${sincronizando ? "animate-spin" : ""}`}
-                />
-                {sincronizando ? "A contactar portais..." : "Sincronizar fontes"}
-              </Button>
             </div>
 
             {estadoSincronizacao && (
