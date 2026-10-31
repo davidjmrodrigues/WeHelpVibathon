@@ -77,6 +77,7 @@ const FILTROS_VAZIOS: Filtros = {
   filhos: "",
 };
 const CAMPO = "w-full rounded-xl border border-input bg-card px-4 py-3 text-base text-foreground";
+const LIMITE_INICIAL = 20;
 
 function AzulejoPadrao({ id, className }: { id: string; className?: string }) {
   return (
@@ -209,6 +210,7 @@ function Index() {
   const limparTudo = () => {
     setFiltros(FILTROS_VAZIOS);
     setTemaSelecionado("Todos");
+    setVerTodos(false);
   };
 
   const textoApoio = (a: ApoioAvaliado) => {
