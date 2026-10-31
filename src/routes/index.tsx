@@ -1,14 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { DISTRITOS, IAS_VALUE, calcularApoios, type Perfil, type Situacao } from "@/lib/apoios";
+import { useMemo, useState } from "react";
+import {
+  DISTRITOS,
+  IAS_VALUE,
+  SITUACOES,
+  avaliarApoios,
+  type Perfil,
+  type Situacao,
+} from "@/lib/apoios";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "WeHelp — Descubra os apoios do Estado a que tem direito" },
-      { name: "description", content: "Triagem rápida e anónima dos apoios do Estado português para o seu perfil." },
-      { property: "og:title", content: "WeHelp — Apoios do Estado" },
-      { property: "og:description", content: "Descubra em 1 minuto, de forma anónima, a que apoios tem direito." },
+      { title: "Guia de Apoios Sociais — Descubra os benefícios do Estado a que tem direito" },
+      { name: "description", content: "Feed interativo de apoios sociais do Estado português, atualizado em tempo real conforme o seu perfil." },
+      { property: "og:title", content: "Guia de Apoios Sociais" },
+      { property: "og:description", content: "Descubra em tempo real, de forma anónima, a que apoios do Estado tem direito." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -16,121 +23,199 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-type Form = { idade: string; distrito: string; situacao: string; agregado: string; rendimento: string };
+interface Filtros {
+  idade: string;
+  distrito: string;
+  situacao: Situacao | "";
+  agregado: string;
+  rendimento: string;
+}
 
-const PASSOS: { key: keyof Form; pergunta: string; tipo: "num" | "select"; opcoes?: string[]; sufixo?: string }[] = [
-  { key: "idade", pergunta: "Que idade tem?", tipo: "num", sufixo: "anos" },
-  { key: "distrito", pergunta: "Em que distrito vive?", tipo: "select", opcoes: DISTRITOS },
-  { key: "situacao", pergunta: "Qual é a sua situação profissional?", tipo: "select", opcoes: ["Estudante", "Trabalhador", "Desempregado"] },
-  { key: "agregado", pergunta: "Quantas pessoas tem o seu agregado familiar?", tipo: "num", sufixo: "pessoas" },
-  { key: "rendimento", pergunta: "Qual o rendimento bruto anual do agregado?", tipo: "num", sufixo: "€" },
-];
+const FILTROS_VAZIOS: Filtros = { idade: "", distrito: "", situacao: "", agregado: "", rendimento: "" };
 
 function Index() {
-  const [passo, setPasso] = useState(0);
-  const [form, setForm] = useState<Form>({ idade: "", distrito: "", situacao: "", agregado: "", rendimento: "" });
-  const [perfil, setPerfil] = useState<Perfil | null>(null);
+  const [filtros, setFiltros] = useState<Filtros>(FILTROS_VAZIOS);
+  const [filtrosAbertos, setFiltrosAbertos] = useState(false);
 
-  const atual = PASSOS[passo]!;
-  const valor = form[atual.key];
-  const valido = atual.tipo === "num" ? valor !== "" && Number(valor) >= (atual.key === "agregado" ? 1 : 0) : valor !== "";
+  const perfil: Perfil = useMemo(
+    () => ({
+      idade: filtros.idade === "" ? null : Number(filtros.idade),
+      distrito: filtros.distrito,
+      situacao: filtros.situacao === "" ? null : filtros.situacao,
+      agregado: filtros.agregado === "" ? null : Number(filtros.agregado),
+      rendimento: filtros.rendimento === "" ? null : Number(filtros.rendimento),
+    }),
+    [filtros],
+  );
 
-  const avancar = () => {
-    if (!valido) return;
-    if (passo < PASSOS.length - 1) return setPasso(passo + 1);
-    setPerfil({
-      idade: Number(form.idade), distrito: form.distrito, situacao: form.situacao as Situacao,
-      agregado: Number(form.agregado), rendimento: Number(form.rendimento),
-    });
-  };
+  const apoios = useMemo(() => avaliarApoios(perfil), [perfil]);
+  const totalElegiveis = apoios.filter((a) => a.resultado.ok).length;
+
+  const set = (patch: Partial<Filtros>) => setFiltros((f) => ({ ...f, ...patch }));
+
+  const painel = (
+    <div className="flex flex-col gap-6">
+      <div>
+        <label htmlFor="idade" className="mb-1.5 block text-sm font-semibold text-foreground">Idade</label>
+        <div className="flex items-center gap-2">
+          <input
+            id="idade" type="number" min={0} inputMode="numeric" placeholder="Ex: 22"
+            value={filtros.idade}
+            onChange={(e) => set({ idade: e.target.value })}
+            className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-foreground outline-none focus:border-primary"
+          />
+          <span className="text-sm text-muted-foreground">anos</span>
+        </div>
+      </div>
+
+      <div>
+        <label htmlFor="distrito" className="mb-1.5 block text-sm font-semibold text-foreground">Distrito</label>
+        <select
+          id="distrito" value={filtros.distrito}
+          onChange={(e) => set({ distrito: e.target.value })}
+          className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-foreground outline-none focus:border-primary"
+        >
+          <option value="">Todos</option>
+          {DISTRITOS.map((d) => <option key={d} value={d}>{d}</option>)}
+        </select>
+      </div>
+
+      <fieldset>
+        <legend className="mb-1.5 text-sm font-semibold text-foreground">Situação profissional</legend>
+        <div className="flex flex-wrap gap-2">
+          {SITUACOES.map((s) => (
+            <button
+              key={s} type="button"
+              onClick={() => set({ situacao: filtros.situacao === s ? "" : s })}
+              className={`rounded-full border px-4 py-1.5 text-sm font-medium transition ${
+                filtros.situacao === s
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-border bg-card text-foreground hover:border-primary/50"
+              }`}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      </fieldset>
+
+      <div>
+        <label htmlFor="agregado" className="mb-1.5 block text-sm font-semibold text-foreground">Agregado familiar</label>
+        <div className="flex items-center gap-2">
+          <input
+            id="agregado" type="number" min={1} inputMode="numeric" placeholder="Ex: 3"
+            value={filtros.agregado}
+            onChange={(e) => set({ agregado: e.target.value })}
+            className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-foreground outline-none focus:border-primary"
+          />
+          <span className="text-sm text-muted-foreground">pessoas</span>
+        </div>
+      </div>
+
+      <div>
+        <label htmlFor="rendimento" className="mb-1.5 block text-sm font-semibold text-foreground">Rendimento bruto anual</label>
+        <div className="flex items-center gap-2">
+          <input
+            id="rendimento" type="number" min={0} inputMode="numeric" placeholder="Ex: 12000"
+            value={filtros.rendimento}
+            onChange={(e) => set({ rendimento: e.target.value })}
+            className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-foreground outline-none focus:border-primary"
+          />
+          <span className="text-sm text-muted-foreground">€</span>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        onClick={() => setFiltros(FILTROS_VAZIOS)}
+        className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition hover:border-primary/50 hover:text-foreground"
+      >
+        Limpar filtros
+      </button>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
-        <button onClick={() => { setPerfil(null); setPasso(0); }} className="font-display text-2xl font-bold text-primary">
-          We<span className="text-accent-foreground">Help</span>
-        </button>
-        <span className="text-xs text-muted-foreground">100% anónimo · nada é guardado</span>
+      <header className="sticky top-0 z-20 border-b border-border bg-background/95 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
+          <h1 className="font-display text-xl font-bold text-primary sm:text-2xl">
+            Guia de <span className="text-accent-foreground">Apoios Sociais</span>
+          </h1>
+          <span className="hidden text-xs text-muted-foreground sm:block">100% anónimo · nada é guardado</span>
+          <button
+            type="button"
+            onClick={() => setFiltrosAbertos((v) => !v)}
+            aria-expanded={filtrosAbertos}
+            className="rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-foreground lg:hidden"
+          >
+            {filtrosAbertos ? "Fechar filtros ✕" : "Filtros ☰"}
+          </button>
+        </div>
+        {filtrosAbertos && (
+          <div className="border-t border-border px-4 py-5 sm:px-6 lg:hidden">{painel}</div>
+        )}
       </header>
 
-      {!perfil ? (
-        <main className="mx-auto flex max-w-2xl flex-col px-6 pt-10 pb-20 sm:pt-20">
-          <div className="mb-10 h-1.5 w-full overflow-hidden rounded-full bg-muted">
-            <div className="h-full bg-primary transition-all duration-500" style={{ width: `${((passo + 1) / PASSOS.length) * 100}%` }} />
+      <div className="mx-auto flex max-w-7xl gap-8 px-4 py-8 sm:px-6">
+        <aside className="hidden w-72 shrink-0 lg:block">
+          <div className="sticky top-24 rounded-2xl border border-border bg-card p-6 shadow-sm">
+            <h2 className="font-display mb-5 text-lg font-bold text-card-foreground">O seu perfil</h2>
+            {painel}
           </div>
-          <form key={passo} onSubmit={(e) => { e.preventDefault(); avancar(); }} className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <p className="mb-3 text-sm font-medium text-primary">Pergunta {passo + 1} de {PASSOS.length}</p>
-            <h1 className="font-display mb-8 text-3xl font-bold text-foreground sm:text-5xl">{atual.pergunta}</h1>
-            {atual.tipo === "num" ? (
-              <div className="flex items-baseline gap-3 border-b-2 border-primary pb-2">
-                <input autoFocus type="number" min={0} inputMode="numeric" value={valor}
-                  onChange={(e) => setForm({ ...form, [atual.key]: e.target.value })}
-                  className="w-full bg-transparent text-3xl text-foreground outline-none" placeholder="0" />
-                <span className="text-xl text-muted-foreground">{atual.sufixo}</span>
-              </div>
-            ) : atual.opcoes!.length <= 4 ? (
-              <div className="grid gap-3">
-                {atual.opcoes!.map((o, i) => (
-                  <button type="button" key={o} onClick={() => setForm({ ...form, [atual.key]: o })}
-                    className={`flex items-center gap-4 rounded-xl border-2 px-5 py-4 text-left text-lg transition ${valor === o ? "border-primary bg-secondary" : "border-border hover:border-primary/50"}`}>
-                    <span className="flex h-7 w-7 items-center justify-center rounded-md border border-primary text-sm text-primary">{String.fromCharCode(65 + i)}</span>
-                    {o}
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <select autoFocus value={valor} onChange={(e) => setForm({ ...form, [atual.key]: e.target.value })}
-                className="w-full rounded-xl border-2 border-border bg-card px-4 py-4 text-xl text-foreground outline-none focus:border-primary">
-                <option value="">Selecione…</option>
-                {atual.opcoes!.map((o) => <option key={o}>{o}</option>)}
-              </select>
-            )}
-            <div className="mt-10 flex items-center gap-4">
-              <button type="submit" disabled={!valido}
-                className="rounded-xl bg-primary px-7 py-3 text-lg font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-40">
-                {passo === PASSOS.length - 1 ? "Ver resultados" : "OK ↵"}
-              </button>
-              {passo > 0 && <button type="button" onClick={() => setPasso(passo - 1)} className="text-muted-foreground hover:text-foreground">← Voltar</button>}
-            </div>
-          </form>
-        </main>
-      ) : (
-        <Resultados perfil={perfil} onReiniciar={() => { setPerfil(null); setPasso(0); }} />
-      )}
-    </div>
-  );
-}
+        </aside>
 
-function Resultados({ perfil, onReiniciar }: { perfil: Perfil; onReiniciar: () => void }) {
-  const apoios = calcularApoios(perfil);
-  return (
-    <main className="mx-auto max-w-5xl px-6 pt-8 pb-20 animate-in fade-in duration-500">
-      <p className="text-sm font-medium text-primary">Os seus resultados</p>
-      <h1 className="font-display mt-2 text-3xl font-bold text-foreground sm:text-5xl">
-        {apoios.length > 0 ? `Encontrámos ${apoios.length} apoio${apoios.length > 1 ? "s" : ""} para si` : "Não encontrámos apoios elegíveis"}
-      </h1>
-      <p className="mt-3 text-muted-foreground">
-        {perfil.idade} anos · {perfil.distrito} · {perfil.situacao} · {perfil.agregado} pessoa(s) · {perfil.rendimento.toLocaleString("pt-PT")} €/ano
-      </p>
-      <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {apoios.map((a) => (
-          <article key={a.id} className="flex flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
-            <span className="w-fit rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">Elegível</span>
-            <h2 className="font-display mt-4 text-xl font-bold text-card-foreground">{a.titulo}</h2>
-            <p className="mt-2 flex-1 text-sm text-muted-foreground">{a.descricao}</p>
-            <p className="mt-5 text-xs uppercase tracking-wide text-muted-foreground">Valor estimado</p>
-            <p className="font-display text-2xl font-bold text-primary">{a.valor}</p>
-            <a href={a.link} target="_blank" rel="noopener noreferrer"
-              className="mt-5 rounded-xl bg-primary px-4 py-2.5 text-center font-semibold text-primary-foreground hover:opacity-90">
-              Saber mais ↗
-            </a>
-          </article>
-        ))}
+        <main className="min-w-0 flex-1">
+          <div className="mb-6">
+            <p className="text-sm font-medium text-primary">O seu feed de apoios</p>
+            <h2 className="font-display mt-1 text-2xl font-bold text-foreground sm:text-3xl">
+              {totalElegiveis > 0
+                ? `${totalElegiveis} ${totalElegiveis > 1 ? "apoios elegíveis" : "apoio elegível"} para si`
+                : "Nenhum apoio elegível de momento"}
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              O feed atualiza automaticamente a cada alteração nos filtros.
+            </p>
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-2">
+            {apoios.map((a) => (
+              <article
+                key={a.id}
+                className={`flex flex-col rounded-2xl border p-6 shadow-sm transition-all duration-300 ${
+                  a.resultado.ok
+                    ? "border-primary/40 bg-card ring-1 ring-primary/20 hover:-translate-y-1 hover:shadow-md"
+                    : "border-border bg-card opacity-55"
+                }`}
+              >
+                {a.resultado.ok ? (
+                  <span className="w-fit rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
+                    ✓ Elegível
+                  </span>
+                ) : (
+                  <span className="w-fit rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
+                    Não elegível · {a.resultado.motivo}
+                  </span>
+                )}
+                <h3 className="font-display mt-4 text-xl font-bold text-card-foreground">{a.titulo}</h3>
+                <p className="mt-2 flex-1 text-sm text-muted-foreground">{a.descricao}</p>
+                <p className="mt-5 text-xs uppercase tracking-wide text-muted-foreground">Valor estimado</p>
+                <p className="font-display text-2xl font-bold text-primary">{a.valor}</p>
+                <a
+                  href={a.link} target="_blank" rel="noopener noreferrer"
+                  className="mt-5 rounded-xl bg-primary px-4 py-2.5 text-center font-semibold text-primary-foreground hover:opacity-90"
+                >
+                  Saber mais ↗
+                </a>
+              </article>
+            ))}
+          </div>
+
+          <p className="mt-10 border-t border-border pt-6 text-xs text-muted-foreground">
+            Estimativas indicativas. Referência IAS 2026: {IAS_VALUE.toLocaleString("pt-PT")} €.
+          </p>
+        </main>
       </div>
-      <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-6">
-        <p className="text-xs text-muted-foreground">Estimativas indicativas. Referência IAS 2026: {IAS_VALUE.toLocaleString("pt-PT")} €.</p>
-        <button onClick={onReiniciar} className="rounded-xl border-2 border-primary px-5 py-2 font-semibold text-primary hover:bg-secondary">Recomeçar</button>
-      </div>
-    </main>
+    </div>
   );
 }
