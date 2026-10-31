@@ -9,8 +9,27 @@
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
 
-- Keep eligibility rules in the browser-only support engine; presentation changes must not change matching rules.
-- Define visual roles centrally in src/styles.css and use the shared Button for controls so the supplied identity remains consistent across views.
+## Regras de Arquitetura e Engenharia
+- Keep eligibility rules in the browser-only support engine (`src/lib/apoios.ts`); presentation changes must not change matching rules.
+- Define visual roles centrally in `src/styles.css` and use the shared `Button` (`@/components/ui/button`) for controls so the supplied identity remains consistent across views.
 - Store dated official sources and unverified mandatory conditions with every benefit; matching is conservative discovery, never a legal entitlement decision, because the five profile fields cannot establish full eligibility.
-- Keep IAS and cent-rounded conversions in src/lib/ias.ts as the single monetary reference for the catalogue and FAQ.
+- Keep IAS and cent-rounded conversions in `src/lib/ias.ts` as the single monetary reference for the catalogue and FAQ.
 - Theme changes use full-page View Transition snapshots with a CSS circular incoming reveal; synchronize React inside the capture callback and suppress child transitions. Browsers without View Transitions use a separate incoming-theme layer; the reveal runs regardless of reduced-motion (user-triggered), and animation does not depend on Web Animations pseudo-element support.
+
+## Mapa de Documentação e Fontes de Contexto para Agentes (Directório `context/`)
+Antes de implementar ou modificar qualquer funcionalidade, regra de negócio, estilo ou integração, consulta obrigatoriamente a pasta `context/`:
+
+- **Visão do Produto e Regras de Negócio:**
+  - [`context/context.md`](context/context.md): Visão geral do WeHelp, personas-alvo, glossário técnico e fórmulas indexadas ao IAS, filtros eliminatórios (*hard blocks*) e garantias de privacidade absoluta.
+- **Identidade Visual e Design System:**
+  - [`context/visual_identity/IDENTIDADE-VISUAL.md`](context/visual_identity/IDENTIDADE-VISUAL.md): Guia oficial de cores (papel e verde em HSL/OKLCH), tipografia (Roboto), formato dos elementos (cantos de 14px, sem pílulas, resultados em lista limpa), padrão decorativo de azulejo e tom de voz (tratamento por "si" em português europeu).
+- **Fontes Oficiais e Critérios Editoriais:**
+  - [`context/apoios-fontes.md`](context/apoios-fontes.md): Legislação oficial (Portaria do IAS, guias da Segurança Social, regulamentos da DGES/IES e ERSE/DGEG), datas de consulta e premissas de neutralidade informativa.
+- **Relatórios Técnicos de Funcionalidades (Reports):**
+  - [`context/reports/`](context/reports/): Documentação detalhada sobre arquitetura de subsistemas completos.
+  - [`context/reports/scraper-e-sincronizacao-oficial.md`](context/reports/scraper-e-sincronizacao-oficial.md): Relatório exaustivo do scraper e sincronização em tempo real (legalidade/RGPD, arquitetura anti-CORS no servidor, timeouts, cache de 15min, fallback em 4 camadas e cobertura de testes em `src/test/scraper.test.ts`).
+- **Prompts de Referência para Lovable e Modelos IA:**
+  - [`context/prompts/first_prompt.md`](context/prompts/first_prompt.md): Prompt inicial gerador da fundação do projeto.
+  - [`context/prompts/scraper_prompt.md`](context/prompts/scraper_prompt.md): Prompt estruturado com diagnóstico técnico de portais públicos e especificações do scraper.
+- **Roadmap da Hackathon:**
+  - [`context/roadmap_da_vibathon.md`](context/roadmap_da_vibathon.md): Cronograma das 4 fases da hackathon de 24h (Fundação, Motor de Decisão, Uau Factor, Polimento & Pitch).

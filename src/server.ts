@@ -2,6 +2,7 @@ import "./lib/error-capture";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
+import { pesquisarServicosGovPt, sincronizarApoiosOficiais } from "./lib/scraper";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -47,6 +48,34 @@ function isH3SwallowedErrorBody(body: string): boolean {
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const url = new URL(request.url);
+
+      if (url.pathname === "/api/sincronizar-apoios") {
+        const forcar = url.searchParams.get("forcar") === "1";
+        const dados = await sincronizarApoiosOficiais(forcar);
+        return new Response(JSON.stringify(dados), {
+          status: 200,
+          headers: { "content-type": "application/json; charset=utf-8" },
+        });
+      }
+
+      if (url.pathname === "/api/pesquisar-gov") {
+        let termo = url.searchParams.get("q") ?? "";
+        if (!termo && request.method === "POST") {
+          try {
+            const body = (await request.json()) as { q?: string };
+            termo = typeof body.q === "string" ? body.q : "";
+          } catch {
+            termo = "";
+          }
+        }
+        const resultados = await pesquisarServicosGovPt(termo);
+        return new Response(JSON.stringify({ resultados }), {
+          status: 200,
+          headers: { "content-type": "application/json; charset=utf-8" },
+        });
+      }
+
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);
