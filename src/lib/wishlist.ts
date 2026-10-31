@@ -409,3 +409,4 @@ export function guardarWishlistLocal(wishlist: Wishlist): void {
     // Falha silenciosa em ambientes de navegação anónima estrita / cotas
   }
 }
+

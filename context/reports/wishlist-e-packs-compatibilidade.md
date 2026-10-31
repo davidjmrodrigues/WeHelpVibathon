@@ -92,3 +92,4 @@ A suíte em [`src/test/wishlist.test.ts`](file:///home/davidrodrigues/sources/We
 - Validação automática de integridade dos 5 Packs Recomendados;
 - Aplicação de pack à wishlist em lote com registo de proveniência (`origem: "pack"`, `packOrigemId`);
 - Comportamento resiliente em ambientes sem `localStorage` ou com dados corrompidos.
+
