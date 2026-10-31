@@ -125,8 +125,8 @@
   input:focus-visible, select:focus-visible, a:focus-visible { outline: 3px solid var(--ring); outline-offset: 3px; }
 }
 .brand-mark { display: block; width: 24px; height: 24px; background: var(--detail); mask: url('./assets/wehelp-logo.svg') center / contain no-repeat; }
-.azulejo-band { color: var(--detail); opacity: .28; height: 44px; overflow: hidden; }
-.azulejo-band svg { display: block; width: 100%; height: 44px; }
+.azulejo-band { color: var(--detail); opacity: .28; height: 88px; overflow: hidden; }
+.azulejo-band svg { display: block; width: 100%; height: 88px; }
 .support-row { animation: row-enter 450ms cubic-bezier(.2,.8,.2,1) both; }
 .support-row:nth-child(1) { animation-delay: 150ms; }
 .support-row:nth-child(2) { animation-delay: 240ms; }
