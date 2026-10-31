@@ -24,7 +24,7 @@ export function SiteFooter() {
   const [mensagem, setMensagem] = useState("");
   return (
     <footer className="border-t border-border bg-secondary text-secondary-foreground">
-      <div className="mx-auto max-w-6xl px-6 py-8 lg:py-10">
+      <div className="mx-auto max-w-6xl px-6 pt-8 pb-6 lg:pt-10 lg:pb-6">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_auto] lg:gap-14">
           <div>
             <a href="/" className="inline-flex" aria-label="WeHelp — início">
