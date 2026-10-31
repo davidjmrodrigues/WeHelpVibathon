@@ -480,7 +480,7 @@ function Index() {
           </div>
         </header>
         <Azulejo />
-        <div className="mx-auto max-w-6xl px-6 py-10 lg:py-12">
+        <div className="mx-auto max-w-6xl px-6 pb-10 pt-6 lg:pb-12 lg:pt-8">
           <main className="min-w-0">
             <div className="mb-4 flex items-center gap-2">
               <p className="text-sm font-medium text-detail">{t("guiaApoios")}</p>
