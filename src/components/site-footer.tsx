@@ -1,5 +1,7 @@
 import { Instagram, Linkedin, Send } from "lucide-react";
 import { useState } from "react";
+import { useIdioma } from "@/lib/idioma";
+import { tx } from "@/lib/textos";
 
 const SOCIAIS = [
   { nome: "LinkedIn", href: "https://www.linkedin.com/company/wehelp", Icone: Linkedin },
@@ -7,15 +9,17 @@ const SOCIAIS = [
 ];
 
 const EXPLORAR = [
-  { rotulo: "Apoios a explorar", href: "#apoios" },
-  { rotulo: "Perguntas e respostas", href: "/faq" },
-  { rotulo: "Fontes oficiais", href: "/fontes" },
-  { rotulo: "Política de Privacidade", href: "/privacidade" },
+  { href: "#apoios", chave: "explorarApoios" },
+  { href: "/faq", chave: "explorarFaq" },
+  { href: "/fontes", chave: "explorarFontes" },
+  { href: "/privacidade", chave: "explorarPrivacidade" },
 ];
 
 const LIGACAO = "text-sm text-secondary-foreground/80 underline-offset-4 transition-opacity hover:opacity-70 hover:underline";
 
 export function SiteFooter() {
+  const { lingua } = useIdioma();
+  const t = (chave: string) => tx(lingua, chave);
   const [mensagem, setMensagem] = useState("");
   return (
     <footer className="border-t border-border bg-secondary text-secondary-foreground">
@@ -23,46 +27,46 @@ export function SiteFooter() {
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_auto] lg:gap-14">
           <div>
             <p className="max-w-sm text-sm leading-relaxed text-secondary-foreground/80">
-              Um guia rápido e anónimo para descobrir os apoios do Estado português.
+              {t("footerTagline")}
             </p>
             <a href="/" className="mt-7 inline-flex items-center gap-2.5" aria-label="WeHelp — início">
               <span className="brand-mark" aria-hidden="true" />
               <span className="text-xl font-semibold">WeHelp</span>
             </a>
             <address className="mt-7 not-italic text-sm leading-relaxed text-secondary-foreground/80">
-              <p className="font-semibold text-secondary-foreground">Sede</p>
+              <p className="font-semibold text-secondary-foreground">{t("sede")}</p>
               <p className="mt-1.5">UalgTecCampus</p>
               <p>Campus da Penha · Ualg</p>
               <p>8005-139 Faro, Portugal</p>
             </address>
           </div>
           <div className="flex flex-col gap-9">
-            <nav aria-label="Explorar o site">
-              <h2 className="text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">Explorar</h2>
+            <nav aria-label={t("explorarTitulo")}>
+              <h2 className="text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">{t("explorarTitulo")}</h2>
               <ul className="mt-4 space-y-3">
-                {EXPLORAR.map(l => <li key={l.rotulo}><a href={l.href} className={LIGACAO}>{l.rotulo}</a></li>)}
+                {EXPLORAR.map(l => <li key={l.chave}><a href={l.href} className={LIGACAO}>{t(l.chave)}</a></li>)}
               </ul>
             </nav>
           </div>
           <div>
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">Fale connosco</h2>
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">{t("faleConnosco")}</h2>
             <form
               className="mt-4"
               onSubmit={(e) => {
                 e.preventDefault();
-                const destino = `mailto:contacto@wehelp.pt?subject=${encodeURIComponent("Contacto WeHelp")}&body=${encodeURIComponent(mensagem)}`;
+                const destino = `mailto:contacto@wehelp.pt?subject=${encodeURIComponent(t("emailAssunto"))}&body=${encodeURIComponent(mensagem)}`;
                 window.location.href = destino;
                 setMensagem("");
               }}
             >
-              <label htmlFor="footer-mensagem" className="sr-only">A sua mensagem</label>
+              <label htmlFor="footer-mensagem" className="sr-only">{t("mensagemAria")}</label>
               <textarea
                 id="footer-mensagem"
                 value={mensagem}
                 onChange={(e) => setMensagem(e.target.value)}
                 required
                 rows={3}
-                placeholder="Escreva a sua mensagem…"
+                placeholder={t("mensagemPlaceholder")}
                 className="w-full resize-none rounded-lg border border-secondary-foreground/25 bg-transparent px-3 py-2.5 text-sm text-secondary-foreground placeholder:text-secondary-foreground/50 focus:outline-none focus:ring-2 focus:ring-secondary-foreground/40"
               />
               <button
@@ -70,18 +74,18 @@ export function SiteFooter() {
                 className="mt-2.5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-secondary-foreground/25 text-sm font-medium text-secondary-foreground transition-opacity hover:opacity-70"
               >
                 <Send aria-hidden="true" className="size-4" />
-                Enviar por email
+                {t("enviarEmail")}
               </button>
               <p className="mt-2 text-center text-xs leading-relaxed text-secondary-foreground/60">
-                Abre o seu programa de email com a mensagem pronta a enviar
+                {t("emailLinha1")}
                 <br />
-                <span className="font-semibold text-secondary-foreground">ou</span>
+                <span className="font-semibold text-secondary-foreground">{t("emailOu")}</span>
                 <br />
-                entre em contacto connosco através de{' '}
+                {t("emailLinha3")}{" "}
                 <strong className="font-semibold text-secondary-foreground">contacto@wehelp.pt</strong>.
               </p>
             </form>
-            <h2 className="mt-8 text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">Siga-nos</h2>
+            <h2 className="mt-8 text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">{t("sigaNos")}</h2>
             <ul className="mt-4 flex gap-2.5">
               {SOCIAIS.map(({ nome, href, Icone }) => (
                 <li key={nome}>
@@ -103,7 +107,7 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-secondary-foreground/15">
         <div className="mx-auto max-w-6xl px-6 py-6 text-center text-xs leading-relaxed text-secondary-foreground/60">
-          <p>© 2026 WeHelp. Todos os direitos reservados.</p>
+          <p>{t("direitos")}</p>
         </div>
       </div>
     </footer>
