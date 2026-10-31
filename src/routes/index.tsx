@@ -189,6 +189,8 @@ function Index() {
 
   const elegiveis = todosApoios.filter((a) => a.resultado.ok);
   const outros = todosApoios.filter((a) => !a.resultado.ok);
+  const visiveis =
+    temFiltrosAtivos || verTodos ? elegiveis : elegiveis.slice(0, LIMITE_INICIAL);
   const set = (patch: Partial<Filtros>) => setFiltros((f) => ({ ...f, ...patch }));
 
   const avancadosAtivos =
