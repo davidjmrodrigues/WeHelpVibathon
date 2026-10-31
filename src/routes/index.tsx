@@ -179,33 +179,32 @@ function CartaoApoio({
                 : `${t("naoCorresponde")} · ${a.resultado.motivo ? traduzMotivo(lingua, a.resultado.motivo) : ""}`}
             </p>
           </div>
-          <div className="hidden max-w-48 shrink-0 text-right sm:block">
-            <p
-              className={`text-base font-semibold ${disponivel ? "text-primary" : "text-muted-foreground"}`}
-            >
-              {texto.valor}
-            </p>
-            <span className="text-xs text-muted-foreground">{t("valorEstimado")}</span>
-          </div>
         </button>
-        <button
-          type="button"
-          aria-pressed={naStack}
-          aria-label={naStack ? t("stackRemoverAria") : t("stackAdicionarAria")}
-          title={naStack ? t("stackRemoverAria") : t("stackAdicionarAria")}
-          onClick={onAlternarStack}
-          className={`mt-6 flex size-9 shrink-0 items-center justify-center rounded-full border backdrop-blur-sm transition-all duration-200 active:scale-95 ${
-            naStack
-              ? "border-primary/70 bg-secondary/70 text-foreground"
-              : "border-input/60 bg-card/40 text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          {naStack ? (
-            <Check aria-hidden="true" className="size-4" />
-          ) : (
-            <Plus aria-hidden="true" className="size-4" />
-          )}
-        </button>
+        <div className="flex flex-col items-end gap-1 pt-6">
+          <p
+            className={`hidden text-base font-semibold sm:block ${disponivel ? "text-primary" : "text-muted-foreground"}`}
+          >
+            {texto.valor}
+          </p>
+          <button
+            type="button"
+            aria-pressed={naStack}
+            aria-label={naStack ? t("stackRemoverAria") : t("stackAdicionarAria")}
+            title={naStack ? t("stackRemoverAria") : t("stackAdicionarAria")}
+            onClick={onAlternarStack}
+            className={`flex size-9 shrink-0 items-center justify-center rounded-full border backdrop-blur-sm transition-all duration-200 active:scale-95 ${
+              naStack
+                ? "border-primary/70 bg-secondary/70 text-foreground"
+                : "border-input/60 bg-card/40 text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {naStack ? (
+              <Check aria-hidden="true" className="size-4" />
+            ) : (
+              <Plus aria-hidden="true" className="size-4" />
+            )}
+          </button>
+        </div>
       </div>
       <div
         className={`apoio-conteudo grid transition-all duration-300 ease-in-out ${aberto ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
