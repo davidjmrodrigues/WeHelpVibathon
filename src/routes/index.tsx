@@ -14,6 +14,7 @@ import {
   Info,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LogoWeHelp } from "@/components/logo-wehelp";
 import { BotaoIdioma } from "@/components/botao-idioma";
 import { SiteFooter } from "@/components/site-footer";
 import {
@@ -404,8 +405,7 @@ function Index() {
         <header className="sticky top-0 z-20 border-b border-border bg-background">
           <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-6 py-4">
             <a href="/" aria-label="WeHelp — início" className="flex items-center gap-2.5">
-              <span className="brand-mark" aria-hidden="true" />
-              <span className="text-xl font-semibold">WeHelp</span>
+              <LogoWeHelp className="h-10 w-auto" />
             </a>
             <div className="flex items-center gap-2">
               <BotaoIdioma />
