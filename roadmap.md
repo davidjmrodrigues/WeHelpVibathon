@@ -10,7 +10,7 @@
 - [x] Testar valores, limites e utilização dos filtros e FAQ: dezasseis testes e verificação em computador e telemóvel.
 
 # Modo escuro com animação
-- [ ] Círculo que expande do botão e troca claro/escuro (falta: cor do círculo transparente — ler --background).
+- [x] Círculo que expande do botão e troca claro/escuro (verificado no ecrã, ida e volta).
 
 # Links oficiais errados (reportados pelo utilizador)
 - [ ] Corrigir links de: Bolsa DGES, RSI, Tarifa social eletricidade, Tarifa social gás, Abono de família, Abono pré-natal, Garantia para a Infância, PSI, Complemento Solidário para Idosos, Pensão Social de Velhice.
