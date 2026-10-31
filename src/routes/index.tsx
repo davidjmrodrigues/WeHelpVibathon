@@ -434,7 +434,7 @@ function Index() {
               key={h}
               type="button"
               aria-pressed={filtros.habitacao === h}
-              onClick={() => set({ habitacao: filtros.habitacao === h ? "" : h })}
+              onClick={() => setComAnimacao({ habitacao: filtros.habitacao === h ? "" : h })}
               className={classePilula(filtros.habitacao === h)}
             >
               {t(h === "arrendada" ? "habitacaoArrendada" : "habitacaoPropria")}
@@ -450,7 +450,7 @@ function Index() {
               key={f}
               type="button"
               aria-pressed={filtros.filhos === f}
-              onClick={() => set({ filhos: filtros.filhos === f ? "" : f })}
+              onClick={() => setComAnimacao({ filhos: filtros.filhos === f ? "" : f })}
               className={classePilula(filtros.filhos === f)}
             >
               {t(f === "sim" ? "filhosSim" : f === "nao" ? "filhosNao" : "filhosMonoparental")}
@@ -527,7 +527,7 @@ function Index() {
                 type="button"
                 aria-pressed={temaSelecionado === temaFiltro}
                 onClick={() =>
-                  setTemaSelecionado(temaSelecionado === temaFiltro ? "Todos" : temaFiltro)
+                  setTemaComAnimacao(temaSelecionado === temaFiltro ? "Todos" : temaFiltro)
                 }
                 className={classePilula(temaSelecionado === temaFiltro)}
               >
@@ -632,7 +632,7 @@ function Index() {
                   key={s}
                   type="button"
                   aria-pressed={filtros.situacao === s}
-                  onClick={() => set({ situacao: filtros.situacao === s ? "" : s })}
+                  onClick={() => setComAnimacao({ situacao: filtros.situacao === s ? "" : s })}
                   className={classePilula(filtros.situacao === s)}
                 >
                   {t(`situacao${s}`)}
