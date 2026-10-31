@@ -10,7 +10,6 @@ import {
   SlidersHorizontal,
   X,
   RotateCcw,
-  Check,
   Info,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -244,9 +243,6 @@ function Index() {
               className={classePilula(filtros.habitacao === h)}
             >
               {t(h === "arrendada" ? "habitacaoArrendada" : "habitacaoPropria")}
-              {filtros.habitacao === h && (
-                <Check aria-hidden="true" className="size-3.5 text-primary" />
-              )}
             </button>
           ))}
         </div>
@@ -263,9 +259,6 @@ function Index() {
               className={classePilula(filtros.filhos === f)}
             >
               {t(f === "sim" ? "filhosSim" : f === "nao" ? "filhosNao" : "filhosMonoparental")}
-              {filtros.filhos === f && (
-                <Check aria-hidden="true" className="size-3.5 text-primary" />
-              )}
             </button>
           ))}
         </div>
@@ -342,9 +335,6 @@ function Index() {
                 className={classePilula(temaSelecionado === temaFiltro)}
               >
                 {rotuloTema(lingua, temaFiltro)}
-                {temaSelecionado === temaFiltro && (
-                  <Check aria-hidden="true" className="size-3.5 text-primary" />
-                )}
               </button>
             ))}
           </div>
@@ -532,9 +522,6 @@ function Index() {
                   className={classePilula(filtros.situacao === s)}
                 >
                   {t(`situacao${s}`)}
-                  {filtros.situacao === s && (
-                    <Check aria-hidden="true" className="size-3.5 text-primary" />
-                  )}
                 </button>
               ))}
               {temFiltrosAtivos && (
