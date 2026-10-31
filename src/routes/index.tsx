@@ -279,17 +279,11 @@ function CartaoPack({
   pack,
   lingua,
   t,
-  packCompleto,
-  packParcial,
-  onAlternarPack,
   obterApoio,
 }: {
   pack: PackApoios;
   lingua: Lingua;
   t: (chave: string) => string;
-  packCompleto: boolean;
-  packParcial: boolean;
-  onAlternarPack: () => void;
   obterApoio: (id: string) => { titulo: string; entidade: string; valor: string } | undefined;
 }) {
   const [aberto, setAberto] = useState(false);
@@ -324,30 +318,10 @@ function CartaoPack({
             </p>
           </div>
         </button>
-        <div className="flex flex-col items-end gap-1 pt-6">
-          <p className="hidden text-base font-semibold text-primary sm:block">
+        <div className="pt-6 text-right">
+          <p className="text-base font-semibold text-primary">
             {pack.apoioIds.length} {t("apoiosContagemCurta")}
           </p>
-          <button
-            type="button"
-            aria-pressed={packCompleto}
-            aria-label={packCompleto ? t("packRemoverTodos") : t("packAdicionarTodos")}
-            title={packCompleto ? t("packRemoverTodos") : t("packAdicionarTodos")}
-            onClick={onAlternarPack}
-            className={`flex size-9 shrink-0 items-center justify-center rounded-full border backdrop-blur-sm transition-all duration-200 active:scale-95 ${
-              packCompleto
-                ? "border-primary/70 bg-secondary/70 text-foreground"
-                : packParcial
-                  ? "border-primary/50 bg-secondary/40 text-detail"
-                  : "border-input/60 bg-card/40 text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {packCompleto ? (
-              <Check aria-hidden="true" className="size-4" />
-            ) : (
-              <Plus aria-hidden="true" className="size-4" />
-            )}
-          </button>
         </div>
       </div>
       <div
@@ -381,26 +355,6 @@ function CartaoPack({
                   </div>
                 );
               })}
-            </div>
-            <div className="mt-4 flex flex-wrap items-center gap-3">
-              <Button
-                type="button"
-                variant={packCompleto ? "outline" : "default"}
-                onClick={onAlternarPack}
-                className="h-10 text-xs font-medium"
-              >
-                {packCompleto ? (
-                  <>
-                    <Check aria-hidden="true" className="mr-1.5 size-3.5" />
-                    {t("packRemoverTodos")}
-                  </>
-                ) : (
-                  <>
-                    <Plus aria-hidden="true" className="mr-1.5 size-3.5" />
-                    {t("packAdicionarTodos")} ({pack.apoioIds.length})
-                  </>
-                )}
-              </Button>
             </div>
           </div>
         </div>
@@ -661,29 +615,6 @@ function Index() {
       entidade: info.entidade,
       valor: info.valor,
     };
-  };
-
-  const alternarPack = (pack: PackApoios) => {
-    const todosNoStack = pack.apoioIds.every((id) => stackIds.has(id));
-    if (todosNoStack) {
-      setStack((atual) => {
-        let nova = atual;
-        for (const id of pack.apoioIds) {
-          nova = removerApoio(nova, id);
-        }
-        guardarWishlistLocal(nova);
-        return nova;
-      });
-    } else {
-      setStack((atual) => {
-        let nova = atual;
-        for (const id of pack.apoioIds) {
-          nova = adicionarApoio(nova, id, "pack", pack.id);
-        }
-        guardarWishlistLocal(nova);
-        return nova;
-      });
-    }
   };
 
   const rutiloDistrito = (nome: string): string => {
@@ -1147,22 +1078,15 @@ function Index() {
               </div>
 
               <div className="border-t border-border">
-                {PACKS_RECOMENDADOS.map((pack) => {
-                  const packCompleto = pack.apoioIds.every((id) => stackIds.has(id));
-                  const packParcial = !packCompleto && pack.apoioIds.some((id) => stackIds.has(id));
-                  return (
-                    <CartaoPack
-                      key={pack.id}
-                      pack={pack}
-                      lingua={lingua}
-                      t={t}
-                      packCompleto={packCompleto}
-                      packParcial={packParcial}
-                      onAlternarPack={() => alternarPack(pack)}
-                      obterApoio={obterInfoApoio}
-                    />
-                  );
-                })}
+                {PACKS_RECOMENDADOS.map((pack) => (
+                  <CartaoPack
+                    key={pack.id}
+                    pack={pack}
+                    lingua={lingua}
+                    t={t}
+                    obterApoio={obterInfoApoio}
+                  />
+                ))}
               </div>
             </section>
 
