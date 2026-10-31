@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { flushSync } from "react-dom";
 import {
@@ -657,13 +657,29 @@ function Index() {
                           </a>
                         </Button>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="mt-4 text-sm text-muted-foreground">{t("semResultados")}</p>
                 ))}
-            </section>
-          </main>
+
+              </div>
+            ) : (
+              <p className="mt-4 text-sm text-muted-foreground">{t("semResultados")}</p>
+            ))}
+          </section>
+
+          <section
+            aria-labelledby="duvidas-heading"
+            className="mt-10 rounded-xl border border-border bg-card p-6"
+          >
+            <h2 id="duvidas-heading" className="text-lg font-semibold">
+              {t("duvidasTitulo")}
+            </h2>
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
+              {t("duvidasDesc")}
+            </p>
+            <Button asChild className="mt-4">
+              <Link to="/faq">{t("duvidasBotao")}</Link>
+            </Button>
+          </section>
+        </main>
         </div>
         <SiteFooter />
       </div>

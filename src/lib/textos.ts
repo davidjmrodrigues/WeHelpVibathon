@@ -158,6 +158,15 @@ export const TEXTOS: Record<string, { pt: string; en: string }> = {
     pt: "Tudo o que precisa de saber sobre o IAS e sobre como ler os resultados do WeHelp.",
     en: "Everything you need to know about the IAS and how to read your WeHelp results.",
   },
+  duvidasTitulo: { pt: "Ainda tem dúvidas?", en: "Still have questions?" },
+  duvidasDesc: {
+    pt: "Consulte as perguntas e respostas para esclarecer como funciona o guia, o que é o IAS e como interpretar os apoios apresentados.",
+    en: "Check the questions and answers to understand how the guide works, what the IAS is and how to read the benefits presented.",
+  },
+  duvidasBotao: {
+    pt: "Ir para perguntas e respostas",
+    en: "Go to questions and answers",
+  },
   iasFaqTitulo: { pt: "IAS e dúvidas frequentes", en: "IAS and frequently asked questions" },
   iasQ1: { pt: "O que é o IAS e quanto vale em 2026?", en: "What is the IAS and what is it worth in 2026?" },
   iasSignifica: { pt: "significa", en: "means" },
