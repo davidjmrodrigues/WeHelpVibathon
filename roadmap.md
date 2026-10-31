@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Auditar todas as combinações, bloquear incompatibilidades pessoais comprovadas e não confirmar pares sem regras verificadas
+- [x] Auditar todas as combinações, bloquear incompatibilidades pessoais comprovadas e não confirmar pares sem regras verificadas
 - [ ] Testar regressões e verificar os exemplos de acumulação na interface PT/EN
 
 - [x] Botão "+" de acumulação (stack) nos cartões de apoio, com painel de verificação de compatibilidade

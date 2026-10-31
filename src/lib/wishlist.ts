@@ -342,8 +342,8 @@ export function validarCompatibilidadeWishlist(apoioIds: string[]): ResultadoVal
         motivo: regra.motivo,
         ...(regra.baseLegal !== undefined ? { baseLegal: regra.baseLegal } : {}),
         sugestao: regra.sugestao,
-        fontes: regra.fontes,
-        verificadoEm: regra.verificadoEm,
+        ...(regra.fontes !== undefined ? { fontes: regra.fontes } : {}),
+        ...(regra.verificadoEm !== undefined ? { verificadoEm: regra.verificadoEm } : {}),
       });
     }
   }
