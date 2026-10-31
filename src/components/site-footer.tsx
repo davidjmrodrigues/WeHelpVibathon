@@ -9,14 +9,8 @@ const SOCIAIS = [
 const EXPLORAR = [
   { rotulo: "Apoios a explorar", href: "#apoios" },
   { rotulo: "Perguntas e respostas", href: "/faq" },
+  { rotulo: "Fontes oficiais", href: "/fontes" },
   { rotulo: "Política de Privacidade", href: "/privacidade" },
-];
-
-const FONTES = [
-  { rotulo: "Segurança Social", href: "https://seg-social.pt" },
-  { rotulo: "gov.pt", href: "https://www.gov.pt" },
-  { rotulo: "Portal do Cidadão", href: "https://www.portaldocidadao.pt" },
-  { rotulo: "DGES — Bolsas de estudo", href: "https://www.dges.gov.pt/pt/pagina/bolsas-de-estudo" },
 ];
 
 const LIGACAO = "text-sm text-secondary-foreground/80 underline-offset-4 transition-opacity hover:opacity-70 hover:underline";
