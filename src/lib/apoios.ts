@@ -677,7 +677,10 @@ export const avaliarApoios = (p: Perfil): ApoioAvaliado[] =>
 function avaliarComFiltrosExtras(a: Apoio, p: Perfil): ResultadoElegibilidade {
   const base = a.elegivel(p);
   if (!base.ok) return base;
-  if (p.habitacao === "propria" && a.condicoes.some((c) => /arrend/i.test(c))) {
+  if (
+    p.habitacao === "propria" &&
+    /arrend/i.test(`${a.descricao} ${a.condicoes.join(" ")}`)
+  ) {
     return fora("Exige habitação arrendada com contrato");
   }
   if (
