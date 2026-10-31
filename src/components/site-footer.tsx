@@ -43,16 +43,6 @@ export function SiteFooter() {
                 {EXPLORAR.map(l => <li key={l.rotulo}><a href={l.href} className={LIGACAO}>{l.rotulo}</a></li>)}
               </ul>
             </nav>
-            <nav aria-label="Fontes oficiais">
-              <h2 className="text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">Fontes oficiais</h2>
-              <ul className="mt-4 space-y-3">
-                {FONTES.map(l => (
-                  <li key={l.rotulo}>
-                    <a href={l.href} target="_blank" rel="noopener noreferrer" className={LIGACAO}>{l.rotulo}</a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
           </div>
           <div>
             <h2 className="text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">Fale connosco</h2>

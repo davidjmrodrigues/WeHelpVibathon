@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as FontesRouteImport } from './routes/fontes'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,6 +24,11 @@ const FaqRoute = FaqRouteImport.update({
   path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FontesRoute = FontesRouteImport.update({
+  id: '/fontes',
+  path: '/fontes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacidadeRoute = PrivacidadeRouteImport.update({
   id: '/privacidade',
   path: '/privacidade',
@@ -32,30 +38,34 @@ const PrivacidadeRoute = PrivacidadeRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/faq': typeof FaqRoute
+  '/fontes': typeof FontesRoute
   '/privacidade': typeof PrivacidadeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/faq': typeof FaqRoute
+  '/fontes': typeof FontesRoute
   '/privacidade': typeof PrivacidadeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/faq': typeof FaqRoute
+  '/fontes': typeof FontesRoute
   '/privacidade': typeof PrivacidadeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/faq' | '/privacidade'
+  fullPaths: '/' | '/faq' | '/fontes' | '/privacidade'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/faq' | '/privacidade'
-  id: '__root__' | '/' | '/faq' | '/privacidade'
+  to: '/' | '/faq' | '/fontes' | '/privacidade'
+  id: '__root__' | '/' | '/faq' | '/fontes' | '/privacidade'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   FaqRoute: typeof FaqRoute
+  FontesRoute: typeof FontesRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
 }
 
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/fontes': {
+      id: '/fontes'
+      path: '/fontes'
+      fullPath: '/fontes'
+      preLoaderRoute: typeof FontesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacidade': {
       id: '/privacidade'
       path: '/privacidade'
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   FaqRoute: FaqRoute,
+  FontesRoute: FontesRoute,
   PrivacidadeRoute: PrivacidadeRoute,
 }
 export const routeTree = rootRouteImport
