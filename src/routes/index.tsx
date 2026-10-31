@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { flushSync } from "react-dom";
-import { CircleHelp, ChevronDown, ArrowUpRight, LockKeyhole, Moon, Sun, SlidersHorizontal, X, RotateCcw, Check } from "lucide-react";
+import { CircleHelp, ChevronDown, ArrowUpRight, LockKeyhole, Moon, Sun, SlidersHorizontal, X, RotateCcw, Check, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { IasFaq } from "@/components/ias-faq";
 import { SiteFooter } from "@/components/site-footer";
@@ -31,6 +31,7 @@ function Azulejo() {
 function Index() {
   const [filtros, setFiltros] = useState<Filtros>(FILTROS_VAZIOS);
   const [filtrosAbertos, setFiltrosAbertos] = useState(false);
+  const [infoAberto, setInfoAberto] = useState(false);
   const [tema, setTema] = useState<Tema>(() => temaAtual());
   const escuro = tema === "escuro";
   const aoCarregarTema = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -72,7 +73,7 @@ function Index() {
     <header className="sticky top-0 z-20 border-b border-border bg-background"><div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-6 py-4"><a href="/" aria-label="WeHelp — início" className="flex items-center gap-2.5"><span className="brand-mark" aria-hidden="true"/><span className="text-xl font-semibold">WeHelp</span></a><div className="flex items-center gap-2"><span className="mr-2 flex items-center gap-1.5 text-xs font-medium text-muted-foreground"><LockKeyhole aria-hidden="true" className="size-3.5"/>Anónimo</span><Button variant="ghost" size="icon" aria-label={escuro ? "Ativar modo claro" : "Ativar modo escuro"} title={escuro ? "Modo claro" : "Modo escuro"} onClick={aoCarregarTema}>{escuro ? <Sun aria-hidden="true"/> : <Moon aria-hidden="true"/>}</Button></div></div></header>
     <Azulejo/>
     <div className="mx-auto max-w-6xl px-6 py-10 lg:py-12">
-      <main className="min-w-0"><p className="mb-3 text-sm font-medium text-detail">Guia de Apoios Sociais</p><p className="mb-8 mt-2 max-w-lg text-base leading-relaxed text-muted-foreground">Informação de fontes oficiais. As respostas orientam a pesquisa, mas não confirmam o direito aos apoios.</p>
+      <main className="min-w-0"><div className="mb-8 flex items-center gap-2"><p className="text-sm font-medium text-detail">Guia de Apoios Sociais</p><span className="group relative inline-flex"><button type="button" aria-label="Sobre esta informação" aria-expanded={infoAberto} onClick={() => setInfoAberto(v => !v)} onBlur={() => setInfoAberto(false)} className="flex size-6 items-center justify-center rounded-full text-detail transition-opacity hover:opacity-70"><Info aria-hidden="true" className="size-4"/></button><span role="tooltip" className={`absolute left-0 top-full z-10 mt-2 w-72 rounded-xl border border-border bg-card p-3 text-sm leading-relaxed text-muted-foreground shadow-md ${infoAberto ? "block" : "hidden"} group-hover:block`}>Informação de fontes oficiais. As respostas orientam a pesquisa, mas não confirmam o direito aos apoios.</span></span></div>
         <div className="flex flex-wrap items-center gap-2.5" role="group" aria-label="Filtros rápidos">
           {SITUACOES.map(s => <button key={s} type="button" aria-pressed={filtros.situacao === s} onClick={() => set({ situacao: filtros.situacao === s ? "" : s })} className={`inline-flex min-h-11 items-center gap-2 rounded-full border px-5 text-sm font-medium transition-colors ${filtros.situacao === s ? "border-primary bg-secondary text-foreground" : "border-input bg-card text-muted-foreground hover:text-foreground"}`}>{s}{filtros.situacao === s && <Check aria-hidden="true" className="size-4 text-primary"/>}</button>)}
           <button type="button" aria-expanded={filtrosAbertos} aria-controls="filtros-avancados" onClick={() => setFiltrosAbertos(v => !v)} className={`inline-flex min-h-11 items-center gap-2 rounded-full border px-5 text-sm font-medium transition-colors ${filtrosAbertos || avancadosAtivos > 0 ? "border-primary bg-secondary text-foreground" : "border-input bg-card text-muted-foreground hover:text-foreground"}`}>{filtrosAbertos ? <X aria-hidden="true" className="size-4"/> : <SlidersHorizontal aria-hidden="true" className="size-4"/>}Mais filtros{avancadosAtivos > 0 && <span className="flex size-5 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">{avancadosAtivos}</span>}</button>
