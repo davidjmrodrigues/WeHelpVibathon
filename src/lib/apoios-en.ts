@@ -492,6 +492,31 @@ export const MOTIVOS_EN: Record<string, string> = {
     "For households with dependent children or young people in their care",
   "Destina-se a residentes nos Açores/Madeira ou estudantes deslocados elegíveis":
     "For residents of the Azores/Madeira or eligible displaced students",
+  // Motivos do motor de compatibilidade (src/lib/wishlist.ts)
+  "A Prestação Social para a Inclusão (PSI) e a Bonificação por Deficiência do abono de família não podem ser acumuladas pelo mesmo titular.":
+    "The Social Inclusion Benefit (PSI) and the family allowance disability supplement cannot be received by the same person.",
+  "A Pensão Social de Velhice é incompatível com o Subsídio de Desemprego. Atingida a idade legal de velhice, cessa o subsídio de desemprego.":
+    "The non-contributory old-age pension is incompatible with the unemployment benefit. At the legal old-age age, the unemployment benefit ends.",
+  "A Pensão Social de Velhice não pode ser auferida em simultâneo com o Subsídio Social de Desemprego.":
+    "The non-contributory old-age pension cannot be received at the same time as the social unemployment benefit.",
+  "O Subsídio de Desemprego (contributivo) e o Subsídio Social de Desemprego inicial destinam-se à mesma perda de rendimento e são regimes alternativos.":
+    "The (contributory) unemployment benefit and the initial social unemployment benefit cover the same loss of income and are alternative schemes.",
+  "O Subsídio Parental Inicial (contributivo) e o Subsídio Social Parental (não contributivo) são vias alternativas para a mesma licença de nascimento.":
+    "The initial parental benefit (contributory) and the social parental benefit (non-contributory) are alternative routes for the same birth leave.",
+  "A Pensão de Invalidez do regime contributivo não acumula com a Pensão Social de Velhice não contributiva.":
+    "The contributory invalidity pension does not combine with the non-contributory old-age pension.",
+  "O Subsídio de Doença pleno não é acumulável com o Subsídio de Desemprego para o mesmo período de ausência de trabalho.":
+    "The full sickness benefit cannot be combined with the unemployment benefit for the same period off work.",
+  "A Bolsa de Estudo DGES destina-se exclusivamente ao Ensino Superior, enquanto a Bolsa da Segurança Social se destina ao Ensino Secundário.":
+    "The DGES grant is exclusively for higher education, while the Social Security grant is for secondary education.",
+  "A Garantia para a Infância é um complemento direto do Abono de Família para crianças até aos 18 anos inseridas no 1.º escalão.":
+    "The Childhood Guarantee is a direct supplement to the family allowance for children under 18 in the first bracket.",
+  "A majoração para famílias monoparentais exige ter previamente concedido o Abono de Família ou o Abono de Família Pré-Natal.":
+    "The single-parent supplement requires prior award of the family allowance or the pre-natal family allowance.",
+  "A majoração para famílias numerosas incide sobre o Abono de Família atribuído a crianças até 36 meses.":
+    "The large-family supplement applies to the family allowance granted for children up to 36 months.",
+  "A Tarifa Social de Gás Natural requer que o titular seja beneficiário de uma prestação social elegível ou da Tarifa Social de Eletricidade.":
+    "The social gas tariff requires the holder to already receive an eligible social benefit or the social electricity tariff.",
 };
 
 /** Tradução dos nomes das entidades apresentadas no cartão. */
