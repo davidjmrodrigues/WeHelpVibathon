@@ -338,7 +338,9 @@ function Index() {
                 key={temaFiltro}
                 type="button"
                 aria-pressed={temaSelecionado === temaFiltro}
-                onClick={() => setTemaSelecionado(temaFiltro)}
+                onClick={() =>
+                  setTemaSelecionado(temaSelecionado === temaFiltro ? "Todos" : temaFiltro)
+                }
                 className={classePilula(temaSelecionado === temaFiltro)}
               >
                 {rotuloTema(lingua, temaFiltro)}
