@@ -454,6 +454,21 @@ function Index() {
                   )}
                 </button>
               ))}
+              {temasDisponiveis.length > 2 &&
+                temasDisponiveis.map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    aria-pressed={temaSelecionado === t}
+                    onClick={() => setTemaSelecionado(t)}
+                    className={`inline-flex min-h-9 items-center gap-1.5 rounded-full border px-4 text-xs font-medium backdrop-blur-sm transition-colors ${temaSelecionado === t ? "border-primary/70 bg-secondary/70 text-foreground" : "border-input/60 bg-card/40 text-muted-foreground hover:text-foreground"}`}
+                  >
+                    {t}
+                    {temaSelecionado === t && (
+                      <Check aria-hidden="true" className="size-3.5 text-primary" />
+                    )}
+                  </button>
+                ))}
               <button
                 type="button"
                 aria-expanded={filtrosAbertos}
@@ -511,24 +526,6 @@ function Index() {
               </div>
             </div>
 
-
-            {temasDisponiveis.length > 2 && (
-              <div className="mb-6 flex flex-wrap gap-2" aria-label="Filtrar por área temática">
-                {temasDisponiveis.map((t) => (
-                  <Button
-                    key={t}
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    aria-pressed={temaSelecionado === t}
-                    onClick={() => setTemaSelecionado(t)}
-                    className={`text-xs ${temaSelecionado === t ? "border-primary bg-secondary" : "bg-card"}`}
-                  >
-                    {t}
-                  </Button>
-                ))}
-              </div>
-            )}
 
             {lista(elegiveis, true)}
 
