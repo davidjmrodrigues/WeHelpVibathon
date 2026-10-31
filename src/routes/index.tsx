@@ -511,11 +511,6 @@ function Index() {
               </div>
             </div>
 
-            {estadoSincronizacao && (
-              <p role="status" className="mb-4 text-xs text-detail">
-                {estadoSincronizacao}
-              </p>
-            )}
 
             {temasDisponiveis.length > 2 && (
               <div className="mb-6 flex flex-wrap gap-2" aria-label="Filtrar por área temática">
