@@ -454,6 +454,21 @@ function Index() {
                   )}
                 </button>
               ))}
+              {temasDisponiveis.length > 2 &&
+                temasDisponiveis.map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    aria-pressed={temaSelecionado === t}
+                    onClick={() => setTemaSelecionado(t)}
+                    className={`inline-flex min-h-9 items-center gap-1.5 rounded-full border px-4 text-xs font-medium backdrop-blur-sm transition-colors ${temaSelecionado === t ? "border-primary/70 bg-secondary/70 text-foreground" : "border-input/60 bg-card/40 text-muted-foreground hover:text-foreground"}`}
+                  >
+                    {t}
+                    {temaSelecionado === t && (
+                      <Check aria-hidden="true" className="size-3.5 text-primary" />
+                    )}
+                  </button>
+                ))}
               <button
                 type="button"
                 aria-expanded={filtrosAbertos}
