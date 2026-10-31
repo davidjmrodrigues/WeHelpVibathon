@@ -1,221 +1,74 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import {
-  DISTRITOS,
-  IAS_VALUE,
-  SITUACOES,
-  avaliarApoios,
-  type Perfil,
-  type Situacao,
-} from "@/lib/apoios";
+import { Check, ChevronDown, ArrowUpRight, LockKeyhole, Moon, Sun, SlidersHorizontal, X, RotateCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { DISTRITOS, IAS_VALUE, SITUACOES, avaliarApoios, type Perfil, type Situacao } from "@/lib/apoios";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Guia de Apoios Sociais — Descubra os benefícios do Estado a que tem direito" },
-      { name: "description", content: "Feed interativo de apoios sociais do Estado português, atualizado em tempo real conforme o seu perfil." },
-      { property: "og:title", content: "Guia de Apoios Sociais" },
-      { property: "og:description", content: "Descubra em tempo real, de forma anónima, a que apoios do Estado tem direito." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-    ],
-  }),
+  head: () => ({ meta: [
+    { title: "WeHelp — Encontre os seus apoios sociais" },
+    { name: "description", content: "Encontre os apoios do Estado português que podem ser para si. Uma estimativa rápida, anónima e sem guardar os seus dados." },
+    { property: "og:title", content: "WeHelp — Encontre os seus apoios sociais" },
+    { property: "og:description", content: "Os seus apoios sociais, de forma simples e anónima. Sem login e sem guardar dados." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+  ] }),
   component: Index,
 });
 
-interface Filtros {
-  idade: string;
-  distrito: string;
-  situacao: Situacao | "";
-  agregado: string;
-  rendimento: string;
-}
-
+interface Filtros { idade: string; distrito: string; situacao: Situacao | ""; agregado: string; rendimento: string; }
 const FILTROS_VAZIOS: Filtros = { idade: "", distrito: "", situacao: "", agregado: "", rendimento: "" };
+const ENTIDADES: Record<string, string> = { porta65: "Habitação · Portal da Habitação", sub23: "Transportes públicos", irsjovem: "Autoridade Tributária", bolsadges: "Ensino superior · DGES" };
+const CAMPO = "w-full rounded-xl border border-input bg-card px-4 py-3 text-base text-foreground";
+
+function Azulejo() {
+  return <div className="azulejo-band" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg"><defs><pattern id="azulejo" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M14 1 27 14 14 27 1 14Z" fill="none" stroke="currentColor" strokeWidth="1.2"/><circle cx="14" cy="14" r="2.2" fill="currentColor"/><circle cx="0" cy="0" r="2" fill="currentColor"/><circle cx="28" cy="28" r="2" fill="currentColor"/></pattern></defs><rect width="100%" height="100%" fill="url(#azulejo)"/></svg></div>;
+}
 
 function Index() {
   const [filtros, setFiltros] = useState<Filtros>(FILTROS_VAZIOS);
   const [filtrosAbertos, setFiltrosAbertos] = useState(false);
-
-  const perfil: Perfil = useMemo(
-    () => ({
-      idade: filtros.idade === "" ? null : Number(filtros.idade),
-      distrito: filtros.distrito,
-      situacao: filtros.situacao === "" ? null : filtros.situacao,
-      agregado: filtros.agregado === "" ? null : Number(filtros.agregado),
-      rendimento: filtros.rendimento === "" ? null : Number(filtros.rendimento),
-    }),
-    [filtros],
-  );
-
+  const [escuro, setEscuro] = useState(false);
+  const perfil: Perfil = useMemo(() => ({
+    idade: filtros.idade === "" ? null : Number(filtros.idade), distrito: filtros.distrito,
+    situacao: filtros.situacao === "" ? null : filtros.situacao,
+    agregado: filtros.agregado === "" ? null : Number(filtros.agregado),
+    rendimento: filtros.rendimento === "" ? null : Number(filtros.rendimento),
+  }), [filtros]);
   const apoios = useMemo(() => avaliarApoios(perfil), [perfil]);
-  const totalElegiveis = apoios.filter((a) => a.resultado.ok).length;
+  const elegiveis = apoios.filter(a => a.resultado.ok);
+  const outros = apoios.filter(a => !a.resultado.ok);
+  const set = (patch: Partial<Filtros>) => setFiltros(f => ({ ...f, ...patch }));
 
-  const set = (patch: Partial<Filtros>) => setFiltros((f) => ({ ...f, ...patch }));
+  const painel = (prefixo: string) => <div className="flex flex-col gap-6">
+    <div><label htmlFor={`${prefixo}-idade`} className="mb-2 block text-base font-semibold">Quantos anos tem?</label><div className="flex items-center gap-3"><input id={`${prefixo}-idade`} type="number" min={0} inputMode="numeric" placeholder="Ex.: 22" value={filtros.idade} onChange={e => set({ idade: e.target.value })} className={CAMPO}/><span className="text-sm text-muted-foreground">anos</span></div></div>
+    <div><label htmlFor={`${prefixo}-distrito`} className="mb-2 block text-base font-semibold">Onde vive?</label><select id={`${prefixo}-distrito`} value={filtros.distrito} onChange={e => set({ distrito: e.target.value })} className={CAMPO}><option value="">Todos os distritos</option>{DISTRITOS.map(d => <option key={d} value={d}>{d}</option>)}</select></div>
+    <fieldset><legend className="mb-2 text-base font-semibold">O que faz neste momento?</legend><div className="flex flex-col gap-2.5">{SITUACOES.map(s => <Button key={s} type="button" variant="outline" aria-pressed={filtros.situacao === s} onClick={() => set({ situacao: filtros.situacao === s ? "" : s })} className={`h-14 w-full justify-between text-base ${filtros.situacao === s ? "border-primary bg-secondary" : "bg-card"}`}>{s}{filtros.situacao === s && <Check aria-hidden="true" className="text-primary"/>}</Button>)}</div></fieldset>
+    <div><label htmlFor={`${prefixo}-agregado`} className="mb-2 block text-base font-semibold">Quantas pessoas vivem em sua casa?</label><div className="flex items-center gap-3"><input id={`${prefixo}-agregado`} type="number" min={1} inputMode="numeric" placeholder="Ex.: 3" value={filtros.agregado} onChange={e => set({ agregado: e.target.value })} className={CAMPO}/><span className="text-sm text-muted-foreground">pessoas</span></div></div>
+    <div><label htmlFor={`${prefixo}-rendimento`} className="mb-2 block text-base font-semibold">Quanto entra, por ano, em sua casa?</label><div className="flex items-center gap-3"><input id={`${prefixo}-rendimento`} type="number" min={0} inputMode="numeric" placeholder="Ex.: 12 000" value={filtros.rendimento} onChange={e => set({ rendimento: e.target.value })} className={CAMPO}/><span className="text-sm text-muted-foreground">€</span></div><p className="mt-2 text-sm leading-relaxed text-muted-foreground">Rendimento bruto, antes dos descontos. O IAS é a referência que o Estado usa para quase todos os limites: {IAS_VALUE.toLocaleString("pt-PT", { minimumFractionDigits: 2 })} €.</p></div>
+    <Button variant="ghost" className="justify-start px-0 text-detail" onClick={() => setFiltros(FILTROS_VAZIOS)}><RotateCcw aria-hidden="true"/>Limpar filtros</Button>
+  </div>;
 
-  const painel = (
-    <div className="flex flex-col gap-6">
-      <div>
-        <label htmlFor="idade" className="mb-1.5 block text-sm font-semibold text-foreground">Idade</label>
-        <div className="flex items-center gap-2">
-          <input
-            id="idade" type="number" min={0} inputMode="numeric" placeholder="Ex: 22"
-            value={filtros.idade}
-            onChange={(e) => set({ idade: e.target.value })}
-            className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-foreground outline-none focus:border-primary"
-          />
-          <span className="text-sm text-muted-foreground">anos</span>
-        </div>
-      </div>
+  const lista = (items: typeof apoios, disponivel: boolean) => <div className="border-t border-border">{items.map(a => <details key={a.id} className={`support-row border-b border-border ${disponivel ? "" : "opacity-60"}`}>
+    <summary className="flex cursor-pointer items-start gap-3 py-6 focus-visible:rounded-md">
+      {disponivel ? <Check aria-hidden="true" className="mt-1 size-5 shrink-0 text-primary"/> : <span aria-hidden="true" className="mt-1 size-5 shrink-0 text-muted-foreground">—</span>}
+      <div className="min-w-0 flex-1"><h3 className="text-xl font-semibold leading-tight">{a.titulo}</h3><p className="mt-1 text-sm text-muted-foreground">{ENTIDADES[a.id]}</p><p className={`mt-2 text-sm ${disponivel ? "text-primary" : "text-muted-foreground"}`}>{disponivel ? "Elegível nesta estimativa" : `Não se aplica · ${a.resultado.motivo}`}</p></div>
+      <div className="hidden max-w-48 shrink-0 text-right sm:block"><p className={`text-base font-semibold ${disponivel ? "text-primary" : "text-muted-foreground"}`}>{a.valor}</p><span className="text-xs text-muted-foreground">valor estimado</span></div><ChevronDown aria-hidden="true" className="mt-1 size-4 shrink-0 text-muted-foreground"/>
+    </summary>
+    <div className="pb-6 pl-8"><p className="max-w-xl text-base leading-relaxed text-muted-foreground">{a.descricao}</p><p className="mt-3 font-semibold text-primary sm:hidden">{a.valor}</p><Button asChild variant="link" className="mt-3 px-0 text-detail"><a href={a.link} target="_blank" rel="noopener noreferrer">Saber mais <ArrowUpRight aria-hidden="true"/></a></Button></div>
+  </details>)}</div>;
 
-      <div>
-        <label htmlFor="distrito" className="mb-1.5 block text-sm font-semibold text-foreground">Distrito</label>
-        <select
-          id="distrito" value={filtros.distrito}
-          onChange={(e) => set({ distrito: e.target.value })}
-          className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-foreground outline-none focus:border-primary"
-        >
-          <option value="">Todos</option>
-          {DISTRITOS.map((d) => <option key={d} value={d}>{d}</option>)}
-        </select>
-      </div>
-
-      <fieldset>
-        <legend className="mb-1.5 text-sm font-semibold text-foreground">Situação profissional</legend>
-        <div className="flex flex-wrap gap-2">
-          {SITUACOES.map((s) => (
-            <button
-              key={s} type="button"
-              onClick={() => set({ situacao: filtros.situacao === s ? "" : s })}
-              className={`rounded-full border px-4 py-1.5 text-sm font-medium transition ${
-                filtros.situacao === s
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-border bg-card text-foreground hover:border-primary/50"
-              }`}
-            >
-              {s}
-            </button>
-          ))}
-        </div>
-      </fieldset>
-
-      <div>
-        <label htmlFor="agregado" className="mb-1.5 block text-sm font-semibold text-foreground">Agregado familiar</label>
-        <div className="flex items-center gap-2">
-          <input
-            id="agregado" type="number" min={1} inputMode="numeric" placeholder="Ex: 3"
-            value={filtros.agregado}
-            onChange={(e) => set({ agregado: e.target.value })}
-            className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-foreground outline-none focus:border-primary"
-          />
-          <span className="text-sm text-muted-foreground">pessoas</span>
-        </div>
-      </div>
-
-      <div>
-        <label htmlFor="rendimento" className="mb-1.5 block text-sm font-semibold text-foreground">Rendimento bruto anual</label>
-        <div className="flex items-center gap-2">
-          <input
-            id="rendimento" type="number" min={0} inputMode="numeric" placeholder="Ex: 12000"
-            value={filtros.rendimento}
-            onChange={(e) => set({ rendimento: e.target.value })}
-            className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-foreground outline-none focus:border-primary"
-          />
-          <span className="text-sm text-muted-foreground">€</span>
-        </div>
-      </div>
-
-      <button
-        type="button"
-        onClick={() => setFiltros(FILTROS_VAZIOS)}
-        className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition hover:border-primary/50 hover:text-foreground"
-      >
-        Limpar filtros
-      </button>
+  return <div className={escuro ? "dark" : ""}><div className="min-h-screen bg-background text-foreground">
+    <header className="sticky top-0 z-20 border-b border-border bg-background"><div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-6 py-4"><a href="/" aria-label="WeHelp — início" className="flex items-center gap-2.5"><span className="brand-mark" aria-hidden="true"/><span className="text-xl font-semibold">WeHelp</span></a><div className="flex items-center gap-2"><span className="mr-2 flex items-center gap-1.5 text-xs font-medium text-muted-foreground"><LockKeyhole aria-hidden="true" className="size-3.5"/>Anónimo</span><Button variant="ghost" size="icon" aria-label={escuro ? "Ativar modo claro" : "Ativar modo escuro"} title={escuro ? "Modo claro" : "Modo escuro"} onClick={() => setEscuro(v => !v)}>{escuro ? <Sun aria-hidden="true"/> : <Moon aria-hidden="true"/>}</Button><Button variant="outline" size="icon" className="lg:hidden" aria-label={filtrosAbertos ? "Fechar filtros" : "Abrir filtros"} title="Filtros" aria-expanded={filtrosAbertos} aria-controls="filtros-mobile" onClick={() => setFiltrosAbertos(v => !v)}>{filtrosAbertos ? <X aria-hidden="true"/> : <SlidersHorizontal aria-hidden="true"/>}</Button></div></div></header>
+    <Azulejo/>
+    {filtrosAbertos && <section id="filtros-mobile" aria-label="Filtros" className="border-b border-border px-6 py-8 lg:hidden"><h2 className="mb-6 text-xl font-semibold">Um pouco sobre si</h2>{painel("mobile")}<Button className="mt-6 h-14 w-full" onClick={() => setFiltrosAbertos(false)}>Ver apoios <Check aria-hidden="true"/></Button></section>}
+    <div className="mx-auto grid max-w-6xl gap-12 px-6 py-10 lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-16 lg:py-12">
+      <aside className="hidden lg:block"><div className="sticky top-24"><h2 className="mb-6 text-xl font-semibold">Um pouco sobre si</h2>{painel("desktop")}</div></aside>
+      <main className="min-w-0"><p className="mb-3 text-sm font-medium text-detail">Guia de Apoios Sociais</p><h1 className="max-w-xl text-[32px] font-semibold leading-[1.12]">{elegiveis.length > 0 ? `Encontrámos ${elegiveis.length} ${elegiveis.length === 1 ? "apoio" : "apoios"} para si.` : "Não encontrámos apoios para si, por agora."}</h1><p className="mb-8 mt-4 max-w-lg text-base leading-relaxed text-muted-foreground">Há apoios que são seus e que talvez ainda não saiba.</p>
+        {lista(elegiveis, true)}
+        {outros.length > 0 && <section className="mt-10"><h2 className="mb-4 text-xl font-semibold">Outros apoios</h2>{lista(outros, false)}</section>}
+        <footer className="mt-10 border-t border-border pt-6"><p className="max-w-xl text-sm leading-relaxed text-muted-foreground">Isto é uma estimativa para o orientar, não uma decisão. Os valores e as regras deste protótipo são de exemplo; confirme sempre as condições no portal oficial.</p><p className="mt-3 flex items-center gap-2 text-xs text-muted-foreground"><LockKeyhole aria-hidden="true" className="size-3.5"/>Não pedimos nome, email nem login. Não guardamos as suas respostas.</p></footer>
+      </main>
     </div>
-  );
-
-  return (
-    <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-20 border-b border-border bg-background/95 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
-          <h1 className="font-display text-xl font-bold text-primary sm:text-2xl">
-            Guia de <span className="text-accent-foreground">Apoios Sociais</span>
-          </h1>
-          <span className="hidden text-xs text-muted-foreground sm:block">100% anónimo · nada é guardado</span>
-          <button
-            type="button"
-            onClick={() => setFiltrosAbertos((v) => !v)}
-            aria-expanded={filtrosAbertos}
-            className="rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-foreground lg:hidden"
-          >
-            {filtrosAbertos ? "Fechar filtros ✕" : "Filtros ☰"}
-          </button>
-        </div>
-        {filtrosAbertos && (
-          <div className="border-t border-border px-4 py-5 sm:px-6 lg:hidden">{painel}</div>
-        )}
-      </header>
-
-      <div className="mx-auto flex max-w-7xl gap-8 px-4 py-8 sm:px-6">
-        <aside className="hidden w-72 shrink-0 lg:block">
-          <div className="sticky top-24 rounded-2xl border border-border bg-card p-6 shadow-sm">
-            <h2 className="font-display mb-5 text-lg font-bold text-card-foreground">O seu perfil</h2>
-            {painel}
-          </div>
-        </aside>
-
-        <main className="min-w-0 flex-1">
-          <div className="mb-6">
-            <p className="text-sm font-medium text-primary">O seu feed de apoios</p>
-            <h2 className="font-display mt-1 text-2xl font-bold text-foreground sm:text-3xl">
-              {totalElegiveis > 0
-                ? `${totalElegiveis} ${totalElegiveis > 1 ? "apoios elegíveis" : "apoio elegível"} para si`
-                : "Nenhum apoio elegível de momento"}
-            </h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              O feed atualiza automaticamente a cada alteração nos filtros.
-            </p>
-          </div>
-
-          <div className="grid gap-5 sm:grid-cols-2">
-            {apoios.map((a) => (
-              <article
-                key={a.id}
-                className={`flex flex-col rounded-2xl border p-6 shadow-sm transition-all duration-300 ${
-                  a.resultado.ok
-                    ? "border-primary/40 bg-card ring-1 ring-primary/20 hover:-translate-y-1 hover:shadow-md"
-                    : "border-border bg-card opacity-55"
-                }`}
-              >
-                {a.resultado.ok ? (
-                  <span className="w-fit rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
-                    ✓ Elegível
-                  </span>
-                ) : (
-                  <span className="w-fit rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
-                    Não elegível · {a.resultado.motivo}
-                  </span>
-                )}
-                <h3 className="font-display mt-4 text-xl font-bold text-card-foreground">{a.titulo}</h3>
-                <p className="mt-2 flex-1 text-sm text-muted-foreground">{a.descricao}</p>
-                <p className="mt-5 text-xs uppercase tracking-wide text-muted-foreground">Valor estimado</p>
-                <p className="font-display text-2xl font-bold text-primary">{a.valor}</p>
-                <a
-                  href={a.link} target="_blank" rel="noopener noreferrer"
-                  className="mt-5 rounded-xl bg-primary px-4 py-2.5 text-center font-semibold text-primary-foreground hover:opacity-90"
-                >
-                  Saber mais ↗
-                </a>
-              </article>
-            ))}
-          </div>
-
-          <p className="mt-10 border-t border-border pt-6 text-xs text-muted-foreground">
-            Estimativas indicativas. Referência IAS 2026: {IAS_VALUE.toLocaleString("pt-PT")} €.
-          </p>
-        </main>
-      </div>
-    </div>
-  );
+  </div></div>;
 }
