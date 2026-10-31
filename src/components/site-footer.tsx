@@ -1,4 +1,4 @@
-import { Instagram, Linkedin, LockKeyhole, Send } from "lucide-react";
+import { Instagram, Linkedin, Send } from "lucide-react";
 import { useState } from "react";
 
 const SOCIAIS = [
@@ -10,6 +10,7 @@ const EXPLORAR = [
   { rotulo: "Início", href: "/" },
   { rotulo: "Apoios a explorar", href: "#apoios" },
   { rotulo: "IAS e dúvidas frequentes", href: "#ias-faq" },
+  { rotulo: "Política de Privacidade", href: "/privacidade" },
 ];
 
 const FONTES = [
@@ -115,23 +116,6 @@ export function SiteFooter() {
               ))}
             </ul>
           </div>
-        </div>
-      </div>
-      <div className="border-t border-secondary-foreground/15">
-        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-6 text-xs leading-relaxed text-secondary-foreground/70 md:items-center">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <p className="flex shrink-0 items-center gap-2">
-              <LockKeyhole aria-hidden="true" className="size-3.5" />
-              Não pedimos nome, email nem login. Não guardamos as suas respostas.
-            </p>
-            <a
-              href="/privacidade"
-              className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg border border-secondary-foreground/25 px-4 text-sm font-medium text-secondary-foreground transition-opacity hover:opacity-70"
-            >
-              Política de Privacidade
-            </a>
-          </div>
-          <p className="text-secondary-foreground/60">© 2026 WeHelp. Todos os direitos reservados.</p>
         </div>
       </div>
     </footer>
