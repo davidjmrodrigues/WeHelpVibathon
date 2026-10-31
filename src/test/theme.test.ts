@@ -24,8 +24,6 @@ describe("theme snapshot coordination", () => {
     });
     vi.stubGlobal("document", document);
     Object.defineProperty(document, "startViewTransition", { configurable: true, value: start });
-    const animate = vi.fn(() => ({ finished: Promise.resolve() }));
-    Object.defineProperty(document.documentElement, "animate", { configurable: true, value: animate });
     const estado = vi.fn();
     const transicao = alternarTemaComCirculo(100, 40, estado);
     expect(temaAtual()).toBe(escuro ? "escuro" : "claro");
@@ -38,21 +36,35 @@ describe("theme snapshot coordination", () => {
     await transicao;
     expect(temaAtual()).toBe(escuro ? "claro" : "escuro");
     expect(estado).toHaveBeenCalledExactlyOnceWith(escuro ? "claro" : "escuro");
-    expect(animate).toHaveBeenCalledWith(
-      { clipPath: ["circle(0px at 100px 40px)", expect.stringMatching(/^circle\([\d.]+px at 100px 40px\)$/)] },
-      expect.objectContaining({ duration: 750, pseudoElement: "::view-transition-new(root)" }),
-    );
     expect(document.documentElement.hasAttribute("data-theme-transition")).toBe(false);
   });
 
-  it.each(["reduced motion", "unsupported browser"])("switches immediately for %s", async mode => {
-    preparar(false, mode === "reduced motion");
+  it("switches immediately for reduced motion", async () => {
+    preparar(false, true);
     const start = vi.fn();
-    Object.defineProperty(document, "startViewTransition", { configurable: true, value: mode === "reduced motion" ? start : undefined });
+    Object.defineProperty(document, "startViewTransition", { configurable: true, value: start });
     const estado = vi.fn();
     await alternarTemaComCirculo(100, 40, estado);
     expect(start).not.toHaveBeenCalled();
     expect(temaAtual()).toBe("escuro");
     expect(estado).toHaveBeenCalledExactlyOnceWith("escuro");
+  });
+
+  it.each([false, true])("keeps the old theme until the fallback layer finishes (dark=%s)", async escuro => {
+    preparar(escuro);
+    Object.defineProperty(document, "startViewTransition", { configurable: true, value: undefined });
+    const frames: FrameRequestCallback[] = [];
+    vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => { frames.push(callback); return frames.length; });
+    const estado = vi.fn();
+    const transicao = alternarTemaComCirculo(100, 40, estado);
+    expect(temaAtual()).toBe(escuro ? "escuro" : "claro");
+    expect(estado).not.toHaveBeenCalled();
+    frames.shift()?.(0);
+    frames.shift()?.(375);
+    expect(estado).not.toHaveBeenCalled();
+    frames.shift()?.(750);
+    await transicao;
+    expect(temaAtual()).toBe(escuro ? "claro" : "escuro");
+    expect(estado).toHaveBeenCalledExactlyOnceWith(escuro ? "claro" : "escuro");
   });
 });

@@ -145,7 +145,26 @@ html[data-theme-transition]::view-transition-new(root) {
   mix-blend-mode: normal;
 }
 html[data-theme-transition]::view-transition-old(root) { z-index: 1; }
-html[data-theme-transition]::view-transition-new(root) { z-index: 2; }
+html[data-theme-transition]::view-transition-new(root) {
+  z-index: 2;
+  animation: theme-circle-reveal 750ms cubic-bezier(.65,0,.35,1) both;
+}
+@keyframes theme-circle-reveal {
+  from { clip-path: circle(0px at var(--theme-reveal-x) var(--theme-reveal-y)); }
+  to { clip-path: circle(var(--theme-reveal-radius) at var(--theme-reveal-x) var(--theme-reveal-y)); }
+}
+.theme-reveal-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  overflow: hidden;
+  pointer-events: none;
+  clip-path: circle(0px at 0px 0px);
+}
+.theme-reveal-layer *, .theme-reveal-layer *::before, .theme-reveal-layer *::after {
+  animation: none !important;
+  transition: none !important;
+}
 html[data-theme-transition]::view-transition { pointer-events: none; }
 html[data-theme-transition] #wehelp-root *,
 html[data-theme-transition] #wehelp-root *::before,
