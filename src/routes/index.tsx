@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Check, ChevronDown, ArrowUpRight, LockKeyhole, Moon, Sun, SlidersHorizontal, X, RotateCcw } from "lucide-react";
+import { CircleHelp, ChevronDown, ArrowUpRight, LockKeyhole, Moon, Sun, SlidersHorizontal, X, RotateCcw, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { IasFaq } from "@/components/ias-faq";
 import { DISTRITOS, IAS_VALUE, SITUACOES, avaliarApoios, type Perfil, type Situacao } from "@/lib/apoios";
 
 export const Route = createFileRoute("/")({
@@ -18,7 +19,6 @@ export const Route = createFileRoute("/")({
 
 interface Filtros { idade: string; distrito: string; situacao: Situacao | ""; agregado: string; rendimento: string; }
 const FILTROS_VAZIOS: Filtros = { idade: "", distrito: "", situacao: "", agregado: "", rendimento: "" };
-const ENTIDADES: Record<string, string> = { porta65: "Habitação · Portal da Habitação", sub23: "Transportes públicos", irsjovem: "Autoridade Tributária", bolsadges: "Ensino superior · DGES" };
 const CAMPO = "w-full rounded-xl border border-input bg-card px-4 py-3 text-base text-foreground";
 
 function Azulejo() {
@@ -45,17 +45,17 @@ function Index() {
     <div><label htmlFor={`${prefixo}-distrito`} className="mb-2 block text-base font-semibold">Onde vive?</label><select id={`${prefixo}-distrito`} value={filtros.distrito} onChange={e => set({ distrito: e.target.value })} className={CAMPO}><option value="">Todos os distritos</option>{DISTRITOS.map(d => <option key={d} value={d}>{d}</option>)}</select></div>
     <fieldset><legend className="mb-2 text-base font-semibold">O que faz neste momento?</legend><div className="flex flex-col gap-2.5">{SITUACOES.map(s => <Button key={s} type="button" variant="outline" aria-pressed={filtros.situacao === s} onClick={() => set({ situacao: filtros.situacao === s ? "" : s })} className={`h-14 w-full justify-between text-base ${filtros.situacao === s ? "border-primary bg-secondary" : "bg-card"}`}>{s}{filtros.situacao === s && <Check aria-hidden="true" className="text-primary"/>}</Button>)}</div></fieldset>
     <div><label htmlFor={`${prefixo}-agregado`} className="mb-2 block text-base font-semibold">Quantas pessoas vivem em sua casa?</label><div className="flex items-center gap-3"><input id={`${prefixo}-agregado`} type="number" min={1} inputMode="numeric" placeholder="Ex.: 3" value={filtros.agregado} onChange={e => set({ agregado: e.target.value })} className={CAMPO}/><span className="text-sm text-muted-foreground">pessoas</span></div></div>
-    <div><label htmlFor={`${prefixo}-rendimento`} className="mb-2 block text-base font-semibold">Quanto entra, por ano, em sua casa?</label><div className="flex items-center gap-3"><input id={`${prefixo}-rendimento`} type="number" min={0} inputMode="numeric" placeholder="Ex.: 12 000" value={filtros.rendimento} onChange={e => set({ rendimento: e.target.value })} className={CAMPO}/><span className="text-sm text-muted-foreground">€</span></div><p className="mt-2 text-sm leading-relaxed text-muted-foreground">Rendimento bruto, antes dos descontos. O IAS é a referência que o Estado usa para quase todos os limites: {IAS_VALUE.toLocaleString("pt-PT", { minimumFractionDigits: 2 })} €.</p></div>
+    <div><label htmlFor={`${prefixo}-rendimento`} className="mb-2 block text-base font-semibold">Quanto entra, por ano, em sua casa?</label><div className="flex items-center gap-3"><input id={`${prefixo}-rendimento`} type="number" min={0} inputMode="numeric" placeholder="Ex.: 12 000" value={filtros.rendimento} onChange={e => set({ rendimento: e.target.value })} className={CAMPO}/><span className="text-sm text-muted-foreground">€</span></div><p className="mt-2 text-sm leading-relaxed text-muted-foreground">Rendimento bruto, antes dos descontos. O IAS vale {IAS_VALUE.toLocaleString("pt-PT", { minimumFractionDigits: 2 })} € em 2026. Este rendimento não substitui o cálculo de recursos de cada apoio.</p></div>
     <Button variant="ghost" className="justify-start px-0 text-detail" onClick={() => setFiltros(FILTROS_VAZIOS)}><RotateCcw aria-hidden="true"/>Limpar filtros</Button>
   </div>;
 
   const lista = (items: typeof apoios, disponivel: boolean) => <div className="border-t border-border">{items.map(a => <details key={a.id} className={`support-row border-b border-border ${disponivel ? "" : "opacity-60"}`}>
     <summary className="flex cursor-pointer items-start gap-3 py-6 focus-visible:rounded-md">
-      {disponivel ? <Check aria-hidden="true" className="mt-1 size-5 shrink-0 text-primary"/> : <span aria-hidden="true" className="mt-1 size-5 shrink-0 text-muted-foreground">—</span>}
-      <div className="min-w-0 flex-1"><h3 className="text-xl font-semibold leading-tight">{a.titulo}</h3><p className="mt-1 text-sm text-muted-foreground">{ENTIDADES[a.id]}</p><p className={`mt-2 text-sm ${disponivel ? "text-primary" : "text-muted-foreground"}`}>{disponivel ? "Elegível nesta estimativa" : `Não se aplica · ${a.resultado.motivo}`}</p></div>
+      {disponivel ? <CircleHelp aria-hidden="true" className="mt-1 size-5 shrink-0 text-detail"/> : <span aria-hidden="true" className="mt-1 size-5 shrink-0 text-muted-foreground">—</span>}
+      <div className="min-w-0 flex-1"><h3 className="text-xl font-semibold leading-tight">{a.titulo}</h3><p className="mt-1 text-sm text-muted-foreground">{a.entidade}</p><p className={`mt-2 text-sm ${disponivel ? "text-detail" : "text-muted-foreground"}`}>{disponivel ? "Pode aplicar-se · confirmar condições" : `Não corresponde ao perfil · ${a.resultado.motivo}`}</p></div>
       <div className="hidden max-w-48 shrink-0 text-right sm:block"><p className={`text-base font-semibold ${disponivel ? "text-primary" : "text-muted-foreground"}`}>{a.valor}</p><span className="text-xs text-muted-foreground">valor estimado</span></div><ChevronDown aria-hidden="true" className="mt-1 size-4 shrink-0 text-muted-foreground"/>
     </summary>
-    <div className="pb-6 pl-8"><p className="max-w-xl text-base leading-relaxed text-muted-foreground">{a.descricao}</p><p className="mt-3 font-semibold text-primary sm:hidden">{a.valor}</p><Button asChild variant="link" className="mt-3 px-0 text-detail"><a href={a.link} target="_blank" rel="noopener noreferrer">Saber mais <ArrowUpRight aria-hidden="true"/></a></Button></div>
+    <div className="pb-6 pl-8"><p className="max-w-xl text-base leading-relaxed text-muted-foreground">{a.descricao}</p><p className="mt-3 font-semibold text-primary sm:hidden">{a.valor}</p><h4 className="mt-4 text-sm font-semibold">Condições a confirmar</h4><ul className="mt-2 list-disc space-y-1 pl-5 text-sm leading-relaxed text-muted-foreground">{a.condicoes.map(c => <li key={c}>{c}</li>)}</ul><p className="mt-4 text-xs leading-relaxed text-muted-foreground">{a.periodo}</p><p className="mt-2 text-xs text-muted-foreground">Fonte: {a.entidade} · Consultada em {a.verificadoEm}</p><Button asChild variant="link" className="mt-3 h-auto min-h-11 whitespace-normal px-0 text-detail"><a href={a.link} target="_blank" rel="noopener noreferrer">Saber mais na fonte oficial <ArrowUpRight aria-hidden="true"/></a></Button></div>
   </details>)}</div>;
 
   return <div className={escuro ? "dark" : ""}><div className="min-h-screen bg-background text-foreground">
@@ -64,10 +64,12 @@ function Index() {
     {filtrosAbertos && <section id="filtros-mobile" aria-label="Filtros" className="border-b border-border px-6 py-8 lg:hidden"><h2 className="mb-6 text-xl font-semibold">Um pouco sobre si</h2>{painel("mobile")}<Button className="mt-6 h-14 w-full" onClick={() => setFiltrosAbertos(false)}>Ver apoios <Check aria-hidden="true"/></Button></section>}
     <div className="mx-auto grid max-w-6xl gap-12 px-6 py-10 lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-16 lg:py-12">
       <aside className="hidden lg:block"><div className="sticky top-24"><h2 className="mb-6 text-xl font-semibold">Um pouco sobre si</h2>{painel("desktop")}</div></aside>
-      <main className="min-w-0"><p className="mb-3 text-sm font-medium text-detail">Guia de Apoios Sociais</p><h1 className="max-w-xl text-[32px] font-semibold leading-[1.12]">{elegiveis.length > 0 ? `Encontrámos ${elegiveis.length} ${elegiveis.length === 1 ? "apoio" : "apoios"} para si.` : "Não encontrámos apoios para si, por agora."}</h1><p className="mb-8 mt-4 max-w-lg text-base leading-relaxed text-muted-foreground">Há apoios que são seus e que talvez ainda não saiba.</p>
+      <main className="min-w-0"><p className="mb-3 text-sm font-medium text-detail">Guia de Apoios Sociais</p><h1 className="max-w-xl text-[32px] font-semibold leading-[1.12]">{elegiveis.length > 0 ? `${elegiveis.length} ${elegiveis.length === 1 ? "apoio que pode" : "apoios que podem"} aplicar-se ao seu caso.` : "Veja outros apoios e as suas condições."}</h1><p className="mb-6 mt-4 max-w-lg text-base leading-relaxed text-muted-foreground">Informação de fontes oficiais. As respostas orientam a pesquisa, mas não confirmam o direito aos apoios.</p>
+        <IasFaq/>
+        <h2 className="mb-4 text-xl font-semibold">Apoios a explorar</h2>
         {lista(elegiveis, true)}
         {outros.length > 0 && <section className="mt-10"><h2 className="mb-4 text-xl font-semibold">Outros apoios</h2>{lista(outros, false)}</section>}
-        <footer className="mt-10 border-t border-border pt-6"><p className="max-w-xl text-sm leading-relaxed text-muted-foreground">Isto é uma estimativa para o orientar, não uma decisão. Os valores e as regras deste protótipo são de exemplo; confirme sempre as condições no portal oficial.</p><p className="mt-3 flex items-center gap-2 text-xs text-muted-foreground"><LockKeyhole aria-hidden="true" className="size-3.5"/>Não pedimos nome, email nem login. Não guardamos as suas respostas.</p></footer>
+        <footer className="mt-10 border-t border-border pt-6"><p className="max-w-xl text-sm leading-relaxed text-muted-foreground">Esta orientação não é uma decisão de atribuição. Os montantes dependem das condições de cada apoio. Confirme a informação e eventuais alterações na fonte oficial antes de pedir.</p><p className="mt-3 flex items-center gap-2 text-xs text-muted-foreground"><LockKeyhole aria-hidden="true" className="size-3.5"/>Não pedimos nome, email nem login. Não guardamos as suas respostas.</p></footer>
       </main>
     </div>
   </div></div>;
