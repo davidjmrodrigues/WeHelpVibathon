@@ -33,6 +33,17 @@ describe("Catálogo oficial e triagem conservadora", () => {
     expect(resultado("porta65", { idade: 37 })).toBe(true);
     expect(resultado("porta65", { idade: 38 })).toBe(false);
   });
+  it("casa própria exclui apoios ao arrendamento; arrendada mantém", () => {
+    expect(resultado("porta65", { idade: 25, habitacao: "propria" })).toBe(false);
+    expect(resultado("porta65", { idade: 25, habitacao: "arrendada" })).toBe(true);
+    expect(resultado("sub23", { idade: 22, habitacao: "propria" })).toBe(true);
+  });
+  it("sem filhos a cargo exclui apoios a agregados com crianças", () => {
+    expect(resultado("abono", { filhos: "nao" })).toBe(false);
+    expect(resultado("abono", { filhos: "sim" })).toBe(true);
+    expect(resultado("abono", { filhos: "monoparental" })).toBe(true);
+    expect(resultado("sub23", { idade: 22, filhos: "nao" })).toBe(true);
+  });
   it("não aplica o antigo teto fictício de rendimento do Porta 65", () => {
     expect(resultado("porta65", { idade: 25, rendimento: 31000 })).toBe(true);
   });
