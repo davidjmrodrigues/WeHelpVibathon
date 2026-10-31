@@ -37,9 +37,9 @@ export function SiteFooter() {
             </p>
             <address className="mt-7 not-italic text-sm leading-relaxed text-secondary-foreground/80">
               <p className="font-semibold text-secondary-foreground">Sede</p>
-              <p className="mt-1.5">WeHelp, Unipessoal Lda.</p>
-              <p>Rua do Chiado 123, 1200-108 Lisboa</p>
-              <p>Portugal</p>
+              <p className="mt-1.5">UalgTecCampus</p>
+              <p>Campi das Gambelas · Universidade do Algarve</p>
+              <p>8005-139 Faro, Portugal</p>
               <p className="mt-2">
                 <a href="mailto:contacto@wehelp.pt" className={LIGACAO}>contacto@wehelp.pt</a>
               </p>
