@@ -36,7 +36,8 @@ export const APOIOS_EN: Record<string, ApoioTextoEn> = {
     descricao:
       "Free pass covered by the measure for young people up to 23, students and non-students alike. Not the same as free access to every transport service.",
     valor: "Covered pass is free",
-    periodo: "Measure announced in December 2024; confirm current coverage and conditions with the operator.",
+    periodo:
+      "Measure announced in December 2024; confirm current coverage and conditions with the operator.",
     condicoes: [
       "Up to 23 years old, whether or not you are a student.",
       "Prove your age and request or activate the pass with the operator. Confirm the services and area covered.",
@@ -460,8 +461,7 @@ export const MOTIVOS_EN: Record<string, string> = {
     "Outside the range between age 18 and the legal old-age age",
   "Requer coabitação com a pessoa cuidada (mínimo de 2 pessoas na habitação)":
     "Requires cohabitation with the cared-for person (at least 2 people in the home)",
-  "Destina-se a situações de desemprego involuntário":
-    "For situations of involuntary unemployment",
+  "Destina-se a situações de desemprego involuntário": "For situations of involuntary unemployment",
   "Atingida a idade legal de reforma por velhice, cessa o subsídio social de desemprego":
     "At the legal old-age retirement age, the social unemployment benefit ends",
   "Destina-se a progenitores por nascimento ou adoção recente de filho":
@@ -534,7 +534,8 @@ export const ENTIDADES_EN: Record<string, string> = {
   "gov.pt · Transportes públicos": "gov.pt · Public transport",
   "Autoridade Tributária · gov.pt": "Tax Authority · gov.pt",
   "Direção-Geral do Ensino Superior": "Directorate-General for Higher Education",
-  "SNS · Administração Central do Sistema de Saúde": "SNS · Central Administration of the Health System",
+  "SNS · Administração Central do Sistema de Saúde":
+    "SNS · Central Administration of the Health System",
   "Segurança Social · Ministério da Justiça": "Social Security · Ministry of Justice",
   "gov.pt · Mobilidade e Transportes": "gov.pt · Mobility and Transport",
 };
@@ -576,4 +577,57 @@ export const SUGESTOES_EN: Record<string, string> = {
 export function traduzSugestao(lingua: Lingua, sugestao: string): string {
   if (lingua === "en") return SUGESTOES_EN[sugestao] ?? sugestao;
   return sugestao;
+}
+
+export interface PackTextoEn {
+  nome: string;
+  descricao: string;
+  publicoAlvo: string;
+}
+
+export const PACKS_EN: Record<string, PackTextoEn> = {
+  "pack-jovem-trabalhador": {
+    nome: "Young Worker Bundle",
+    descricao:
+      "Ideal combination for young adults up to 35 starting their career while renting a home.",
+    publicoAlvo: "Young adults aged 18 to 35 working as employees or self-employed.",
+  },
+  "pack-estudante-superior": {
+    nome: "Relocated University Student Bundle",
+    descricao: "Social action and mobility support package for higher education students.",
+    publicoAlvo: "Students enrolled in public or private higher education in need of support.",
+  },
+  "pack-familia-filhos": {
+    nome: "Family with Children Bundle",
+    descricao:
+      "Comprehensive safety net covering child support, parental guarantees and household energy relief.",
+    publicoAlvo: "Families with minor dependents and energy expenses.",
+  },
+  "pack-senior": {
+    nome: "Senior & Older Age Bundle",
+    descricao:
+      "Income support and essential health exemptions for pensioners and citizens aged 66 and 9 months or over.",
+    publicoAlvo: "Older citizens with lower incomes or at risk of poverty.",
+  },
+  "pack-desemprego-transicao": {
+    nome: "Unemployment Protection Bundle",
+    descricao:
+      "Income support and immediate reduction in fixed electricity and gas expenses during career transitions.",
+    publicoAlvo:
+      "Workers experiencing involuntary unemployment registered with the employment center (IEFP).",
+  },
+};
+
+export function traduzPack(
+  lingua: Lingua,
+  pack: { id: string; nome: string; descricao: string; publicoAlvo: string },
+): { nome: string; descricao: string; publicoAlvo: string } {
+  if (lingua === "en" && PACKS_EN[pack.id]) {
+    return PACKS_EN[pack.id];
+  }
+  return {
+    nome: pack.nome,
+    descricao: pack.descricao,
+    publicoAlvo: pack.publicoAlvo,
+  };
 }

@@ -13,6 +13,7 @@ import {
   Info,
   Plus,
   Check,
+  Boxes,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LogoWeHelp } from "@/components/logo-wehelp";
@@ -36,16 +37,20 @@ import {
   limparWishlist,
   removerApoio,
   validarCompatibilidadeWishlist,
+  PACKS_RECOMENDADOS,
   type Wishlist,
+  type PackApoios,
 } from "@/lib/wishlist";
-import { APOIOS_EN, traduzEntidade, traduzMotivo, traduzSugestao } from "@/lib/apoios-en";
+import {
+  APOIOS_EN,
+  traduzEntidade,
+  traduzMotivo,
+  traduzSugestao,
+  traduzPack,
+} from "@/lib/apoios-en";
 import { useIdioma, type Lingua } from "@/lib/idioma";
 import { rotuloTema, tx } from "@/lib/textos";
-import type {
-  ApoioDescoberto,
-  DadosOficiaisExtraidos,
-  RespostaSincronizacao,
-} from "@/lib/scraper";
+import type { ApoioDescoberto, DadosOficiaisExtraidos, RespostaSincronizacao } from "@/lib/scraper";
 import { alternarTemaComCirculo, temaAtual, type Tema } from "@/lib/theme";
 
 export const Route = createFileRoute("/")({
@@ -270,6 +275,140 @@ function CartaoApoio({
   );
 }
 
+function CartaoPack({
+  pack,
+  lingua,
+  t,
+  packCompleto,
+  packParcial,
+  onAlternarPack,
+  obterApoio,
+}: {
+  pack: PackApoios;
+  lingua: Lingua;
+  t: (chave: string) => string;
+  packCompleto: boolean;
+  packParcial: boolean;
+  onAlternarPack: () => void;
+  obterApoio: (id: string) => { titulo: string; entidade: string; valor: string } | undefined;
+}) {
+  const [aberto, setAberto] = useState(false);
+  const textoPack = traduzPack(lingua, pack);
+
+  return (
+    <div className="support-row border-b border-border">
+      <div className="flex items-start gap-2">
+        <button
+          type="button"
+          aria-expanded={aberto}
+          onClick={() => setAberto((v) => !v)}
+          className="flex min-w-0 flex-1 cursor-pointer items-start gap-3 py-6 text-left focus-visible:rounded-md"
+        >
+          <div className="flex shrink-0 flex-col items-center gap-2">
+            <Boxes aria-hidden="true" className="size-5 text-detail" />
+            <ChevronDown
+              aria-hidden="true"
+              className={`apoio-seta size-4 text-muted-foreground transition-transform duration-300 ease-in-out ${aberto ? "rotate-180" : ""}`}
+            />
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="text-xl font-semibold leading-tight">{textoPack.nome}</h3>
+              <span className="rounded-full border border-primary/40 bg-secondary/60 px-2.5 py-0.5 text-[11px] font-medium text-detail">
+                {t("packVerificado")}
+              </span>
+            </div>
+            <p className="mt-1 text-sm text-muted-foreground">{textoPack.publicoAlvo}</p>
+            <p className="mt-2 text-sm text-detail">
+              {pack.apoioIds.length} {t("packApoiosContagem")} · {t("packCompativelTag")}
+            </p>
+          </div>
+        </button>
+        <div className="flex flex-col items-end gap-1 pt-6">
+          <p className="hidden text-base font-semibold text-primary sm:block">
+            {pack.apoioIds.length} {t("apoiosContagemCurta")}
+          </p>
+          <button
+            type="button"
+            aria-pressed={packCompleto}
+            aria-label={packCompleto ? t("packRemoverTodos") : t("packAdicionarTodos")}
+            title={packCompleto ? t("packRemoverTodos") : t("packAdicionarTodos")}
+            onClick={onAlternarPack}
+            className={`flex size-9 shrink-0 items-center justify-center rounded-full border backdrop-blur-sm transition-all duration-200 active:scale-95 ${
+              packCompleto
+                ? "border-primary/70 bg-secondary/70 text-foreground"
+                : packParcial
+                  ? "border-primary/50 bg-secondary/40 text-detail"
+                  : "border-input/60 bg-card/40 text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {packCompleto ? (
+              <Check aria-hidden="true" className="size-4" />
+            ) : (
+              <Plus aria-hidden="true" className="size-4" />
+            )}
+          </button>
+        </div>
+      </div>
+      <div
+        className={`apoio-conteudo grid transition-all duration-300 ease-in-out ${aberto ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
+      >
+        <div className="overflow-hidden">
+          <div className="pb-6 pl-8">
+            <p className="max-w-xl text-base leading-relaxed text-muted-foreground">
+              {textoPack.descricao}
+            </p>
+            <h4 className="mt-4 text-sm font-semibold">{t("packApoiosIncluidos")}</h4>
+            <div className="mt-2.5 space-y-2">
+              {pack.apoioIds.map((apoioId) => {
+                const info = obterApoio(apoioId);
+                return (
+                  <div
+                    key={apoioId}
+                    className="flex flex-col justify-between gap-1 rounded-xl border border-border/80 bg-background/50 p-3 sm:flex-row sm:items-center"
+                  >
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">
+                        {info?.titulo ?? apoioId}
+                      </p>
+                      <p className="text-xs text-muted-foreground">{info?.entidade}</p>
+                    </div>
+                    {info?.valor && (
+                      <span className="text-xs font-semibold text-primary sm:text-right">
+                        {info.valor}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <Button
+                type="button"
+                variant={packCompleto ? "outline" : "default"}
+                onClick={onAlternarPack}
+                className="h-10 text-xs font-medium"
+              >
+                {packCompleto ? (
+                  <>
+                    <Check aria-hidden="true" className="mr-1.5 size-3.5" />
+                    {t("packRemoverTodos")}
+                  </>
+                ) : (
+                  <>
+                    <Plus aria-hidden="true" className="mr-1.5 size-3.5" />
+                    {t("packAdicionarTodos")} ({pack.apoioIds.length})
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Index() {
   const { lingua } = useIdioma();
   const t = (chave: string) => tx(lingua, chave);
@@ -375,11 +514,9 @@ function Index() {
       filtros.filhos,
     ].filter((v) => v !== "").length + (temaSelecionado !== "Todos" ? 1 : 0);
 
-  const temFiltrosAtivos =
-    filtros.situacao !== "" || filtros.idade !== "" || avancadosAtivos > 0;
+  const temFiltrosAtivos = filtros.situacao !== "" || filtros.idade !== "" || avancadosAtivos > 0;
 
-  const visiveis =
-    temFiltrosAtivos || verTodos ? elegiveis : elegiveis.slice(0, LIMITE_INICIAL);
+  const visiveis = temFiltrosAtivos || verTodos ? elegiveis : elegiveis.slice(0, LIMITE_INICIAL);
 
   const emTransicaoRef = useRef(false);
 
@@ -392,7 +529,10 @@ function Index() {
     const resultados = resultadosRef.current;
     resultados?.classList.add("resultados-em-transicao", "resultados-animados");
     const saida = resultados?.animate(
-      [{ opacity: 1, transform: "translateY(0)" }, { opacity: 0, transform: "translateY(-6px)" }],
+      [
+        { opacity: 1, transform: "translateY(0)" },
+        { opacity: 0, transform: "translateY(-6px)" },
+      ],
       { duration: duracaoSaida, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" },
     );
     window.setTimeout(() => {
@@ -405,7 +545,10 @@ function Index() {
       const alturaNova = resultados.getBoundingClientRect().height;
       saida?.cancel();
       resultados.animate(
-        [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "translateY(0)" }],
+        [
+          { opacity: 0, transform: "translateY(10px)" },
+          { opacity: 1, transform: "translateY(0)" },
+        ],
         { duration: 450, easing: "cubic-bezier(.2,.8,.2,1)" },
       );
       const reposicionar = resultados.animate(
@@ -439,8 +582,7 @@ function Index() {
     }, 300);
   };
 
-  const setComAnimacao = (patch: Partial<Filtros>) =>
-    transicaoResultados(() => set(patch));
+  const setComAnimacao = (patch: Partial<Filtros>) => transicaoResultados(() => set(patch));
   const setTemaComAnimacao = (novoTema: string) =>
     transicaoResultados(() => setTemaSelecionado(novoTema));
 
@@ -508,6 +650,40 @@ function Index() {
       guardarWishlistLocal(nova);
       setStack(nova);
     }, 180);
+  };
+
+  const obterInfoApoio = (id: string) => {
+    const a = todosApoios.find((x) => x.id === id);
+    if (!a) return undefined;
+    const info = textoApoio(a);
+    return {
+      titulo: info.titulo,
+      entidade: info.entidade,
+      valor: info.valor,
+    };
+  };
+
+  const alternarPack = (pack: PackApoios) => {
+    const todosNoStack = pack.apoioIds.every((id) => stackIds.has(id));
+    if (todosNoStack) {
+      setStack((atual) => {
+        let nova = atual;
+        for (const id of pack.apoioIds) {
+          nova = removerApoio(nova, id);
+        }
+        guardarWishlistLocal(nova);
+        return nova;
+      });
+    } else {
+      setStack((atual) => {
+        let nova = atual;
+        for (const id of pack.apoioIds) {
+          nova = adicionarApoio(nova, id, "pack", pack.id);
+        }
+        guardarWishlistLocal(nova);
+        return nova;
+      });
+    }
   };
 
   const rutiloDistrito = (nome: string): string => {
@@ -616,19 +792,21 @@ function Index() {
         <div className="sm:col-span-2">
           <p className="mb-2 text-base font-semibold">{t("fTemas")}</p>
           <div className="flex flex-wrap gap-2">
-            {temasDisponiveis.filter((temaFiltro) => temaFiltro !== "Todos").map((temaFiltro) => (
-              <button
-                key={temaFiltro}
-                type="button"
-                aria-pressed={temaSelecionado === temaFiltro}
-                onClick={() =>
-                  setTemaComAnimacao(temaSelecionado === temaFiltro ? "Todos" : temaFiltro)
-                }
-                className={classePilula(temaSelecionado === temaFiltro)}
-              >
-                {rotuloTema(lingua, temaFiltro)}
-              </button>
-            ))}
+            {temasDisponiveis
+              .filter((temaFiltro) => temaFiltro !== "Todos")
+              .map((temaFiltro) => (
+                <button
+                  key={temaFiltro}
+                  type="button"
+                  aria-pressed={temaSelecionado === temaFiltro}
+                  onClick={() =>
+                    setTemaComAnimacao(temaSelecionado === temaFiltro ? "Todos" : temaFiltro)
+                  }
+                  className={classePilula(temaSelecionado === temaFiltro)}
+                >
+                  {rotuloTema(lingua, temaFiltro)}
+                </button>
+              ))}
           </div>
         </div>
       )}
@@ -783,182 +961,234 @@ function Index() {
             )}
 
             <div ref={resultadosRef} className="flow-root">
-            <div
-              className="mb-4 mt-6 flex scroll-mt-24 flex-wrap items-baseline justify-between gap-3"
-              id="apoios"
-            >
-              <h2 className="text-xl font-semibold">
-                {temFiltrosAtivos ? t("apoiosRecomendados") : t("apoiosExplorar")}
-              </h2>
-              <p className="text-sm font-medium text-detail">
-                {temFiltrosAtivos
-                  ? `${elegiveis.length} ${t(elegiveis.length === 1 ? "possivelApoio1" : "possivelApoios")}`
-                  : `${todosApoios.length} ${t("contagemCatalogo")}`}
-              </p>
+              <div
+                className="mb-4 mt-6 flex scroll-mt-24 flex-wrap items-baseline justify-between gap-3"
+                id="apoios"
+              >
+                <h2 className="text-xl font-semibold">
+                  {temFiltrosAtivos ? t("apoiosRecomendados") : t("apoiosExplorar")}
+                </h2>
+                <p className="text-sm font-medium text-detail">
+                  {temFiltrosAtivos
+                    ? `${elegiveis.length} ${t(elegiveis.length === 1 ? "possivelApoio1" : "possivelApoios")}`
+                    : `${todosApoios.length} ${t("contagemCatalogo")}`}
+                </p>
+              </div>
+
+              <section
+                aria-live="polite"
+                inert={stack.itens.length === 0}
+                className={`stack-painel pointer-events-none fixed inset-x-0 bottom-0 z-40 ${stack.itens.length === 0 ? "stack-painel-fechado" : ""}`}
+              >
+                <div className="stack-painel-interior">
+                  <div className="mx-4 mb-6 rounded-xl border border-border bg-card p-4 shadow-xl pointer-events-auto sm:mx-auto sm:max-h-[70vh] sm:max-w-3xl sm:overflow-y-auto">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <h3 className="text-base font-semibold">
+                        {t("stackTitulo")} · {stack.itens.length}
+                      </h3>
+                      <button
+                        type="button"
+                        onClick={limparStack}
+                        className="text-xs font-medium text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"
+                      >
+                        {t("stackLimpar")}
+                      </button>
+                    </div>
+                    <ul className="mt-3 flex flex-wrap gap-2">
+                      {stack.itens.map((item) => (
+                        <li
+                          key={item.id}
+                          className={`stack-chip ${saindoStack.has(item.id) ? "stack-chip-saindo" : ""}`}
+                        >
+                          <button
+                            type="button"
+                            title={t("stackRemoverChip")}
+                            onClick={() => alternarStack(item.id)}
+                            className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-primary/70 bg-secondary/70 px-3 text-xs font-medium text-foreground backdrop-blur-sm transition-opacity hover:opacity-80"
+                          >
+                            {tituloDe(item.id)}
+                            {okPorId.get(item.id) === false && (
+                              <span className="text-[10px] text-muted-foreground">
+                                · {t("stackForaPerfil")}
+                              </span>
+                            )}
+                            <X aria-hidden="true" className="size-3" />
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                    <div key={assinaturaStack} className="stack-resultado mt-3 space-y-2">
+                      {validacaoStack.valida ? (
+                        <p className="text-sm font-medium text-primary">{t("stackTudoOk")}</p>
+                      ) : (
+                        <>
+                          {validacaoStack.conflitos.map((c) => (
+                            <div
+                              key={`${c.apoioA}-${c.apoioB}`}
+                              className="rounded-lg border-l-2 border-destructive bg-destructive/10 px-3 py-2"
+                            >
+                              <p className="text-sm font-semibold text-destructive">
+                                {t(
+                                  c.tipo === "incompatibilidade_perfil"
+                                    ? "stackPerfilTitulo"
+                                    : "stackConflitoTitulo",
+                                )}
+                              </p>
+                              <p className="mt-1 text-xs font-medium">
+                                {tituloDe(c.apoioA)} · {tituloDe(c.apoioB)}
+                              </p>
+                              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                                {traduzMotivo(lingua, c.motivo)}
+                              </p>
+                              {c.baseLegal && (
+                                <p className="mt-1 text-xs text-muted-foreground">
+                                  {t("stackBaseLegal")}: {c.baseLegal}
+                                </p>
+                              )}
+                              {c.fontes?.map((url, i) => (
+                                <a
+                                  key={url}
+                                  href={url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="mr-3 text-xs text-primary underline"
+                                >
+                                  {t("stackFonte")} {i + 1} · {c.verificadoEm}
+                                </a>
+                              ))}
+                              <p className="mt-1 text-xs leading-relaxed text-detail">
+                                <span className="font-semibold">{t("stackSugestao")}:</span>{" "}
+                                {traduzSugestao(lingua, c.sugestao)}
+                              </p>
+                            </div>
+                          ))}
+                          {validacaoStack.dependenciasEmFalta.map((d) => (
+                            <div
+                              key={d.apoioId}
+                              className="rounded-lg border-l-2 border-border px-3 py-2"
+                            >
+                              <p className="text-sm font-semibold">{t("stackDependenciaTitulo")}</p>
+                              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                                {traduzMotivo(lingua, d.motivo)}
+                              </p>
+                            </div>
+                          ))}
+                        </>
+                      )}
+                      {validacaoStack.paresPorConfirmar.length > 0 && (
+                        <details className="text-sm text-muted-foreground">
+                          <summary className="cursor-pointer">
+                            {t("stackPorConfirmar")} · {validacaoStack.paresPorConfirmar.length}
+                          </summary>
+                          <ul className="mt-2 space-y-1">
+                            {validacaoStack.paresPorConfirmar.map((p) => (
+                              <li key={`${p.apoioA}-${p.apoioB}`}>
+                                {tituloDe(p.apoioA)} + {tituloDe(p.apoioB)}
+                              </li>
+                            ))}
+                          </ul>
+                        </details>
+                      )}
+                    </div>
+                    <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                      {t("stackAviso")}
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              {lista(visiveis, true)}
+              {!temFiltrosAtivos && elegiveis.length > LIMITE_INICIAL && (
+                <div className="mt-6 flex justify-center">
+                  <button
+                    type="button"
+                    aria-expanded={verTodos}
+                    onClick={() => setVerTodos((v) => !v)}
+                    className={classePilula(verTodos)}
+                  >
+                    {verTodos ? t("verMenos") : `${t("verTodos")} (${elegiveis.length})`}
+                  </button>
+                </div>
+              )}
+              {lingua === "en" && apoiosDescobertos.length > 0 && (
+                <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                  {t("notaConteudoOficial")}
+                </p>
+              )}
+
+              {temFiltrosAtivos && outros.length > 0 && (
+                <details className="mt-10 rounded-xl border border-border bg-card p-4">
+                  <summary className="cursor-pointer text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground">
+                    {t("verDescartados")} ({outros.length})
+                  </summary>
+                  <div className="mt-4">
+                    <p className="mb-4 text-xs text-muted-foreground">{t("descartadosNota")}</p>
+                    {lista(outros, false)}
+                  </div>
+                </details>
+              )}
             </div>
 
             <section
-              aria-live="polite"
-              inert={stack.itens.length === 0}
-              className={`stack-painel pointer-events-none fixed inset-x-0 bottom-0 z-40 ${stack.itens.length === 0 ? "stack-painel-fechado" : ""}`}
+              id="packs-apoios"
+              aria-labelledby="packs-heading"
+              className="mt-12 border-t border-border pt-10"
             >
-              <div className="stack-painel-interior">
-                <div className="mx-4 mb-6 rounded-xl border border-border bg-card p-4 shadow-xl pointer-events-auto sm:mx-auto sm:max-h-[70vh] sm:max-w-3xl sm:overflow-y-auto">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <h3 className="text-base font-semibold">
-                    {t("stackTitulo")} · {stack.itens.length}
-                  </h3>
-                  <button
-                    type="button"
-                    onClick={limparStack}
-                    className="text-xs font-medium text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"
-                  >
-                    {t("stackLimpar")}
-                  </button>
+              <div className="mb-4 flex flex-wrap items-baseline justify-between gap-3">
+                <div>
+                  <h2 id="packs-heading" className="text-xl font-semibold">
+                    {t("packsTitulo")}
+                  </h2>
+                  <p className="mt-1 text-sm text-muted-foreground">{t("packsDescricao")}</p>
                 </div>
-                <ul className="mt-3 flex flex-wrap gap-2">
-                  {stack.itens.map((item) => (
-                    <li
-                      key={item.id}
-                      className={`stack-chip ${saindoStack.has(item.id) ? "stack-chip-saindo" : ""}`}
-                    >
-                      <button
-                        type="button"
-                        title={t("stackRemoverChip")}
-                        onClick={() => alternarStack(item.id)}
-                        className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-primary/70 bg-secondary/70 px-3 text-xs font-medium text-foreground backdrop-blur-sm transition-opacity hover:opacity-80"
-                      >
-                        {tituloDe(item.id)}
-                        {okPorId.get(item.id) === false && (
-                          <span className="text-[10px] text-muted-foreground">
-                            · {t("stackForaPerfil")}
-                          </span>
-                        )}
-                        <X aria-hidden="true" className="size-3" />
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-                <div key={assinaturaStack} className="stack-resultado mt-3 space-y-2">
-                  {validacaoStack.valida ? (
-                    <p className="text-sm font-medium text-primary">{t("stackTudoOk")}</p>
-                  ) : (
-                    <>
-                      {validacaoStack.conflitos.map((c) => (
-                        <div
-                          key={`${c.apoioA}-${c.apoioB}`}
-                          className="rounded-lg border-l-2 border-destructive bg-destructive/10 px-3 py-2"
-                        >
-                          <p className="text-sm font-semibold text-destructive">
-                            {t(c.tipo === "incompatibilidade_perfil" ? "stackPerfilTitulo" : "stackConflitoTitulo")}
-                          </p>
-                          <p className="mt-1 text-xs font-medium">{tituloDe(c.apoioA)} · {tituloDe(c.apoioB)}</p>
-                          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                            {traduzMotivo(lingua, c.motivo)}
-                          </p>
-                          {c.baseLegal && (
-                            <p className="mt-1 text-xs text-muted-foreground">
-                              {t("stackBaseLegal")}: {c.baseLegal}
-                            </p>
-                          )}
-                          {c.fontes?.map((url, i) => (
-                            <a key={url} href={url} target="_blank" rel="noopener noreferrer" className="mr-3 text-xs text-primary underline">
-                              {t("stackFonte")} {i + 1} · {c.verificadoEm}
-                            </a>
-                          ))}
-                          <p className="mt-1 text-xs leading-relaxed text-detail">
-                            <span className="font-semibold">{t("stackSugestao")}:</span>{" "}
-                            {traduzSugestao(lingua, c.sugestao)}
-                          </p>
-                        </div>
-                      ))}
-                      {validacaoStack.dependenciasEmFalta.map((d) => (
-                        <div
-                          key={d.apoioId}
-                          className="rounded-lg border-l-2 border-border px-3 py-2"
-                        >
-                          <p className="text-sm font-semibold">{t("stackDependenciaTitulo")}</p>
-                          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                            {traduzMotivo(lingua, d.motivo)}
-                          </p>
-                        </div>
-                      ))}
-                    </>
-                  )}
-                  {validacaoStack.paresPorConfirmar.length > 0 && (
-                    <details className="text-sm text-muted-foreground">
-                      <summary className="cursor-pointer">{t("stackPorConfirmar")} · {validacaoStack.paresPorConfirmar.length}</summary>
-                      <ul className="mt-2 space-y-1">
-                        {validacaoStack.paresPorConfirmar.map((p) => <li key={`${p.apoioA}-${p.apoioB}`}>{tituloDe(p.apoioA)} + {tituloDe(p.apoioB)}</li>)}
-                      </ul>
-                    </details>
-                  )}
-                </div>
-                <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-                  {t("stackAviso")}
+                <p className="text-sm font-medium text-detail">
+                  {PACKS_RECOMENDADOS.length} {t("packsDisponiveis")}
                 </p>
-                </div>
+              </div>
+
+              <div className="border-t border-border">
+                {PACKS_RECOMENDADOS.map((pack) => {
+                  const packCompleto = pack.apoioIds.every((id) => stackIds.has(id));
+                  const packParcial = !packCompleto && pack.apoioIds.some((id) => stackIds.has(id));
+                  return (
+                    <CartaoPack
+                      key={pack.id}
+                      pack={pack}
+                      lingua={lingua}
+                      t={t}
+                      packCompleto={packCompleto}
+                      packParcial={packParcial}
+                      onAlternarPack={() => alternarPack(pack)}
+                      obterApoio={obterInfoApoio}
+                    />
+                  );
+                })}
               </div>
             </section>
 
-            {lista(visiveis, true)}
-            {!temFiltrosAtivos && elegiveis.length > LIMITE_INICIAL && (
-              <div className="mt-6 flex justify-center">
-                <button
-                  type="button"
-                  aria-expanded={verTodos}
-                  onClick={() => setVerTodos((v) => !v)}
-                  className={classePilula(verTodos)}
-                >
-                  {verTodos
-                    ? t("verMenos")
-                    : `${t("verTodos")} (${elegiveis.length})`}
-                </button>
-              </div>
-            )}
-            {lingua === "en" && apoiosDescobertos.length > 0 && (
-              <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-                {t("notaConteudoOficial")}
-              </p>
-            )}
-
-            {temFiltrosAtivos && outros.length > 0 && (
-              <details className="mt-10 rounded-xl border border-border bg-card p-4">
-                <summary className="cursor-pointer text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground">
-                  {t("verDescartados")} ({outros.length})
-                </summary>
-                <div className="mt-4">
-                  <p className="mb-4 text-xs text-muted-foreground">{t("descartadosNota")}</p>
-                  {lista(outros, false)}
-                </div>
-              </details>
-            )}
-            </div>
-
-
-          <section
-            aria-labelledby="duvidas-heading"
-            className="relative mt-10 overflow-hidden rounded-xl border border-border bg-card p-6"
-          >
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 opacity-[0.1] [color:var(--detail)]"
+            <section
+              aria-labelledby="duvidas-heading"
+              className="relative mt-10 overflow-hidden rounded-xl border border-border bg-card p-6"
             >
-              <AzulejoPadrao id="azulejo-card" className="h-full w-full" />
-            </div>
-            <div className="relative">
-              <h2 id="duvidas-heading" className="text-lg font-semibold">
-                {t("duvidasTitulo")}
-              </h2>
-              <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                {t("duvidasDesc")}
-              </p>
-              <Button asChild className="mt-4">
-                <Link to="/faq">{t("duvidasBotao")}</Link>
-              </Button>
-            </div>
-          </section>
-        </main>
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 opacity-[0.1] [color:var(--detail)]"
+              >
+                <AzulejoPadrao id="azulejo-card" className="h-full w-full" />
+              </div>
+              <div className="relative">
+                <h2 id="duvidas-heading" className="text-lg font-semibold">
+                  {t("duvidasTitulo")}
+                </h2>
+                <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                  {t("duvidasDesc")}
+                </p>
+                <Button asChild className="mt-4">
+                  <Link to="/faq">{t("duvidasBotao")}</Link>
+                </Button>
+              </div>
+            </section>
+          </main>
         </div>
         <SiteFooter />
       </div>

@@ -37,7 +37,10 @@ export const TEXTOS: Record<string, { pt: string; en: string }> = {
   fAgregado: { pt: "Quantas pessoas vivem em sua casa?", en: "How many people live in your home?" },
   pessoas: { pt: "pessoas", en: "people" },
   exemploAgregado: { pt: "Ex.: 3", en: "e.g. 3" },
-  fRendimento: { pt: "Quanto entra, por ano, em sua casa?", en: "How much comes in per year, in your home?" },
+  fRendimento: {
+    pt: "Quanto entra, por ano, em sua casa?",
+    en: "How much comes in per year, in your home?",
+  },
   exemploRendimento: { pt: "Ex.: 12 000", en: "e.g. 12,000" },
   notaRendimentoPrefix: {
     pt: "Rendimento bruto antes dos descontos. O IAS vale",
@@ -180,7 +183,10 @@ export const TEXTOS: Record<string, { pt: string; en: string }> = {
     en: "Go to questions and answers",
   },
   iasFaqTitulo: { pt: "Dúvidas frequentes", en: "Frequently asked questions" },
-  iasQ1: { pt: "O que é o IAS e quanto vale em 2026?", en: "What is the IAS and what is it worth in 2026?" },
+  iasQ1: {
+    pt: "O que é o IAS e quanto vale em 2026?",
+    en: "What is the IAS and what is it worth in 2026?",
+  },
   iasSignifica: { pt: "significa", en: "means" },
   iasNomeCompleto: {
     pt: "Indexante dos Apoios Sociais",
@@ -206,7 +212,10 @@ export const TEXTOS: Record<string, { pt: string; en: string }> = {
     pt: "Consultar o valor oficial · Portaria n.º 480-A/2025/1",
     en: "See the official value · Portaria n.º 480-A/2025/1",
   },
-  iasQ2: { pt: "Estes resultados confirmam que tenho direito?", en: "Do these results confirm my entitlement?" },
+  iasQ2: {
+    pt: "Estes resultados confirmam que tenho direito?",
+    en: "Do these results confirm my entitlement?",
+  },
   iasResposta2: {
     pt: "Não. São apoios que podem aplicar-se ao seu caso. As respostas ajudam a orientar, mas faltam informações como descontos para a Segurança Social, património, filhos, incapacidade ou contrato de arrendamento. Em cada apoio encontra as condições a confirmar e a ligação à fonte oficial. O rendimento bruto anual da casa não substitui o cálculo legal de recursos de cada apoio.",
     en: "No. These are benefits that may apply to your situation. The answers help point you in the right direction, but information such as Social Security contributions, assets, children, disability or a rental contract is missing. Each benefit lists the conditions to confirm and the link to its official source. The household's gross annual income does not replace the legal resource calculation of each benefit.",
@@ -284,8 +293,14 @@ export const TEXTOS: Record<string, { pt: string; en: string }> = {
     pt: "Não foram detetadas incompatibilidades nas regras verificadas. Isto não confirma que estes apoios possam ser acumulados.",
     en: "No incompatibilities were found in the checked rules. This does not confirm that these benefits can be combined.",
   },
-  stackPerfilTitulo: { pt: "Incompatíveis para a mesma pessoa", en: "Incompatible for the same person" },
-  stackPorConfirmar: { pt: "Combinações por confirmar junto das entidades competentes", en: "Combinations to confirm with the relevant authorities" },
+  stackPerfilTitulo: {
+    pt: "Incompatíveis para a mesma pessoa",
+    en: "Incompatible for the same person",
+  },
+  stackPorConfirmar: {
+    pt: "Combinações por confirmar junto das entidades competentes",
+    en: "Combinations to confirm with the relevant authorities",
+  },
   stackFonte: { pt: "Fonte oficial", en: "Official source" },
   stackConflitoTitulo: { pt: "Não podem ser acumulados", en: "These cannot be combined" },
   stackDependenciaTitulo: { pt: "Pré-requisito por confirmar", en: "Prerequisite to confirm" },
@@ -296,6 +311,24 @@ export const TEXTOS: Record<string, { pt: string; en: string }> = {
     pt: "Verificação para a mesma pessoa e o mesmo período. Apoios de outros membros da casa podem ter regras diferentes. Selecionar um apoio não prova que já o recebe; a decisão final cabe à entidade competente.",
     en: "Check for the same person and period. Benefits for other household members may follow different rules. Selecting a benefit does not prove you receive it; the relevant authority makes the final decision.",
   },
+
+  // ===== Packs de apoios =====
+  packsTitulo: {
+    pt: "Packs de apoios combinados",
+    en: "Combined benefit bundles",
+  },
+  packsDescricao: {
+    pt: "Conjuntos de apoios legais que podem ser pedidos em conjunto e fazem sentido para diferentes fases da vida.",
+    en: "Groups of state benefits that can legally be claimed together and make sense for different life stages.",
+  },
+  packsDisponiveis: { pt: "packs recomendados", en: "recommended bundles" },
+  packApoiosIncluidos: { pt: "Apoios incluídos no pack", en: "Benefits included in this bundle" },
+  packAdicionarTodos: { pt: "Adicionar pack à verificação", en: "Add bundle to check" },
+  packRemoverTodos: { pt: "Remover pack da verificação", en: "Remove bundle from check" },
+  packCompativelTag: { pt: "100% compatíveis entre si", en: "100% compatible with each other" },
+  packVerificado: { pt: "Sem conflitos legais", en: "No legal conflicts" },
+  packApoiosContagem: { pt: "apoios combinados", en: "combined benefits" },
+  apoiosContagemCurta: { pt: "apoios", en: "benefits" },
 };
 
 /** Devolve o texto da chave no idioma ativo, com fallback para português. */

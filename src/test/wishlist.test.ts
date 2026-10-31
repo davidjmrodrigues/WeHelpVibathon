@@ -13,6 +13,7 @@ import {
   removerApoio,
   validarCompatibilidadeWishlist,
 } from "@/lib/wishlist";
+import { PACKS_EN, traduzPack } from "@/lib/apoios-en";
 
 describe("Motor de Wishlist e Validação de Compatibilidade entre Apoios", () => {
   it.each([
@@ -233,6 +234,20 @@ describe("Motor de Wishlist e Validação de Compatibilidade entre Apoios", () =
 
       expect(pack).toBeUndefined();
       expect(wishlist.itens).toHaveLength(1);
+    });
+
+    it("traduz corretamente os textos de cada pack para inglês", () => {
+      for (const pack of PACKS_RECOMENDADOS) {
+        const pt = traduzPack("pt", pack);
+        expect(pt.nome).toBe(pack.nome);
+        expect(pt.descricao).toBe(pack.descricao);
+
+        const en = traduzPack("en", pack);
+        expect(en.nome).toBeTruthy();
+        expect(en.descricao).toBeTruthy();
+        expect(en.publicoAlvo).toBeTruthy();
+        expect(PACKS_EN[pack.id]).toBeDefined();
+      }
     });
   });
 
