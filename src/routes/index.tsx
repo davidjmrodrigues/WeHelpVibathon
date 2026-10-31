@@ -1,9 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { flushSync } from "react-dom";
 import { CircleHelp, ChevronDown, ArrowUpRight, LockKeyhole, Moon, Sun, SlidersHorizontal, X, RotateCcw, Check, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { IasFaq } from "@/components/ias-faq";
 import { SiteFooter } from "@/components/site-footer";
 import { DISTRITOS, IAS_VALUE, SITUACOES, avaliarApoios, type Perfil, type Situacao } from "@/lib/apoios";
 import { alternarTemaComCirculo, temaAtual, type Tema } from "@/lib/theme";
@@ -83,7 +82,6 @@ function Index() {
         <div className="mb-4 mt-6 flex scroll-mt-24 items-baseline justify-between gap-3" id="apoios"><h2 className="text-xl font-semibold">Apoios a explorar</h2><p className="text-sm font-medium text-detail">{elegiveis.length} {elegiveis.length === 1 ? "possível apoio" : "possíveis apoios"}</p></div>
         {lista(elegiveis, true)}
         {outros.length > 0 && <section className="mt-10"><h2 className="mb-4 text-xl font-semibold">Outros apoios</h2>{lista(outros, false)}</section>}
-        <div className="mt-10"><IasFaq/></div>
       </main>
     </div>
     <SiteFooter/>

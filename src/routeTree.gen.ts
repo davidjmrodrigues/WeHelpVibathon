@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacidadeRoute = PrivacidadeRouteImport.update({
@@ -25,27 +31,31 @@ const PrivacidadeRoute = PrivacidadeRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/faq': typeof FaqRoute
   '/privacidade': typeof PrivacidadeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/faq': typeof FaqRoute
   '/privacidade': typeof PrivacidadeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/faq': typeof FaqRoute
   '/privacidade': typeof PrivacidadeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/privacidade'
+  fullPaths: '/' | '/faq' | '/privacidade'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/privacidade'
-  id: '__root__' | '/' | '/privacidade'
+  to: '/' | '/faq' | '/privacidade'
+  id: '__root__' | '/' | '/faq' | '/privacidade'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  FaqRoute: typeof FaqRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacidade': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FaqRoute: FaqRoute,
   PrivacidadeRoute: PrivacidadeRoute,
 }
 export const routeTree = rootRouteImport
