@@ -467,9 +467,9 @@ export function extrairResultadosPesquisaGov(payloadJson: unknown): ResultadoPes
   for (const item of lista) {
     const src = item?._source;
     if (!src) continue;
-    const titulo = limparTextoOficial(typeof src.title === "string" ? src.title : "");
+    const titulo = limparTextoOficial(typeof src["title"] === "string" ? src["title"] : "");
     const descricao = limparTextoOficial(
-      typeof src.description === "string" ? src.description : "",
+      typeof src["description"] === "string" ? src["description"] : "",
     );
     const rawUrl = typeof src["url"] === "string" ? src["url"] : "";
     const categoria = limparTextoOficial(
