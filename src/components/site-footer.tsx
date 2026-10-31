@@ -30,25 +30,6 @@ export function SiteFooter() {
             <a href="/" className="inline-flex" aria-label="WeHelp — início">
               <LogoWeHelp className="h-12 w-auto" />
             </a>
-            <div className="mt-3">
-              <h2 className="text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">{t("sigaNos")}</h2>
-              <ul className="mt-4 flex gap-2.5">
-                {SOCIAIS.map(({ nome, href, Icone }) => (
-                  <li key={nome}>
-                    <a
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={nome}
-                      title={nome}
-                      className="flex size-9 items-center justify-center rounded-lg border border-secondary-foreground/25 text-secondary-foreground/80 transition-opacity hover:opacity-70"
-                    >
-                      <Icone aria-hidden="true" className="size-4" />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
             <address className="mt-7 not-italic text-sm leading-relaxed text-secondary-foreground/80">
               <p className="font-semibold text-secondary-foreground">{t("sede")}</p>
               <p className="mt-1.5">UalgTecCampus</p>
@@ -63,6 +44,22 @@ export function SiteFooter() {
                 {EXPLORAR.map(l => <li key={l.chave}><a href={l.href} className={LIGACAO}>{t(l.chave)}</a></li>)}
               </ul>
             </nav>
+            <ul className="flex gap-2.5">
+              {SOCIAIS.map(({ nome, href, Icone }) => (
+                <li key={nome}>
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={nome}
+                    title={nome}
+                    className="flex size-9 items-center justify-center rounded-lg border border-secondary-foreground/25 text-secondary-foreground/80 transition-opacity hover:opacity-70"
+                  >
+                    <Icone aria-hidden="true" className="size-4" />
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
           <div>
             <h2 className="text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">{t("faleConnosco")}</h2>
