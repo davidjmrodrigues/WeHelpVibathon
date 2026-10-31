@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { IasFaq } from "@/components/ias-faq";
+import { LogoWeHelp } from "@/components/logo-wehelp";
 import { BotaoIdioma } from "@/components/botao-idioma";
 import { SiteFooter } from "@/components/site-footer";
 import { useIdioma } from "@/lib/idioma";
@@ -36,8 +37,7 @@ function PaginaFaq() {
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <Link to="/" className="inline-flex items-center gap-2.5" aria-label="WeHelp — início">
-            <span className="brand-mark" aria-hidden="true" />
-            <span className="text-xl font-semibold">WeHelp</span>
+            <LogoWeHelp className="h-10 w-auto" />
           </Link>
           <div className="flex items-center gap-2">
             <BotaoIdioma />
