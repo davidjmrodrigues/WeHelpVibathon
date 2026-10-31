@@ -284,6 +284,7 @@ function Index() {
   const [apoiosDescobertos, setApoiosDescobertos] = useState<ApoioDescoberto[]>([]);
   const [temaSelecionado, setTemaSelecionado] = useState<string>("Todos");
   const [stack, setStack] = useState<Wishlist>(() => criarWishlist());
+  const [saindoStack, setSaindoStack] = useState<ReadonlySet<string>>(new Set());
   const escuro = tema === "escuro";
 
   const aoCarregarTema = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -467,6 +468,7 @@ function Index() {
     () => validarCompatibilidadeWishlist(stack.itens.map((i) => i.id)),
     [stack],
   );
+  const assinaturaStack = `${validacaoStack.valida}|${validacaoStack.conflitos.map((c) => `${c.apoioA}>${c.apoioB}`).join(",")}|${validacaoStack.dependenciasEmFalta.map((d) => d.apoioId).join(",")}`;
   const stackIds = useMemo(() => new Set(stack.itens.map((i) => i.id)), [stack]);
   const okPorId = useMemo(
     () => new Map(todosApoios.map((x) => [x.id, x.resultado.ok] as const)),
@@ -474,19 +476,38 @@ function Index() {
   );
 
   const alternarStack = (id: string) => {
+    if (stack.itens.some((i) => i.id === id)) {
+      setSaindoStack((s) => new Set(s).add(id));
+      window.setTimeout(() => {
+        setSaindoStack((s) => {
+          const n = new Set(s);
+          n.delete(id);
+          return n;
+        });
+        setStack((atual) => {
+          const nova = removerApoio(atual, id);
+          guardarWishlistLocal(nova);
+          return nova;
+        });
+      }, 180);
+      return;
+    }
     setStack((atual) => {
-      const nova = atual.itens.some((i) => i.id === id)
-        ? removerApoio(atual, id)
-        : adicionarApoio(atual, id);
+      const nova = adicionarApoio(atual, id);
       guardarWishlistLocal(nova);
       return nova;
     });
   };
 
   const limparStack = () => {
-    const nova = limparWishlist();
-    guardarWishlistLocal(nova);
-    setStack(nova);
+    if (stack.itens.length === 0) return;
+    setSaindoStack(new Set(stack.itens.map((i) => i.id)));
+    window.setTimeout(() => {
+      setSaindoStack(new Set());
+      const nova = limparWishlist();
+      guardarWishlistLocal(nova);
+      setStack(nova);
+    }, 180);
   };
 
   const rutiloDistrito = (nome: string): string => {
@@ -776,11 +797,13 @@ function Index() {
               </p>
             </div>
 
-            {stack.itens.length > 0 && (
-              <section
-                aria-live="polite"
-                className="mb-6 rounded-xl border border-border bg-card p-4"
-              >
+            <section
+              aria-live="polite"
+              inert={stack.itens.length === 0}
+              className={`stack-painel ${stack.itens.length === 0 ? "stack-painel-fechado" : ""}`}
+            >
+              <div className="stack-painel-interior">
+                <div className="mb-6 rounded-xl border border-border bg-card p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <h3 className="text-base font-semibold">
                     {t("stackTitulo")} · {stack.itens.length}
@@ -795,7 +818,10 @@ function Index() {
                 </div>
                 <ul className="mt-3 flex flex-wrap gap-2">
                   {stack.itens.map((item) => (
-                    <li key={item.id}>
+                    <li
+                      key={item.id}
+                      className={`stack-chip ${saindoStack.has(item.id) ? "stack-chip-saindo" : ""}`}
+                    >
                       <button
                         type="button"
                         title={t("stackRemoverChip")}
@@ -813,7 +839,7 @@ function Index() {
                     </li>
                   ))}
                 </ul>
-                <div className="mt-3 space-y-2">
+                <div key={assinaturaStack} className="stack-resultado mt-3 space-y-2">
                   {validacaoStack.valida ? (
                     <p className="text-sm font-medium text-primary">{t("stackTudoOk")}</p>
                   ) : (
@@ -857,8 +883,9 @@ function Index() {
                 <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
                   {t("stackAviso")}
                 </p>
-              </section>
-            )}
+                </div>
+              </div>
+            </section>
 
             {lista(visiveis, true)}
             {!temFiltrosAtivos && elegiveis.length > LIMITE_INICIAL && (
