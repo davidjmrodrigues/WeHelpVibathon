@@ -136,6 +136,15 @@
 .resultados-animados .support-row { animation: none !important; }
 .pilula-selecionada { animation: pilula-pop 260ms cubic-bezier(.34,1.56,.64,1) both; }
 @keyframes pilula-pop { from { transform: scale(.93); } to { transform: scale(1); } }
+/* Painel de acumulação: abre/fecha com deslize suave (truque de grid-rows). */
+.stack-painel { display: grid; grid-template-rows: 1fr; transition: grid-template-rows 300ms cubic-bezier(.2,.8,.2,1), opacity 300ms cubic-bezier(.2,.8,.2,1); }
+.stack-painel-fechado { grid-template-rows: 0fr; opacity: 0; pointer-events: none; }
+.stack-painel-interior { overflow: hidden; min-height: 0; }
+.stack-chip { animation: chip-entrada 260ms cubic-bezier(.2,.8,.2,1) both; }
+@keyframes chip-entrada { from { opacity: 0; transform: translateY(4px) scale(.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.stack-chip-saindo { opacity: 0; transform: scale(.95); transition: opacity 180ms ease, transform 180ms ease; }
+.stack-resultado { animation: stack-resultado-entrada 300ms cubic-bezier(.2,.8,.2,1) both; }
+@keyframes stack-resultado-entrada { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes row-enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 /* Keep full old/new theme snapshots intact; only the incoming snapshot is revealed. */
 html[data-theme-transition]::view-transition-group(root) { animation: none; }
@@ -179,4 +188,8 @@ html[data-theme-transition] #wehelp-root *::after { transition: none !important;
   .limpar-pill { transition-duration: 300ms !important; }
   /* The pill selection pop is user-triggered and keeps its animation. */
   .pilula-selecionada { animation-duration: 260ms !important; }
+  /* The stacking panel and its chips are user-triggered and keep their motion. */
+  .stack-painel { transition-duration: 300ms !important; }
+  .stack-chip, .stack-resultado { animation-duration: 260ms !important; }
+  .stack-chip-saindo { transition-duration: 180ms !important; }
 }
