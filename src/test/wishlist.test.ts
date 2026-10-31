@@ -53,12 +53,12 @@ describe("Motor de Wishlist e Validação de Compatibilidade entre Apoios", () =
     expect(res.conflitos).toHaveLength(1);
 
     const conflito = res.conflitos[0];
-    expect(conflito!tipo).toBe("incompatibilidade_legal");
-    expect(conflito!apoioA).toBe("psi");
-    expect(conflito!apoioB).toBe("bonificacaodeficiencia");
-    expect(conflito!motivo).toContain("não podem ser acumuladas pelo mesmo titular");
-    expect(conflito!sugestao).toBeTruthy();
-    expect(conflito!baseLegal).toBeTruthy();
+    expect(conflito!.tipo).toBe("incompatibilidade_legal");
+    expect(conflito!.apoioA).toBe("psi");
+    expect(conflito!.apoioB).toBe("bonificacaodeficiencia");
+    expect(conflito!.motivo).toContain("não podem ser acumuladas pelo mesmo titular");
+    expect(conflito!.sugestao).toBeTruthy();
+    expect(conflito!.baseLegal).toBeTruthy();
   });
 
   it("deteta incompatibilidade direta entre Pensão Social de Velhice e Subsídio de Desemprego", () => {
