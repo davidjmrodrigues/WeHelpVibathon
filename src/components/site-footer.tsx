@@ -1,4 +1,5 @@
-import { Github, Instagram, Linkedin, LockKeyhole, Twitter } from "lucide-react";
+import { Github, Instagram, Linkedin, LockKeyhole, Send, Twitter } from "lucide-react";
+import { useState } from "react";
 
 const SOCIAIS = [
   { nome: "LinkedIn", href: "https://www.linkedin.com/company/wehelp", Icone: Linkedin },
