@@ -527,24 +527,6 @@ function Index() {
             </div>
 
 
-            {temasDisponiveis.length > 2 && (
-              <div className="mb-6 flex flex-wrap gap-2" aria-label="Filtrar por área temática">
-                {temasDisponiveis.map((t) => (
-                  <Button
-                    key={t}
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    aria-pressed={temaSelecionado === t}
-                    onClick={() => setTemaSelecionado(t)}
-                    className={`text-xs ${temaSelecionado === t ? "border-primary bg-secondary" : "bg-card"}`}
-                  >
-                    {t}
-                  </Button>
-                ))}
-              </div>
-            )}
-
             {lista(elegiveis, true)}
 
             {temFiltrosAtivos && outros.length > 0 && (
