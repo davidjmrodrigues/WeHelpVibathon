@@ -171,4 +171,6 @@ html[data-theme-transition] #wehelp-root *::after { transition: none !important;
   html[data-theme-transition]::view-transition-new(root) { animation-duration: 750ms !important; }
   /* Support card expand/collapse is user-triggered and keeps its slide. */
   .apoio-conteudo, .apoio-seta { transition-duration: 300ms !important; }
+  /* The clear-filters pill spin-and-shrink is user-triggered and keeps its animation. */
+  .limpar-pill { transition-duration: 300ms !important; }
 }

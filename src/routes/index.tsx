@@ -586,7 +586,7 @@ function Index() {
                   size="icon"
                   aria-label={t("limparFiltros")}
                   title={t("limparFiltros")}
-                  className={`size-[34px] rounded-full border border-input/60 bg-card/40 text-detail backdrop-blur-sm transition-all duration-300 ease-in hover:bg-card/70 ${
+                  className={`limpar-pill size-[34px] rounded-full border border-input/60 bg-card/40 text-detail backdrop-blur-sm transition-all duration-300 ease-in hover:bg-card/70 ${
                     limpando
                       ? "pointer-events-none -rotate-[360deg] scale-0 border-transparent opacity-0"
                       : ""
