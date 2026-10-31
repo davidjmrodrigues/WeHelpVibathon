@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { CircleHelp, ChevronDown, ArrowUpRight, LockKeyhole, Moon, Sun, SlidersHorizontal, X, RotateCcw, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { IasFaq } from "@/components/ias-faq";
 import { DISTRITOS, IAS_VALUE, SITUACOES, avaliarApoios, type Perfil, type Situacao } from "@/lib/apoios";
+import { alternarTemaComCirculo, temaAtual, type Tema } from "@/lib/theme";
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
@@ -28,7 +29,15 @@ function Azulejo() {
 function Index() {
   const [filtros, setFiltros] = useState<Filtros>(FILTROS_VAZIOS);
   const [filtrosAbertos, setFiltrosAbertos] = useState(false);
-  const [escuro, setEscuro] = useState(false);
+  const [tema, setTema] = useState<Tema>(() => temaAtual());
+  const circuloRef = useRef<HTMLDivElement>(null);
+  const escuro = tema === "escuro";
+  const aoCarregarTema = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const circulo = circuloRef.current;
+    if (!circulo) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    alternarTemaComCirculo(r.left + r.width / 2, r.top + r.height / 2, circulo, setTema);
+  };
   const perfil: Perfil = useMemo(() => ({
     idade: filtros.idade === "" ? null : Number(filtros.idade), distrito: filtros.distrito,
     situacao: filtros.situacao === "" ? null : filtros.situacao,
