@@ -227,24 +227,47 @@ function Index() {
     return nome;
   };
 
+  const classePilula = (ativo: boolean) =>
+    `inline-flex min-h-9 items-center gap-1.5 rounded-full border px-4 text-xs font-medium backdrop-blur-sm transition-colors ${ativo ? "border-primary/70 bg-secondary/70 text-foreground" : "border-input/60 bg-card/40 text-muted-foreground hover:text-foreground"}`;
+
   const painelAvancado = (
     <div className="grid gap-6 sm:grid-cols-2">
       <div>
-        <label htmlFor="f-idade" className="mb-2 block text-base font-semibold">
-          {t("fIdade")}
-        </label>
-        <div className="flex items-center gap-3">
-          <input
-            id="f-idade"
-            type="number"
-            min={0}
-            inputMode="numeric"
-            placeholder={t("exemploIdade")}
-            value={filtros.idade}
-            onChange={(e) => set({ idade: e.target.value })}
-            className={CAMPO}
-          />
-          <span className="text-sm text-muted-foreground">{t("anos")}</span>
+        <p className="mb-2 text-base font-semibold">{t("fHabitacao")}</p>
+        <div className="flex flex-wrap gap-2">
+          {(["arrendada", "propria"] as const).map((h) => (
+            <button
+              key={h}
+              type="button"
+              aria-pressed={filtros.habitacao === h}
+              onClick={() => set({ habitacao: filtros.habitacao === h ? "" : h })}
+              className={classePilula(filtros.habitacao === h)}
+            >
+              {t(h === "arrendada" ? "habitacaoArrendada" : "habitacaoPropria")}
+              {filtros.habitacao === h && (
+                <Check aria-hidden="true" className="size-3.5 text-primary" />
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div>
+        <p className="mb-2 text-base font-semibold">{t("fFilhos")}</p>
+        <div className="flex flex-wrap gap-2">
+          {(["sim", "nao", "monoparental"] as const).map((f) => (
+            <button
+              key={f}
+              type="button"
+              aria-pressed={filtros.filhos === f}
+              onClick={() => set({ filhos: filtros.filhos === f ? "" : f })}
+              className={classePilula(filtros.filhos === f)}
+            >
+              {t(f === "sim" ? "filhosSim" : f === "nao" ? "filhosNao" : "filhosMonoparental")}
+              {filtros.filhos === f && (
+                <Check aria-hidden="true" className="size-3.5 text-primary" />
+              )}
+            </button>
+          ))}
         </div>
       </div>
       <div>
