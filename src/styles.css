@@ -174,3 +174,14 @@ html[data-theme-transition] #wehelp-root *::after { transition: none !important;
   /* The theme reveal is user-triggered and must keep its circular expansion. */
   html[data-theme-transition]::view-transition-new(root) { animation-duration: 750ms !important; }
 }
+
+/* Esconde as setas nativas dos campos numéricos (pill da idade). */
+.numero-pill::-webkit-outer-spin-button,
+.numero-pill::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.numero-pill {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
