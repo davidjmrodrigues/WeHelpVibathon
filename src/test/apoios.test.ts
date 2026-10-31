@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+// novo teste adicionado no fim do describe principal
 import { APOIOS, avaliarApoios, type Perfil } from "@/lib/apoios";
 import { multiplicarIAS } from "@/lib/ias";
 
