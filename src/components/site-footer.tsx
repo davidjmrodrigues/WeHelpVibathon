@@ -30,7 +30,7 @@ export function SiteFooter() {
             <a href="/" className="inline-flex" aria-label="WeHelp — início">
               <LogoWeHelp className="h-12 w-auto" />
             </a>
-            <div className="mt-7">
+            <div className="mt-3">
               <h2 className="text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">{t("sigaNos")}</h2>
               <ul className="mt-4 flex gap-2.5">
                 {SOCIAIS.map(({ nome, href, Icone }) => (
