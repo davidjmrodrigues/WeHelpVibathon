@@ -37,10 +37,10 @@ export function SiteFooter() {
               <p>8005-139 Faro, Portugal</p>
             </address>
           </div>
-          <div className="flex flex-col gap-9">
+          <div className="flex flex-col gap-4">
             <nav aria-label={t("explorarTitulo")}>
               <h2 className="text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">{t("explorarTitulo")}</h2>
-              <ul className="mt-4 space-y-2">
+              <ul className="mt-4 space-y-1">
                 {EXPLORAR.map(l => <li key={l.chave}><a href={l.href} className={LIGACAO}>{t(l.chave)}</a></li>)}
               </ul>
             </nav>
