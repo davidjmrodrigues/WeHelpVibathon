@@ -12,7 +12,6 @@ import {
   RotateCcw,
   Check,
   Info,
-  Search,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BotaoIdioma } from "@/components/botao-idioma";
@@ -34,7 +33,6 @@ import type {
   ApoioDescoberto,
   DadosOficiaisExtraidos,
   RespostaSincronizacao,
-  ResultadoPesquisaGov,
 } from "@/lib/scraper";
 import { alternarTemaComCirculo, temaAtual, type Tema } from "@/lib/theme";
 
@@ -76,13 +74,6 @@ const FILTROS_VAZIOS: Filtros = {
 };
 const CAMPO = "w-full rounded-xl border border-input bg-card px-4 py-3 text-base text-foreground";
 
-const SUGESTOES_GOV: Array<{ termo: string; chave: string }> = [
-  { termo: "Habitação", chave: "sugestaoHabitação" },
-  { termo: "Parentalidade", chave: "sugestaoParentalidade" },
-  { termo: "Deficiência", chave: "sugestaoDeficiência" },
-  { termo: "Bolsa de estudo", chave: "sugestaoBolsaDeEstudo" },
-];
-
 function Azulejo() {
   return (
     <div className="azulejo-band" aria-hidden="true">
@@ -111,10 +102,6 @@ function Index() {
   const [dadosOficiais, setDadosOficiais] = useState<Record<string, DadosOficiaisExtraidos>>({});
   const [apoiosDescobertos, setApoiosDescobertos] = useState<ApoioDescoberto[]>([]);
   const [temaSelecionado, setTemaSelecionado] = useState<string>("Todos");
-  const [termoGov, setTermoGov] = useState("");
-  const [pesquisandoGov, setPesquisandoGov] = useState(false);
-  const [resultadosGov, setResultadosGov] = useState<ResultadoPesquisaGov[]>([]);
-  const [pesquisaGovRealizada, setPesquisaGovRealizada] = useState(false);
   const escuro = tema === "escuro";
 
   const aoCarregarTema = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -139,23 +126,6 @@ function Index() {
   useEffect(() => {
     void sincronizarComFontes(false);
   }, []);
-
-  const executarPesquisaGov = async (termo: string) => {
-    const limpo = termo.trim();
-    if (!limpo) return;
-    setPesquisandoGov(true);
-    setPesquisaGovRealizada(true);
-    try {
-      const res = await fetch(`/api/pesquisar-gov?q=${encodeURIComponent(limpo)}`);
-      if (!res.ok) throw new Error("Falha na pesquisa");
-      const json = (await res.json()) as { resultados?: ResultadoPesquisaGov[] };
-      setResultadosGov(json.resultados ?? []);
-    } catch {
-      setResultadosGov([]);
-    } finally {
-      setPesquisandoGov(false);
-    }
-  };
 
   const perfil: Perfil = useMemo(
     () => ({
@@ -580,90 +550,6 @@ function Index() {
               </details>
             )}
 
-            <section
-              aria-labelledby="pesquisa-gov-heading"
-              className="mt-10 border-t border-border pt-8"
-            >
-              <h2 id="pesquisa-gov-heading" className="text-xl font-semibold">
-                {t("pesquisaGovTitulo")}
-              </h2>
-              <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                {t("pesquisaGovDesc")}
-              </p>
-              <form
-                className="mt-4 flex flex-col gap-3 sm:flex-row"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  void executarPesquisaGov(termoGov);
-                }}
-              >
-                <label htmlFor="campo-pesquisa-gov" className="sr-only">
-                  {t("termoPesquisaAria")}
-                </label>
-                <input
-                  id="campo-pesquisa-gov"
-                  type="search"
-                  placeholder={t("placeholderPesquisa")}
-                  value={termoGov}
-                  onChange={(e) => setTermoGov(e.target.value)}
-                  className={CAMPO}
-                />
-                <Button
-                  type="submit"
-                  disabled={pesquisandoGov || !termoGov.trim()}
-                  className="h-14 shrink-0 px-6"
-                >
-                  <Search aria-hidden="true" />
-                  {pesquisandoGov ? t("aPesquisar") : t("pesquisarGov")}
-                </Button>
-              </form>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {SUGESTOES_GOV.map(({ termo, chave }) => (
-                  <Button
-                    key={termo}
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    className="bg-card text-xs"
-                    onClick={() => {
-                      setTermoGov(termo);
-                      void executarPesquisaGov(termo);
-                    }}
-                  >
-                    {t(chave)}
-                  </Button>
-                ))}
-              </div>
-              {pesquisaGovRealizada &&
-                !pesquisandoGov &&
-                (resultadosGov.length > 0 ? (
-                  <div className="mt-6 border-t border-border">
-                    {resultadosGov.map((item) => (
-                      <div key={item.url} className="border-b border-border py-5">
-                        <p className="text-xs font-medium text-detail">gov.pt · {item.categoria}</p>
-                        <h3 className="mt-1 text-lg font-semibold leading-snug">{item.titulo}</h3>
-                        {item.descricao && (
-                          <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                            {item.descricao}
-                          </p>
-                        )}
-                        <Button
-                          asChild
-                          variant="link"
-                          className="mt-2 h-auto min-h-11 whitespace-normal px-0 text-detail"
-                        >
-                          <a href={item.url} target="_blank" rel="noopener noreferrer">
-                            {t("abrirFicha")} <ArrowUpRight aria-hidden="true" />
-                          </a>
-                        </Button>
-                      </div>
-                ))}
-
-              </div>
-            ) : (
-              <p className="mt-4 text-sm text-muted-foreground">{t("semResultados")}</p>
-            ))}
-          </section>
 
           <section
             aria-labelledby="duvidas-heading"
