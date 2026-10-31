@@ -1,7 +1,6 @@
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-export const IAS_SOURCE = "https://files.diariodarepublica.pt/1s/2025/12/25001/0000200002.pdf";
+import { IAS_SOURCE, IAS_VALUE, IAS_YEAR, euros, multiplicarIAS } from "@/lib/ias";
 
 export function IasFaq() {
   return (
@@ -13,8 +12,8 @@ export function IasFaq() {
           <ChevronDown aria-hidden="true" className="size-4 shrink-0 text-detail group-open:rotate-180" />
         </summary>
         <div className="space-y-3 pb-4 pt-2 text-base leading-relaxed text-muted-foreground">
-          <p>IAS significa <strong className="text-foreground">Indexante dos Apoios Sociais</strong>. É um valor de referência que o Estado usa para calcular montantes de prestações e alguns limites de acesso. <strong className="text-detail">Em 2026, 1 IAS = 537,13 €</strong>, desde 1 de janeiro.</p>
-          <p>Por exemplo, um limite de <strong className="text-foreground">2 IAS corresponde a 1 074,26 €</strong>. Um limite de <strong className="text-foreground">2,5 IAS corresponde a 1 342,83 €</strong>, arredondado aos cêntimos. São exemplos de conversão, não valores que todos recebem.</p>
+          <p>IAS significa <strong className="text-foreground">Indexante dos Apoios Sociais</strong>. É um valor de referência que o Estado usa para calcular montantes de prestações e alguns limites de acesso. <strong className="text-detail">Em {IAS_YEAR}, 1 IAS = {euros(IAS_VALUE)}</strong>, desde 1 de janeiro.</p>
+          <p>Por exemplo, um limite de <strong className="text-foreground">2 IAS corresponde a {euros(multiplicarIAS(2))}</strong>. Um limite de <strong className="text-foreground">2,5 IAS corresponde a {euros(multiplicarIAS(2.5))}</strong>, arredondado aos cêntimos. São exemplos de conversão, não valores que todos recebem.</p>
           <p>O IAS não é o salário mínimo nem um pagamento automático. Cada apoio tem as suas próprias regras: o limite pode ser mensal, anual, por pessoa ou para toda a casa.</p>
           <Button asChild variant="link" className="h-auto min-h-11 whitespace-normal px-0 text-detail"><a href={IAS_SOURCE} target="_blank" rel="noopener noreferrer">Consultar o valor oficial · Portaria n.º 480-A/2025/1 <ArrowUpRight aria-hidden="true" /></a></Button>
         </div>
