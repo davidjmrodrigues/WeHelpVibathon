@@ -89,14 +89,6 @@ export function SiteFooter() {
                 <Send aria-hidden="true" className="size-4" />
                 {t("enviarEmail")}
               </button>
-              <p className="mt-2 text-center text-xs leading-relaxed text-secondary-foreground/60">
-                {t("emailLinha1")}
-                <br />
-                <span className="font-semibold text-secondary-foreground">{t("emailOu")}</span>
-                <br />
-                {t("emailLinha3")}{" "}
-                <strong className="font-semibold text-secondary-foreground">contacto@wehelp.pt</strong>.
-              </p>
             </form>
           </div>
         </div>
