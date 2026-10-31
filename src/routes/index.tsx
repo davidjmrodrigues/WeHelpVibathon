@@ -113,25 +113,14 @@ function Index() {
   };
 
   const sincronizarComFontes = async (forcar = false) => {
-    setSincronizando(true);
     try {
       const res = await fetch(`/api/sincronizar-apoios${forcar ? "?forcar=1" : ""}`);
       if (!res.ok) throw new Error("Falha ao sincronizar");
       const json = (await res.json()) as RespostaSincronizacao;
       setDadosOficiais(json.apoios ?? {});
-      const descobertos = json.apoiosDescobertos ?? [];
-      setApoiosDescobertos(descobertos);
-      setEstadoSincronizacao(
-        `Sincronizado em ${json.sincronizadoEm} · ${json.fontesComSucesso} fichas verificadas + ${descobertos.length} apoios oficiais em tempo real de gov.pt.`,
-      );
+      setApoiosDescobertos(json.apoiosDescobertos ?? []);
     } catch {
-      if (forcar) {
-        setEstadoSincronizacao(
-          "Não foi possível contactar os portais oficiais neste momento. A apresentar o catálogo local verificado.",
-        );
-      }
-    } finally {
-      setSincronizando(false);
+      // Falha silenciosa: o catálogo local verificado continua disponível.
     }
   };
 
