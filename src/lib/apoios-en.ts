@@ -421,6 +421,16 @@ export const MOTIVOS_EN: Record<string, string> = {
     "Intended for young people (18 to 35 years old), incompatible with being retired",
   "Destina-se a jovens até aos 23 anos, incompatível com a situação de reformado":
     "Intended for young people up to 23 years old, incompatible with being retired",
+  "Destina-se a situações de desemprego involuntário, incompatível com a situação de reformado":
+    "Intended for situations of involuntary unemployment, incompatible with being retired",
+  "Destina-se a quem não tem proteção contributiva; quem está reformado já recebe pensão":
+    "Intended for those without contributory coverage; retired people already receive a pension",
+  "O subsídio de cuidador informal principal aplica-se até à idade legal da pensão de velhice":
+    "The main informal carer allowance applies up to the legal old-age pension age",
+  "A pensão de invalidez converte-se em pensão de velhice na idade legal de reforma":
+    "The invalidity pension converts into an old-age pension at the legal retirement age",
+  "Destina-se a compensar a perda de remuneração por impedimento temporário para o trabalho":
+    "Intended to compensate lost pay for temporary inability to work",
   "Idade superior a 23 anos": "Older than 23",
   "O IRS Jovem destina-se a jovens entre os 18 e os 35 anos":
     "IRS Jovem is for young people between 18 and 35",

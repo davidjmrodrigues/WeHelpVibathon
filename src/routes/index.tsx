@@ -109,6 +109,7 @@ function Index() {
   const [filtrosAbertos, setFiltrosAbertos] = useState(false);
   const [infoAberto, setInfoAberto] = useState(false);
   const [limpando, setLimpando] = useState(false);
+  const [verTodos, setVerTodos] = useState(false);
   const [tema, setTema] = useState<Tema>(() => temaAtual());
   const [dadosOficiais, setDadosOficiais] = useState<Record<string, DadosOficiaisExtraidos>>({});
   const [apoiosDescobertos, setApoiosDescobertos] = useState<ApoioDescoberto[]>([]);
