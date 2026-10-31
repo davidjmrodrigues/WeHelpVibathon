@@ -49,16 +49,16 @@ export function alternarTemaComCirculo(
   circulo.style.opacity = "1";
   circulo.style.transform = "translate(-50%, -50%) scale(0)";
 
-  const duracao = 620;
-  const metade = duracao * 0.55;
+  const duracao = 750;
+  const metade = duracao * 0.5;
   let inicio: number | null = null;
   let trocado = false;
 
   const passo = (agora: number) => {
     if (inicio === null) inicio = agora;
     const t = Math.min((agora - inicio) / duracao, 1);
-    // easing suave (ease-out cúbico)
-    const suave = 1 - Math.pow(1 - t, 3);
+    // ease-in-out cúbico: começa devagar (círculo visível a crescer) e acelera
+    const suave = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
     const escala = (suave * raioFinal * 2) / 44; // o círculo tem 44px de diâmetro
     circulo.style.transform = `translate(-50%, -50%) scale(${escala})`;
 
