@@ -584,16 +584,14 @@ function Index() {
               className="mb-4 mt-6 flex scroll-mt-24 flex-wrap items-baseline justify-between gap-3"
               id="apoios"
             >
-              <div>
-                <h2 className="text-xl font-semibold">
-                  {temFiltrosAtivos ? t("apoiosRecomendados") : t("apoiosExplorar")}
-                </h2>
-                <p className="mt-1 text-sm font-medium text-detail">
-                  {temFiltrosAtivos
-                    ? `${elegiveis.length} ${t(elegiveis.length === 1 ? "possivelApoio1" : "possivelApoios")}`
-                    : `${todosApoios.length} ${t("contagemCatalogo")}`}
-                </p>
-              </div>
+              <h2 className="text-xl font-semibold">
+                {temFiltrosAtivos ? t("apoiosRecomendados") : t("apoiosExplorar")}
+              </h2>
+              <p className="text-sm font-medium text-detail">
+                {temFiltrosAtivos
+                  ? `${elegiveis.length} ${t(elegiveis.length === 1 ? "possivelApoio1" : "possivelApoios")}`
+                  : `${todosApoios.length} ${t("contagemCatalogo")}`}
+              </p>
             </div>
 
             {lista(elegiveis, true)}
