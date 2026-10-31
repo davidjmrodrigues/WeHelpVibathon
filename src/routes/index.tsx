@@ -108,6 +108,7 @@ function Index() {
   const [filtros, setFiltros] = useState<Filtros>(FILTROS_VAZIOS);
   const [filtrosAbertos, setFiltrosAbertos] = useState(false);
   const [infoAberto, setInfoAberto] = useState(false);
+  const [limpando, setLimpando] = useState(false);
   const [tema, setTema] = useState<Tema>(() => temaAtual());
   const [dadosOficiais, setDadosOficiais] = useState<Record<string, DadosOficiaisExtraidos>>({});
   const [apoiosDescobertos, setApoiosDescobertos] = useState<ApoioDescoberto[]>([]);
@@ -531,9 +532,21 @@ function Index() {
                   aria-label={t("limparFiltros")}
                   title={t("limparFiltros")}
                   className="size-[34px] rounded-full border border-input/60 bg-card/40 text-detail backdrop-blur-sm transition-colors hover:bg-card/70"
-                  onClick={limparTudo}
+                  onClick={() => {
+                    if (limpando) return;
+                    setLimpando(true);
+                    window.setTimeout(() => {
+                      limparTudo();
+                      setLimpando(false);
+                    }, 350);
+                  }}
                 >
-                  <RotateCcw aria-hidden="true" className="size-3.5" />
+                  <RotateCcw
+                    aria-hidden="true"
+                    className={`size-3.5 transition-all duration-300 ease-in ${
+                      limpando ? "-rotate-[360deg] scale-0 opacity-0" : ""
+                    }`}
+                  />
                 </Button>
               )}
               <button
