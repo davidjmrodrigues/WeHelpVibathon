@@ -509,13 +509,27 @@ function Index() {
               role="group"
               aria-label={t("filtrosRapidos")}
             >
+              <label className="sr-only" htmlFor="f-idade">
+                {t("fIdade")}
+              </label>
+              <input
+                id="f-idade"
+                type="number"
+                min={0}
+                inputMode="numeric"
+                placeholder={t("idadePlaceholder")}
+                aria-label={t("fIdade")}
+                value={filtros.idade}
+                onChange={(e) => set({ idade: e.target.value })}
+                className="min-h-9 w-24 rounded-full border border-input/60 bg-card/40 px-4 text-xs font-medium text-foreground backdrop-blur-sm transition-colors placeholder:text-muted-foreground"
+              />
               {SITUACOES.map((s) => (
                 <button
                   key={s}
                   type="button"
                   aria-pressed={filtros.situacao === s}
                   onClick={() => set({ situacao: filtros.situacao === s ? "" : s })}
-                  className={`inline-flex min-h-9 items-center gap-1.5 rounded-full border px-4 text-xs font-medium backdrop-blur-sm transition-colors ${filtros.situacao === s ? "border-primary/70 bg-secondary/70 text-foreground" : "border-input/60 bg-card/40 text-muted-foreground hover:text-foreground"}`}
+                  className={classePilula(filtros.situacao === s)}
                 >
                   {t(`situacao${s}`)}
                   {filtros.situacao === s && (
@@ -523,27 +537,12 @@ function Index() {
                   )}
                 </button>
               ))}
-              {temasDisponiveis.length > 2 &&
-                temasDisponiveis.map((temaFiltro) => (
-                  <button
-                    key={temaFiltro}
-                    type="button"
-                    aria-pressed={temaSelecionado === temaFiltro}
-                    onClick={() => setTemaSelecionado(temaFiltro)}
-                    className={`inline-flex min-h-9 items-center gap-1.5 rounded-full border px-4 text-xs font-medium backdrop-blur-sm transition-colors ${temaSelecionado === temaFiltro ? "border-primary/70 bg-secondary/70 text-foreground" : "border-input/60 bg-card/40 text-muted-foreground hover:text-foreground"}`}
-                  >
-                    {rotuloTema(lingua, temaFiltro)}
-                    {temaSelecionado === temaFiltro && (
-                      <Check aria-hidden="true" className="size-3.5 text-primary" />
-                    )}
-                  </button>
-                ))}
               <button
                 type="button"
                 aria-expanded={filtrosAbertos}
                 aria-controls="filtros-avancados"
                 onClick={() => setFiltrosAbertos((v) => !v)}
-                className={`inline-flex min-h-9 items-center gap-1.5 rounded-full border px-4 text-xs font-medium backdrop-blur-sm transition-colors ${filtrosAbertos || avancadosAtivos > 0 ? "border-primary/70 bg-secondary/70 text-foreground" : "border-input/60 bg-card/40 text-muted-foreground hover:text-foreground"}`}
+                className={classePilula(filtrosAbertos || avancadosAtivos > 0)}
               >
                 {filtrosAbertos ? (
                   <X aria-hidden="true" className="size-3.5" />
@@ -561,7 +560,7 @@ function Index() {
                 <Button
                   variant="ghost"
                   className="min-h-9 rounded-full px-3 text-xs text-detail"
-                  onClick={() => setFiltros(FILTROS_VAZIOS)}
+                  onClick={limparTudo}
                 >
                   <RotateCcw aria-hidden="true" className="size-3.5" />
                   {t("limparFiltros")}
