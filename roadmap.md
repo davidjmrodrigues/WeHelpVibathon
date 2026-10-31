@@ -16,4 +16,4 @@
 - [x] Corrigir links de: Bolsa DGES, RSI, Tarifa social eletricidade, Tarifa social gás, Abono de família, Abono pré-natal, Garantia para a Infância, PSI, Complemento Solidário para Idosos, Pensão Social de Velhice.
 
 # Layout
-- [ ] Mover a secção "IAS e dúvidas frequentes" para o fundo da página, diretamente acima do rodapé.
+- [x] Mover a secção "IAS e dúvidas frequentes" para o fundo da página, diretamente acima do rodapé (verificado no ecrã).
