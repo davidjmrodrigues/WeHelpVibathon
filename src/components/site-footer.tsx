@@ -118,6 +118,11 @@ export function SiteFooter() {
           </div>
         </div>
       </div>
+      <div className="border-t border-secondary-foreground/15">
+        <div className="mx-auto max-w-6xl px-6 py-6 text-center text-xs leading-relaxed text-secondary-foreground/60">
+          <p>© 2026 WeHelp. Todos os direitos reservados.</p>
+        </div>
+      </div>
     </footer>
   );
 }
