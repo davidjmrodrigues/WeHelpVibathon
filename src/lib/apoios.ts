@@ -1,13 +1,17 @@
 import { IAS_VALUE, euros, multiplicarIAS } from "./ias";
 export { IAS_VALUE } from "./ias";
 
-export type Situacao = "Estudante" | "Trabalhador" | "Desempregado";
+export type Situacao = "Estudante" | "Trabalhador" | "Desempregado" | "Reformado";
+export type Habitacao = "arrendada" | "propria";
+export type Filhos = "sim" | "nao" | "monoparental";
 export interface Perfil {
   idade: number | null;
   distrito: string;
   situacao: Situacao | null;
   agregado: number | null;
   rendimento: number | null;
+  habitacao?: Habitacao | null;
+  filhos?: Filhos | null;
 }
 export interface ResultadoElegibilidade {
   ok: boolean;
@@ -47,7 +51,7 @@ export const DISTRITOS = [
   "Região Autónoma dos Açores",
   "Região Autónoma da Madeira",
 ];
-export const SITUACOES: Situacao[] = ["Estudante", "Trabalhador", "Desempregado"];
+export const SITUACOES: Situacao[] = ["Estudante", "Trabalhador", "Desempregado", "Reformado"];
 const possivel = (): ResultadoElegibilidade => ({ ok: true });
 const fora = (motivo: string): ResultadoElegibilidade => ({ ok: false, motivo });
 const SS = "Segurança Social";
