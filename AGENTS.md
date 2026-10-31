@@ -11,3 +11,5 @@
 
 - Keep eligibility rules in the browser-only support engine; presentation changes must not change matching rules.
 - Define visual roles centrally in src/styles.css and use the shared Button for controls so the supplied identity remains consistent across views.
+- Store dated official sources and unverified mandatory conditions with every benefit; matching is conservative discovery, never a legal entitlement decision, because the five profile fields cannot establish full eligibility.
+- Keep IAS and cent-rounded conversions in src/lib/ias.ts as the single monetary reference for the catalogue and FAQ.
