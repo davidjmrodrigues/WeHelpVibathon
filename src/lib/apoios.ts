@@ -1,13 +1,17 @@
 import { IAS_VALUE, euros, multiplicarIAS } from "./ias";
 export { IAS_VALUE } from "./ias";
 
-export type Situacao = "Estudante" | "Trabalhador" | "Desempregado";
+export type Situacao = "Estudante" | "Trabalhador" | "Desempregado" | "Reformado";
+export type Habitacao = "arrendada" | "propria";
+export type Filhos = "sim" | "nao" | "monoparental";
 export interface Perfil {
   idade: number | null;
   distrito: string;
   situacao: Situacao | null;
   agregado: number | null;
   rendimento: number | null;
+  habitacao?: Habitacao | null;
+  filhos?: Filhos | null;
 }
 export interface ResultadoElegibilidade {
   ok: boolean;
@@ -47,7 +51,7 @@ export const DISTRITOS = [
   "Região Autónoma dos Açores",
   "Região Autónoma da Madeira",
 ];
-export const SITUACOES: Situacao[] = ["Estudante", "Trabalhador", "Desempregado"];
+export const SITUACOES: Situacao[] = ["Estudante", "Trabalhador", "Desempregado", "Reformado"];
 const possivel = (): ResultadoElegibilidade => ({ ok: true });
 const fora = (motivo: string): ResultadoElegibilidade => ({ ok: false, motivo });
 const SS = "Segurança Social";
@@ -662,9 +666,31 @@ export interface ApoioAvaliado extends Apoio {
 }
 /** True means not ruled out by known fields, NEVER verified entitlement. */
 export const avaliarApoios = (p: Perfil): ApoioAvaliado[] =>
-  APOIOS.map((a) => ({ ...a, resultado: a.elegivel(p) })).sort(
+  APOIOS.map((a) => ({ ...a, resultado: avaliarComFiltrosExtras(a, p) })).sort(
     (a, b) => Number(b.resultado.ok) - Number(a.resultado.ok),
   );
+
+/**
+ * Conservative post-filters for the housing and dependent-children quick fields.
+ * They only rule supports out; they never confirm entitlement.
+ */
+function avaliarComFiltrosExtras(a: Apoio, p: Perfil): ResultadoElegibilidade {
+  const base = a.elegivel(p);
+  if (!base.ok) return base;
+  if (
+    p.habitacao === "propria" &&
+    /arrend/i.test(`${a.descricao} ${a.condicoes.join(" ")}`)
+  ) {
+    return fora("Exige habitação arrendada com contrato");
+  }
+  if (
+    p.filhos === "nao" &&
+    a.condicoes.some((c) => /filhos?|crianças?|descendentes?|progenitor/i.test(c))
+  ) {
+    return fora("Destina-se a agregados com filhos ou dependentes a cargo");
+  }
+  return base;
+}
 
 /**
  * Browser-only conservative evaluation for additional benefits discovered live by the scraper.

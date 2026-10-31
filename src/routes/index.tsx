@@ -65,6 +65,8 @@ interface Filtros {
   situacao: Situacao | "";
   agregado: string;
   rendimento: string;
+  habitacao: "" | "arrendada" | "propria";
+  filhos: "" | "sim" | "nao" | "monoparental";
 }
 const FILTROS_VAZIOS: Filtros = {
   idade: "",
@@ -72,6 +74,8 @@ const FILTROS_VAZIOS: Filtros = {
   situacao: "",
   agregado: "",
   rendimento: "",
+  habitacao: "",
+  filhos: "",
 };
 const CAMPO = "w-full rounded-xl border border-input bg-card px-4 py-3 text-base text-foreground";
 
@@ -141,6 +145,8 @@ function Index() {
       situacao: filtros.situacao === "" ? null : filtros.situacao,
       agregado: filtros.agregado === "" ? null : Number(filtros.agregado),
       rendimento: filtros.rendimento === "" ? null : Number(filtros.rendimento),
+      habitacao: filtros.habitacao === "" ? null : filtros.habitacao,
+      filhos: filtros.filhos === "" ? null : filtros.filhos,
     }),
     [filtros],
   );
@@ -184,14 +190,22 @@ function Index() {
   const outros = todosApoios.filter((a) => !a.resultado.ok);
   const set = (patch: Partial<Filtros>) => setFiltros((f) => ({ ...f, ...patch }));
 
-  const avancadosAtivos = [
-    filtros.idade,
-    filtros.distrito,
-    filtros.agregado,
-    filtros.rendimento,
-  ].filter((v) => v !== "").length;
+  const avancadosAtivos =
+    [
+      filtros.distrito,
+      filtros.agregado,
+      filtros.rendimento,
+      filtros.habitacao,
+      filtros.filhos,
+    ].filter((v) => v !== "").length + (temaSelecionado !== "Todos" ? 1 : 0);
 
-  const temFiltrosAtivos = filtros.situacao !== "" || avancadosAtivos > 0;
+  const temFiltrosAtivos =
+    filtros.situacao !== "" || filtros.idade !== "" || avancadosAtivos > 0;
+
+  const limparTudo = () => {
+    setFiltros(FILTROS_VAZIOS);
+    setTemaSelecionado("Todos");
+  };
 
   const textoApoio = (a: ApoioAvaliado) => {
     const en = lingua === "en" ? APOIOS_EN[a.id] : undefined;
@@ -213,24 +227,47 @@ function Index() {
     return nome;
   };
 
+  const classePilula = (ativo: boolean) =>
+    `inline-flex min-h-9 items-center gap-1.5 rounded-full border px-4 text-xs font-medium backdrop-blur-sm transition-colors ${ativo ? "border-primary/70 bg-secondary/70 text-foreground" : "border-input/60 bg-card/40 text-muted-foreground hover:text-foreground"}`;
+
   const painelAvancado = (
     <div className="grid gap-6 sm:grid-cols-2">
       <div>
-        <label htmlFor="f-idade" className="mb-2 block text-base font-semibold">
-          {t("fIdade")}
-        </label>
-        <div className="flex items-center gap-3">
-          <input
-            id="f-idade"
-            type="number"
-            min={0}
-            inputMode="numeric"
-            placeholder={t("exemploIdade")}
-            value={filtros.idade}
-            onChange={(e) => set({ idade: e.target.value })}
-            className={CAMPO}
-          />
-          <span className="text-sm text-muted-foreground">{t("anos")}</span>
+        <p className="mb-2 text-base font-semibold">{t("fHabitacao")}</p>
+        <div className="flex flex-wrap gap-2">
+          {(["arrendada", "propria"] as const).map((h) => (
+            <button
+              key={h}
+              type="button"
+              aria-pressed={filtros.habitacao === h}
+              onClick={() => set({ habitacao: filtros.habitacao === h ? "" : h })}
+              className={classePilula(filtros.habitacao === h)}
+            >
+              {t(h === "arrendada" ? "habitacaoArrendada" : "habitacaoPropria")}
+              {filtros.habitacao === h && (
+                <Check aria-hidden="true" className="size-3.5 text-primary" />
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div>
+        <p className="mb-2 text-base font-semibold">{t("fFilhos")}</p>
+        <div className="flex flex-wrap gap-2">
+          {(["sim", "nao", "monoparental"] as const).map((f) => (
+            <button
+              key={f}
+              type="button"
+              aria-pressed={filtros.filhos === f}
+              onClick={() => set({ filhos: filtros.filhos === f ? "" : f })}
+              className={classePilula(filtros.filhos === f)}
+            >
+              {t(f === "sim" ? "filhosSim" : f === "nao" ? "filhosNao" : "filhosMonoparental")}
+              {filtros.filhos === f && (
+                <Check aria-hidden="true" className="size-3.5 text-primary" />
+              )}
+            </button>
+          ))}
         </div>
       </div>
       <div>
@@ -292,6 +329,27 @@ function Index() {
           {t("notaRendimentoSufixo")}
         </p>
       </div>
+      {temasDisponiveis.length > 2 && (
+        <div className="sm:col-span-2">
+          <p className="mb-2 text-base font-semibold">{t("fTemas")}</p>
+          <div className="flex flex-wrap gap-2">
+            {temasDisponiveis.map((temaFiltro) => (
+              <button
+                key={temaFiltro}
+                type="button"
+                aria-pressed={temaSelecionado === temaFiltro}
+                onClick={() => setTemaSelecionado(temaFiltro)}
+                className={classePilula(temaSelecionado === temaFiltro)}
+              >
+                {rotuloTema(lingua, temaFiltro)}
+                {temaSelecionado === temaFiltro && (
+                  <Check aria-hidden="true" className="size-3.5 text-primary" />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 
@@ -451,13 +509,27 @@ function Index() {
               role="group"
               aria-label={t("filtrosRapidos")}
             >
+              <label className="sr-only" htmlFor="f-idade">
+                {t("fIdade")}
+              </label>
+              <input
+                id="f-idade"
+                type="number"
+                min={0}
+                inputMode="numeric"
+                placeholder={t("idadePlaceholder")}
+                aria-label={t("fIdade")}
+                value={filtros.idade}
+                onChange={(e) => set({ idade: e.target.value })}
+                className="min-h-9 w-24 rounded-full border border-input/60 bg-card/40 px-4 text-xs font-medium text-foreground backdrop-blur-sm transition-colors placeholder:text-muted-foreground"
+              />
               {SITUACOES.map((s) => (
                 <button
                   key={s}
                   type="button"
                   aria-pressed={filtros.situacao === s}
                   onClick={() => set({ situacao: filtros.situacao === s ? "" : s })}
-                  className={`inline-flex min-h-9 items-center gap-1.5 rounded-full border px-4 text-xs font-medium backdrop-blur-sm transition-colors ${filtros.situacao === s ? "border-primary/70 bg-secondary/70 text-foreground" : "border-input/60 bg-card/40 text-muted-foreground hover:text-foreground"}`}
+                  className={classePilula(filtros.situacao === s)}
                 >
                   {t(`situacao${s}`)}
                   {filtros.situacao === s && (
@@ -465,27 +537,12 @@ function Index() {
                   )}
                 </button>
               ))}
-              {temasDisponiveis.length > 2 &&
-                temasDisponiveis.map((temaFiltro) => (
-                  <button
-                    key={temaFiltro}
-                    type="button"
-                    aria-pressed={temaSelecionado === temaFiltro}
-                    onClick={() => setTemaSelecionado(temaFiltro)}
-                    className={`inline-flex min-h-9 items-center gap-1.5 rounded-full border px-4 text-xs font-medium backdrop-blur-sm transition-colors ${temaSelecionado === temaFiltro ? "border-primary/70 bg-secondary/70 text-foreground" : "border-input/60 bg-card/40 text-muted-foreground hover:text-foreground"}`}
-                  >
-                    {rotuloTema(lingua, temaFiltro)}
-                    {temaSelecionado === temaFiltro && (
-                      <Check aria-hidden="true" className="size-3.5 text-primary" />
-                    )}
-                  </button>
-                ))}
               <button
                 type="button"
                 aria-expanded={filtrosAbertos}
                 aria-controls="filtros-avancados"
                 onClick={() => setFiltrosAbertos((v) => !v)}
-                className={`inline-flex min-h-9 items-center gap-1.5 rounded-full border px-4 text-xs font-medium backdrop-blur-sm transition-colors ${filtrosAbertos || avancadosAtivos > 0 ? "border-primary/70 bg-secondary/70 text-foreground" : "border-input/60 bg-card/40 text-muted-foreground hover:text-foreground"}`}
+                className={classePilula(filtrosAbertos || avancadosAtivos > 0)}
               >
                 {filtrosAbertos ? (
                   <X aria-hidden="true" className="size-3.5" />
@@ -503,7 +560,7 @@ function Index() {
                 <Button
                   variant="ghost"
                   className="min-h-9 rounded-full px-3 text-xs text-detail"
-                  onClick={() => setFiltros(FILTROS_VAZIOS)}
+                  onClick={limparTudo}
                 >
                   <RotateCcw aria-hidden="true" className="size-3.5" />
                   {t("limparFiltros")}

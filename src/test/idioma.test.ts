@@ -17,9 +17,10 @@ for (const idade of [null, 10, 17, 22, 30, 40, 55, 66, 70]) {
 
 describe("Idioma: cobertura das traduções PT/EN", () => {
   it("mantém as chaves de situação em português (a elegibilidade depende delas)", () => {
-    expect(SITUACOES).toEqual(["Estudante", "Trabalhador", "Desempregado"]);
+    expect(SITUACOES).toEqual(["Estudante", "Trabalhador", "Desempregado", "Reformado"]);
     expect(TEXTOS["situacaoEstudante"]?.pt).toBe("Estudante");
     expect(TEXTOS["situacaoTrabalhador"]?.en).toBe("Worker");
+    expect(TEXTOS["situacaoReformado"]?.en).toBe("Retired");
   });
 
   it("cobre com inglês todos os apoios do catálogo verificado", () => {
