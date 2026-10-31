@@ -13,7 +13,6 @@ import {
   RotateCcw,
   Check,
   Info,
-  RefreshCw,
   Search,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
