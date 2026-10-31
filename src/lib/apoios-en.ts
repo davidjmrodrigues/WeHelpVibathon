@@ -540,3 +540,28 @@ export function traduzMotivo(lingua: Lingua, motivo: string): string {
   if (lingua === "en") return MOTIVOS_EN[motivo] ?? motivo;
   return motivo;
 }
+
+/** Tradução das sugestões do motor de compatibilidade (chave = texto exato em português). */
+export const SUGESTOES_EN: Record<string, string> = {
+  "Geralmente a PSI oferece um montante de referência mais abrangente para a autonomia; consulte o serviço competente para optar pela mais vantajosa.":
+    "The PSI generally offers a broader reference amount for independence; ask the competent service which option is more advantageous.",
+  "Se tiver idade de reforma e não reunir carreira contributiva, a Pensão Social de Velhice acompanhada do CES é a prestação de destino.":
+    "If you are of retirement age without a contributory record, the old-age pension with the CES is the target benefit.",
+  "Opte pela prestação adequada à sua idade definitiva de aposentação.":
+    "Choose the benefit matching your definitive retirement age.",
+  "O subsídio social de desemprego é apenas acionado se não cumprir o prazo de 360 dias do regime normal ou após o seu esgotamento (subsequente).":
+    "The social unemployment benefit only applies if you do not meet the 360-day requirement of the standard scheme or after it runs out (subsequent).",
+  "Se tiver pelo menos 6 meses de descontos registados tem direito ao regime contributivo pleno; o social destina-se a quem não tem garantia de descontos.":
+    "With at least 6 months of contributions you qualify for the full contributory scheme; the social one is for those without guaranteed contributions.",
+  "Mantenha a Pensão de Invalidez, que será convertida em Pensão de Velhice aos 66 anos e 9 meses.":
+    "Keep the invalidity pension, which converts into an old-age pension at 66 years and 9 months.",
+  "Durante o período de doença clinicamente certificada com baixa médica, o subsídio de desemprego suspende-se e vigora a proteção na doença.":
+    "During medically certified sick leave, the unemployment benefit is suspended and sickness protection applies.",
+  "Selecione a bolsa correspondente ao nível de ensino que está atualmente a frequentar.":
+    "Select the grant matching the education level you are currently attending.",
+};
+
+export function traduzSugestao(lingua: Lingua, sugestao: string): string {
+  if (lingua === "en") return SUGESTOES_EN[sugestao] ?? sugestao;
+  return sugestao;
+}
