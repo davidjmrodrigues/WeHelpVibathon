@@ -39,6 +39,42 @@ export function SiteFooter() {
               <p>Campus da Penha · Ualg</p>
               <p>8005-139 Faro, Portugal</p>
             </address>
+            <form
+              className="mt-8 max-w-sm"
+              onSubmit={(e) => {
+                e.preventDefault();
+                const destino = `mailto:contacto@wehelp.pt?subject=${encodeURIComponent(t("emailAssunto"))}&body=${encodeURIComponent(mensagem)}`;
+                window.location.href = destino;
+                setMensagem("");
+              }}
+            >
+              <h2 className="text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">{t("faleConnosco")}</h2>
+              <label htmlFor="footer-mensagem" className="sr-only">{t("mensagemAria")}</label>
+              <textarea
+                id="footer-mensagem"
+                value={mensagem}
+                onChange={(e) => setMensagem(e.target.value)}
+                required
+                rows={3}
+                placeholder={t("mensagemPlaceholder")}
+                className="mt-3 w-full resize-none rounded-lg border border-secondary-foreground/25 bg-transparent px-3 py-2.5 text-sm text-secondary-foreground placeholder:text-secondary-foreground/50 focus:outline-none focus:ring-2 focus:ring-secondary-foreground/40"
+              />
+              <button
+                type="submit"
+                className="mt-2.5 inline-flex min-h-9 items-center justify-center gap-2 rounded-lg border border-secondary-foreground/25 px-4 text-sm font-medium text-secondary-foreground transition-opacity hover:opacity-70"
+              >
+                <Send aria-hidden="true" className="size-4" />
+                {t("enviarEmail")}
+              </button>
+              <p className="mt-2 text-center text-xs leading-relaxed text-secondary-foreground/60">
+                {t("emailLinha1")}
+                <br />
+                <span className="font-semibold text-secondary-foreground">{t("emailOu")}</span>
+                <br />
+                {t("emailLinha3")}{" "}
+                <strong className="font-semibold text-secondary-foreground">contacto@wehelp.pt</strong>.
+              </p>
+            </form>
           </div>
           <div className="flex flex-col gap-9">
             <nav aria-label={t("explorarTitulo")}>
