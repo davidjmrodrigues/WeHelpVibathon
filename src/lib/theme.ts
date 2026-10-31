@@ -71,10 +71,6 @@ export async function alternarTemaComCirculo(
     aplicarEstado(destino);
   };
 
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    aplicar();
-    return;
-  }
 
   aAnimar = true;
   document.documentElement.setAttribute("data-theme-transition", "");

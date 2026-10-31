@@ -169,4 +169,8 @@ html[data-theme-transition]::view-transition { pointer-events: none; }
 html[data-theme-transition] #wehelp-root *,
 html[data-theme-transition] #wehelp-root *::before,
 html[data-theme-transition] #wehelp-root *::after { transition: none !important; }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; }
+  /* The theme reveal is user-triggered and must keep its circular expansion. */
+  html[data-theme-transition]::view-transition-new(root) { animation-duration: 750ms !important; }
+}
