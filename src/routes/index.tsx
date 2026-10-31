@@ -166,11 +166,11 @@ function CartaoApoio({
         </div>
         <ChevronDown
           aria-hidden="true"
-          className={`mt-1 size-4 shrink-0 text-muted-foreground transition-transform duration-300 ease-in-out ${aberto ? "rotate-180" : ""}`}
+          className={`apoio-seta mt-1 size-4 shrink-0 text-muted-foreground transition-transform duration-300 ease-in-out ${aberto ? "rotate-180" : ""}`}
         />
       </button>
       <div
-        className={`grid transition-all duration-300 ease-in-out ${aberto ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
+        className={`apoio-conteudo grid transition-all duration-300 ease-in-out ${aberto ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
       >
         <div className="overflow-hidden">
           <div className="pb-6 pl-8">
