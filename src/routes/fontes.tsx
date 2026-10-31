@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
 import { BotaoIdioma } from "@/components/botao-idioma";
 import { LogoWeHelp } from "@/components/logo-wehelp";
 import { SiteFooter } from "@/components/site-footer";
+import { Azulejo, AzulejoPadrao } from "@/components/azulejo";
+import { IAS_SOURCE } from "@/lib/ias";
 import { useIdioma } from "@/lib/idioma";
 import { tx } from "@/lib/textos";
 
@@ -14,13 +16,13 @@ export const Route = createFileRoute("/fontes")({
       {
         name: "description",
         content:
-          "As fontes oficiais onde pode confirmar a informação sobre os apoios do Estado português: Segurança Social, gov.pt, Portal do Cidadão e DGES.",
+          "Fontes oficiais dos apoios do Estado português em 2026: Segurança Social, gov.pt, DGES, IHRU, DGEG/ERSE, Autoridade Tributária e Diário da República.",
       },
       { property: "og:title", content: "Fontes oficiais — WeHelp" },
       {
         property: "og:description",
         content:
-          "As fontes oficiais onde pode confirmar a informação sobre os apoios do Estado português: Segurança Social, gov.pt, Portal do Cidadão e DGES.",
+          "Fontes oficiais dos apoios do Estado português em 2026: Segurança Social, gov.pt, DGES, IHRU, DGEG/ERSE, Autoridade Tributária e Diário da República.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -32,14 +34,29 @@ const FONTES = [
   { chaveNome: "fonteSegNome", chaveDesc: "fonteSegDesc", href: "https://seg-social.pt" },
   { chaveNome: "fonteGovNome", chaveDesc: "fonteGovDesc", href: "https://www.gov.pt" },
   {
-    chaveNome: "fonteCidadaoNome",
-    chaveDesc: "fonteCidadaoDesc",
-    href: "https://www.portaldocidadao.pt",
-  },
-  {
     chaveNome: "fonteDgesNome",
     chaveDesc: "fonteDgesDesc",
     href: "https://www.dges.gov.pt/pt/pagina/bolsas-de-estudo",
+  },
+  {
+    chaveNome: "fonteIhruNome",
+    chaveDesc: "fonteIhruDesc",
+    href: "https://www.portaldahabitacao.pt/porta-65-jovem1",
+  },
+  {
+    chaveNome: "fonteEnergiaNome",
+    chaveDesc: "fonteEnergiaDesc",
+    href: "https://www.dgeg.gov.pt/pt/areas-transversais/politicas-de-protecao-ao-consumidor-de-energia/tarifa-social-de-energia/",
+  },
+  {
+    chaveNome: "fonteAtNome",
+    chaveDesc: "fonteAtDesc",
+    href: "https://portaldasfinancas.gov.pt",
+  },
+  {
+    chaveNome: "fonteDreNome",
+    chaveDesc: "fonteDreDesc",
+    href: "https://files.diariodarepublica.pt/1s/2025/12/25001/0000200002.pdf",
   },
 ];
 
@@ -66,11 +83,45 @@ function PaginaFontes() {
         </div>
       </header>
 
+      <Azulejo />
+
       <main className="mx-auto max-w-3xl px-6 py-12 lg:py-16">
         <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl">{t("fontesTitulo")}</h1>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{t("fontesDesc")}</p>
 
-        <ul className="mt-10 divide-y divide-border border-y border-border">
+        <div className="relative mt-8 overflow-hidden rounded-xl border border-border bg-card p-6">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 opacity-[0.08] [color:var(--detail)]"
+          >
+            <AzulejoPadrao id="azulejo-fontes" className="h-full w-full" />
+          </div>
+          <div className="relative">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-secondary/60 px-3 py-1 text-xs font-medium text-detail">
+                <Check aria-hidden="true" className="size-3.5" />
+                {t("fontesRevisaoBadge")}
+              </span>
+              <span className="text-xs text-muted-foreground">· IAS 2026 = 537,13 €</span>
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              {t("fontesIasNota")}
+            </p>
+            <div className="mt-3">
+              <a
+                href={IAS_SOURCE}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-detail transition-opacity hover:opacity-75"
+              >
+                {t("fontesConsultarDRE")}
+                <ArrowUpRight aria-hidden="true" className="size-3.5" />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <ul className="mt-8 divide-y divide-border border-y border-border">
           {FONTES.map((f) => (
             <li key={f.href}>
               <a
@@ -81,7 +132,9 @@ function PaginaFontes() {
               >
                 <span>
                   <span className="text-xl font-semibold leading-tight">{t(f.chaveNome)}</span>
-                  <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">{t(f.chaveDesc)}</span>
+                  <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
+                    {t(f.chaveDesc)}
+                  </span>
                 </span>
                 <ArrowUpRight
                   aria-hidden="true"
@@ -91,6 +144,10 @@ function PaginaFontes() {
             </li>
           ))}
         </ul>
+
+        <p className="mt-8 text-xs leading-relaxed text-muted-foreground">
+          {t("fontesAvisoLegal")}
+        </p>
       </main>
 
       <SiteFooter />

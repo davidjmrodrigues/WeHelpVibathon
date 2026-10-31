@@ -4,6 +4,7 @@ import { IasFaq } from "@/components/ias-faq";
 import { LogoWeHelp } from "@/components/logo-wehelp";
 import { BotaoIdioma } from "@/components/botao-idioma";
 import { SiteFooter } from "@/components/site-footer";
+import { Azulejo } from "@/components/azulejo";
 import { useIdioma } from "@/lib/idioma";
 import { tx } from "@/lib/textos";
 
@@ -51,6 +52,7 @@ function PaginaFaq() {
           </div>
         </div>
       </header>
+      <Azulejo />
 
       <main className="mx-auto max-w-3xl px-6 py-12 lg:py-16">
         <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl">{t("faqTitulo")}</h1>

@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { LogoWeHelp } from "@/components/logo-wehelp";
 import { BotaoIdioma } from "@/components/botao-idioma";
 import { SiteFooter } from "@/components/site-footer";
+import { Azulejo, AzulejoPadrao } from "@/components/azulejo";
 import {
   DISTRITOS,
   IAS_VALUE,
@@ -95,30 +96,6 @@ const FILTROS_VAZIOS: Filtros = {
 };
 const CAMPO = "w-full rounded-xl border border-input bg-card px-4 py-3 text-base text-foreground";
 const LIMITE_INICIAL = 20;
-
-function AzulejoPadrao({ id, className }: { id: string; className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" className={className}>
-      <defs>
-        <pattern id={id} width="28" height="28" patternUnits="userSpaceOnUse">
-          <path d="M14 1 27 14 14 27 1 14Z" fill="none" stroke="currentColor" strokeWidth="1.2" />
-          <circle cx="14" cy="14" r="2.2" fill="currentColor" />
-          <circle cx="0" cy="0" r="2" fill="currentColor" />
-          <circle cx="28" cy="28" r="2" fill="currentColor" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill={`url(#${id})`} />
-    </svg>
-  );
-}
-
-function Azulejo() {
-  return (
-    <div className="azulejo-band" aria-hidden="true">
-      <AzulejoPadrao id="azulejo" />
-    </div>
-  );
-}
 
 interface TextoApoio {
   titulo: string;

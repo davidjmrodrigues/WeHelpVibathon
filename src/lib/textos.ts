@@ -242,8 +242,50 @@ export const TEXTOS: Record<string, { pt: string; en: string }> = {
   },
   fonteDgesNome: { pt: "DGES — Bolsas de estudo", en: "DGES — Study grants" },
   fonteDgesDesc: {
-    pt: "Regulamento e candidatura às bolsas de estudo do ensino superior.",
-    en: "Rules and application for higher education study grants.",
+    pt: "Regulamento, simulador oficial e candidatura às bolsas de estudo do ensino superior.",
+    en: "Regulations, official simulator and applications for higher education study grants.",
+  },
+  fonteIhruNome: { pt: "Portal da Habitação · IHRU", en: "Housing Portal · IHRU" },
+  fonteIhruDesc: {
+    pt: "Programa Porta 65 Jovem e instrumentos públicos de apoio ao arrendamento habitacional.",
+    en: "Porta 65 Youth Programme and public rental housing support schemes.",
+  },
+  fonteEnergiaNome: { pt: "DGEG · ERSE (Energia)", en: "DGEG · ERSE (Energy)" },
+  fonteEnergiaDesc: {
+    pt: "Critérios de atribuição e descontos nas tarifas sociais de eletricidade e gás natural.",
+    en: "Eligibility criteria and discounts on electricity and natural gas social tariffs.",
+  },
+  fonteAtNome: {
+    pt: "Autoridade Tributária (Portal das Finanças)",
+    en: "Tax and Customs Authority (Finanças)",
+  },
+  fonteAtDesc: {
+    pt: "Isenções fiscais do IRS Jovem (art.º 12.º-B do CIRS) e orientações tributárias.",
+    en: "IRS Jovem tax exemptions (art. 12-B of CIRS) and official tax guidance.",
+  },
+  fonteDreNome: {
+    pt: "Diário da República (DRE) — IAS 2026",
+    en: "Diário da República (Official Gazette) — 2026 IAS",
+  },
+  fonteDreDesc: {
+    pt: "Portaria n.º 480-A/2025/1: fixação oficial do valor do IAS (Indexante dos Apoios Sociais) em 537,13 € para 2026.",
+    en: "Ministerial Order no. 480-A/2025/1: official IAS value set at €537.13 for 2026.",
+  },
+  fontesRevisaoBadge: {
+    pt: "Catálogo verificado em 31 de outubro de 2026",
+    en: "Catalogue verified on 31 October 2026",
+  },
+  fontesIasNota: {
+    pt: "O valor oficial do IAS em 2026 é de 537,13 € (Portaria n.º 480-A/2025/1, em vigor desde 1 de janeiro). Todos os limites e escalões monetários do WeHelp são rigorosamente indexados a este valor legal.",
+    en: "The official 2026 IAS value is €537.13 (Ministerial Order no. 480-A/2025/1, effective 1 January). All monetary thresholds and brackets in WeHelp are rigorously indexed to this legal value.",
+  },
+  fontesConsultarDRE: {
+    pt: "Ver portaria no Diário da República",
+    en: "View ministerial order in Diário da República",
+  },
+  fontesAvisoLegal: {
+    pt: "O WeHelp apresenta estimativas de elegibilidade com base na legislação em vigor. A decisão formal de atribuição compete em exclusivo aos respetivos organismos públicos.",
+    en: "WeHelp provides eligibility estimates based on current legislation. The formal award decision rests exclusively with the respective public authorities.",
   },
   privBadge: { pt: "Privacidade em primeiro lugar", en: "Privacy first" },
   privTitulo: { pt: "Política de Privacidade", en: "Privacy Policy" },

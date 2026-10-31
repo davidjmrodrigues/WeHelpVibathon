@@ -3,6 +3,7 @@ import { ArrowLeft, LockKeyhole } from "lucide-react";
 import { BotaoIdioma } from "@/components/botao-idioma";
 import { LogoWeHelp } from "@/components/logo-wehelp";
 import { SiteFooter } from "@/components/site-footer";
+import { Azulejo } from "@/components/azulejo";
 import { useIdioma } from "@/lib/idioma";
 import { tx } from "@/lib/textos";
 
@@ -58,20 +59,25 @@ function PaginaPrivacidade() {
           </div>
         </div>
       </header>
+      <Azulejo />
 
       <main className="mx-auto max-w-3xl px-6 py-12 lg:py-16">
         <p className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground">
           <LockKeyhole aria-hidden="true" className="size-3.5" />
           {t("privBadge")}
         </p>
-        <h1 className="mt-4 text-3xl font-semibold tracking-tight lg:text-4xl">{t("privTitulo")}</h1>
+        <h1 className="mt-4 text-3xl font-semibold tracking-tight lg:text-4xl">
+          {t("privTitulo")}
+        </h1>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{t("privDesc")}</p>
 
         <div className="mt-10 space-y-8">
           {SECCOES.map((s) => (
             <section key={s.chaveTitulo}>
               <h2 className="text-lg font-semibold">{t(s.chaveTitulo)}</h2>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t(s.chaveTexto)}</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {t(s.chaveTexto)}
+              </p>
             </section>
           ))}
         </div>
