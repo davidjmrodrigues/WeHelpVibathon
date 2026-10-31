@@ -13,10 +13,11 @@ export function temaAtual(): Tema {
 function fundoDe(tema: Tema): string {
   const el = raiz();
   if (!el) return "#fff";
-  if (tema === temaAtual()) return getComputedStyle(el).backgroundColor;
-  // Lê o fundo do tema de destino sem o aplicar: mede um elemento temporário com a classe alternada.
+  const ler = () => getComputedStyle(el).getPropertyValue("--background").trim();
+  if (tema === temaAtual()) return ler();
+  // Lê o fundo do tema de destino sem o aplicar: alterna a classe só para medir a variável.
   el.classList.toggle("dark");
-  const cor = getComputedStyle(el).backgroundColor;
+  const cor = ler();
   el.classList.toggle("dark");
   return cor;
 }
