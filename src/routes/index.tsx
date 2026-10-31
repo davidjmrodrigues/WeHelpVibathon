@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import {
   CircleHelp,
@@ -240,6 +240,7 @@ function Index() {
   const [filtrosAbertos, setFiltrosAbertos] = useState(false);
   const [infoAberto, setInfoAberto] = useState(false);
   const [limpando, setLimpando] = useState(false);
+  const resultadosRef = useRef<HTMLDivElement>(null);
   const [verTodos, setVerTodos] = useState(false);
   const [tema, setTema] = useState<Tema>(() => temaAtual());
   const [dadosOficiais, setDadosOficiais] = useState<Record<string, DadosOficiaisExtraidos>>({});
@@ -341,6 +342,40 @@ function Index() {
     setFiltros(FILTROS_VAZIOS);
     setTemaSelecionado("Todos");
     setVerTodos(false);
+  };
+
+  const limparComAnimacao = () => {
+    if (limpando) return;
+    setLimpando(true);
+    const resultados = resultadosRef.current;
+    resultados?.classList.add("resultados-em-transicao");
+    const saida = resultados?.animate(
+      [{ opacity: 1, transform: "translateY(0)" }, { opacity: 0, transform: "translateY(-8px)" }],
+      { duration: 300, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" },
+    );
+    window.setTimeout(() => {
+      if (!resultados?.isConnected) return;
+      const alturaAnterior = resultados.getBoundingClientRect().height;
+      flushSync(() => {
+        limparTudo();
+        setLimpando(false);
+      });
+      const alturaNova = resultados.getBoundingClientRect().height;
+      saida?.cancel();
+      resultados.animate(
+        [{ opacity: 0, transform: "translateY(12px)" }, { opacity: 1, transform: "translateY(0)" }],
+        { duration: 450, easing: "cubic-bezier(.2,.8,.2,1)" },
+      );
+      const reposicionar = resultados.animate(
+        [{ height: `${alturaAnterior}px` }, { height: `${alturaNova}px` }],
+        { duration: 450, easing: "cubic-bezier(.2,.8,.2,1)" },
+      );
+      void reposicionar.finished.then(() => {
+        resultados.classList.remove("resultados-em-transicao");
+      }).catch(() => {
+        resultados.classList.remove("resultados-em-transicao");
+      });
+    }, 350);
   };
 
   const textoApoio = (a: ApoioAvaliado) => {
@@ -591,14 +626,7 @@ function Index() {
                       ? "pointer-events-none -rotate-[360deg] scale-0 border-transparent opacity-0"
                       : ""
                   }`}
-                  onClick={() => {
-                    if (limpando) return;
-                    setLimpando(true);
-                    window.setTimeout(() => {
-                      limparTudo();
-                      setLimpando(false);
-                    }, 350);
-                  }}
+                  onClick={limparComAnimacao}
                 >
                   <RotateCcw aria-hidden="true" className="size-3.5" />
                 </Button>
@@ -634,6 +662,7 @@ function Index() {
               </section>
             )}
 
+            <div ref={resultadosRef} className="flow-root">
             <div
               className="mb-4 mt-6 flex scroll-mt-24 flex-wrap items-baseline justify-between gap-3"
               id="apoios"
@@ -680,6 +709,7 @@ function Index() {
                 </div>
               </details>
             )}
+            </div>
 
 
           <section

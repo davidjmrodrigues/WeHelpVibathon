@@ -132,6 +132,8 @@
 .support-row:nth-child(2) { animation-delay: 240ms; }
 .support-row:nth-child(3) { animation-delay: 330ms; }
 .support-row:nth-child(4) { animation-delay: 420ms; }
+.resultados-em-transicao { overflow: hidden; overflow-anchor: none; }
+.resultados-em-transicao .support-row { animation: none !important; }
 @keyframes row-enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 /* Keep full old/new theme snapshots intact; only the incoming snapshot is revealed. */
 html[data-theme-transition]::view-transition-group(root) { animation: none; }
