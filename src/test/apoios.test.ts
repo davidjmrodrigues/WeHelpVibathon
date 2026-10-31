@@ -27,11 +27,11 @@ describe("Catálogo oficial e triagem conservadora", () => {
     expect(resultado("sub23", { idade: 23, situacao: "Trabalhador" })).toBe(true);
     expect(resultado("sub23", { idade: 24 })).toBe(false);
   });
-  it("considera a exceção de casal até 37 anos no Porta 65", () => {
+  it("aplica o limite geral de 35 anos do Porta 65 por não sabermos se vive em casal", () => {
     expect(resultado("porta65", { idade: 17 })).toBe(false);
     expect(resultado("porta65", { idade: 18 })).toBe(true);
-    expect(resultado("porta65", { idade: 37 })).toBe(true);
-    expect(resultado("porta65", { idade: 38 })).toBe(false);
+    expect(resultado("porta65", { idade: 35 })).toBe(true);
+    expect(resultado("porta65", { idade: 36 })).toBe(false);
   });
   it("casa própria exclui apoios ao arrendamento; arrendada mantém", () => {
     expect(resultado("porta65", { idade: 25, habitacao: "propria" })).toBe(false);
