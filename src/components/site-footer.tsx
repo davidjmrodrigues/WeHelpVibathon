@@ -33,6 +33,25 @@ export function SiteFooter() {
               <span className="brand-mark" aria-hidden="true" />
               <span className="text-xl font-semibold">WeHelp</span>
             </a>
+            <div className="mt-7">
+              <h2 className="text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">{t("sigaNos")}</h2>
+              <ul className="mt-4 flex gap-2.5">
+                {SOCIAIS.map(({ nome, href, Icone }) => (
+                  <li key={nome}>
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={nome}
+                      title={nome}
+                      className="flex size-11 items-center justify-center rounded-lg border border-secondary-foreground/25 text-secondary-foreground/80 transition-opacity hover:opacity-70"
+                    >
+                      <Icone aria-hidden="true" className="size-5" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
             <address className="mt-7 not-italic text-sm leading-relaxed text-secondary-foreground/80">
               <p className="font-semibold text-secondary-foreground">{t("sede")}</p>
               <p className="mt-1.5">UalgTecCampus</p>
@@ -85,23 +104,6 @@ export function SiteFooter() {
                 <strong className="font-semibold text-secondary-foreground">contacto@wehelp.pt</strong>.
               </p>
             </form>
-            <h2 className="mt-8 text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">{t("sigaNos")}</h2>
-            <ul className="mt-4 flex gap-2.5">
-              {SOCIAIS.map(({ nome, href, Icone }) => (
-                <li key={nome}>
-                  <a
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={nome}
-                    title={nome}
-                    className="flex size-11 items-center justify-center rounded-lg border border-secondary-foreground/25 text-secondary-foreground/80 transition-opacity hover:opacity-70"
-                  >
-                    <Icone aria-hidden="true" className="size-5" />
-                  </a>
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
       </div>
