@@ -1,12 +1,12 @@
 export interface DadosOficiaisExtraidos {
   id: string;
   fonteUrl: string;
-  tituloOficial?: string;
-  resumoOficial?: string;
-  entidadeOficial?: string;
-  atualizadoEm?: string;
-  condicoesExtraidas?: string[];
-  linkCandidatura?: string;
+  tituloOficial?: string | undefined;
+  resumoOficial?: string | undefined;
+  entidadeOficial?: string | undefined;
+  atualizadoEm?: string | undefined;
+  condicoesExtraidas?: string[] | undefined;
+  linkCandidatura?: string | undefined;
   consultadoEm: string;
   sucesso: boolean;
 }
