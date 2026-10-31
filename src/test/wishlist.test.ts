@@ -21,8 +21,8 @@ describe("Motor de Wishlist e Validação de Compatibilidade entre Apoios", () =
 
     wishlist = adicionarApoio(wishlist, "porta65");
     expect(wishlist.itens).toHaveLength(1);
-    expect(wishlist.itens[0].id).toBe("porta65");
-    expect(wishlist.itens[0].origem).toBe("individual");
+    expect(wishlist.itens[0]!.id).toBe("porta65");
+    expect(wishlist.itens[0]!.origem).toBe("individual");
 
     // Tentativa de adicionar o mesmo apoio não duplica
     wishlist = adicionarApoio(wishlist, "porta65");
@@ -33,7 +33,7 @@ describe("Motor de Wishlist e Validação de Compatibilidade entre Apoios", () =
 
     wishlist = removerApoio(wishlist, "porta65");
     expect(wishlist.itens).toHaveLength(1);
-    expect(wishlist.itens[0].id).toBe("irsjovem");
+    expect(wishlist.itens[0]!.id).toBe("irsjovem");
 
     wishlist = limparWishlist();
     expect(wishlist.itens).toHaveLength(0);
@@ -53,12 +53,12 @@ describe("Motor de Wishlist e Validação de Compatibilidade entre Apoios", () =
     expect(res.conflitos).toHaveLength(1);
 
     const conflito = res.conflitos[0];
-    expect(conflito.tipo).toBe("incompatibilidade_legal");
-    expect(conflito.apoioA).toBe("psi");
-    expect(conflito.apoioB).toBe("bonificacaodeficiencia");
-    expect(conflito.motivo).toContain("não podem ser acumuladas pelo mesmo titular");
-    expect(conflito.sugestao).toBeTruthy();
-    expect(conflito.baseLegal).toBeTruthy();
+    expect(conflito!.tipo).toBe("incompatibilidade_legal");
+    expect(conflito!.apoioA).toBe("psi");
+    expect(conflito!.apoioB).toBe("bonificacaodeficiencia");
+    expect(conflito!.motivo).toContain("não podem ser acumuladas pelo mesmo titular");
+    expect(conflito!.sugestao).toBeTruthy();
+    expect(conflito!.baseLegal).toBeTruthy();
   });
 
   it("deteta incompatibilidade direta entre Pensão Social de Velhice e Subsídio de Desemprego", () => {
@@ -91,8 +91,8 @@ describe("Motor de Wishlist e Validação de Compatibilidade entre Apoios", () =
     const semAbono = validarCompatibilidadeWishlist(["garantiainfancia"]);
     expect(semAbono.valida).toBe(false);
     expect(semAbono.dependenciasEmFalta).toHaveLength(1);
-    expect(semAbono.dependenciasEmFalta[0].apoioId).toBe("garantiainfancia");
-    expect(semAbono.dependenciasEmFalta[0].requerApoioId).toBe("abono");
+    expect(semAbono.dependenciasEmFalta[0]!.apoioId).toBe("garantiainfancia");
+    expect(semAbono.dependenciasEmFalta[0]!.requerApoioId).toBe("abono");
 
     // Ao juntar o Abono de Família, a dependência fica satisfeita
     const comAbono = validarCompatibilidadeWishlist(["garantiainfancia", "abono"]);

@@ -509,17 +509,6 @@ function Index() {
               </section>
             )}
 
-            {!temFiltrosAtivos && (
-              <div className="mt-6 rounded-xl border border-border bg-card p-4 text-sm text-muted-foreground">
-                <p>
-                  <strong className="text-foreground">Catálogo geral aberto:</strong> A apresentar
-                  todos os apoios disponíveis ({todosApoios.length}). Indique a sua idade e situação
-                  nos filtros acima para descartar medidas que não se destinam ao seu perfil (como
-                  apoios de velhice para jovens ou medidas jovens para reformados).
-                </p>
-              </div>
-            )}
-
             <div
               className="mb-4 mt-6 flex scroll-mt-24 flex-wrap items-baseline justify-between gap-3"
               id="apoios"
