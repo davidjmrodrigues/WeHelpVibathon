@@ -40,6 +40,9 @@ export function SiteFooter() {
               <p className="mt-1.5">UalgTecCampus</p>
               <p>Campus da Penha · Ualg</p>
               <p>8005-139 Faro, Portugal</p>
+              <p className="mt-2">
+                <a href="mailto:contacto@wehelp.pt" className={LIGACAO}>contacto@wehelp.pt</a>
+              </p>
             </address>
           </div>
           <div className="flex flex-col gap-9">
