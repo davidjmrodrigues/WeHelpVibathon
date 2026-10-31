@@ -5,7 +5,6 @@ import {
   CircleHelp,
   ChevronDown,
   ArrowUpRight,
-  LockKeyhole,
   Moon,
   Sun,
   SlidersHorizontal,
@@ -16,6 +15,7 @@ import {
   Search,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BotaoIdioma } from "@/components/botao-idioma";
 import { SiteFooter } from "@/components/site-footer";
 import {
   DISTRITOS,
@@ -27,6 +27,9 @@ import {
   type Perfil,
   type Situacao,
 } from "@/lib/apoios";
+import { APOIOS_EN, traduzEntidade, traduzMotivo } from "@/lib/apoios-en";
+import { useIdioma } from "@/lib/idioma";
+import { rotuloTema, tx } from "@/lib/textos";
 import type {
   ApoioDescoberto,
   DadosOficiaisExtraidos,
@@ -73,6 +76,13 @@ const FILTROS_VAZIOS: Filtros = {
 };
 const CAMPO = "w-full rounded-xl border border-input bg-card px-4 py-3 text-base text-foreground";
 
+const SUGESTOES_GOV: Array<{ termo: string; chave: string }> = [
+  { termo: "Habitação", chave: "sugestaoHabitação" },
+  { termo: "Parentalidade", chave: "sugestaoParentalidade" },
+  { termo: "Deficiência", chave: "sugestaoDeficiência" },
+  { termo: "Bolsa de estudo", chave: "sugestaoBolsaDeEstudo" },
+];
+
 function Azulejo() {
   return (
     <div className="azulejo-band" aria-hidden="true">
@@ -92,6 +102,8 @@ function Azulejo() {
 }
 
 function Index() {
+  const { lingua } = useIdioma();
+  const t = (chave: string) => tx(lingua, chave);
   const [filtros, setFiltros] = useState<Filtros>(FILTROS_VAZIOS);
   const [filtrosAbertos, setFiltrosAbertos] = useState(false);
   const [infoAberto, setInfoAberto] = useState(false);
@@ -178,9 +190,9 @@ function Index() {
   );
 
   const temasDisponiveis = useMemo(() => {
-    const t = new Set<string>(["Todos", "Catálogo Principal"]);
-    for (const d of apoiosDescobertos) t.add(d.tema);
-    return Array.from(t);
+    const temas = new Set<string>(["Todos", "Catálogo Principal"]);
+    for (const d of apoiosDescobertos) temas.add(d.tema);
+    return Array.from(temas);
   }, [apoiosDescobertos]);
 
   const todosApoios = useMemo(() => {
@@ -204,11 +216,31 @@ function Index() {
 
   const temFiltrosAtivos = filtros.situacao !== "" || avancadosAtivos > 0;
 
+  const textoApoio = (a: ApoioAvaliado) => {
+    const en = lingua === "en" ? APOIOS_EN[a.id] : undefined;
+    return {
+      titulo: en?.titulo ?? a.titulo,
+      entidade: traduzEntidade(lingua, a.entidade),
+      descricao: en?.descricao ?? a.descricao,
+      valor: en?.valor ?? a.valor,
+      periodo: en?.periodo ?? a.periodo,
+      condicoes: en?.condicoes ?? a.condicoes,
+      link: a.link,
+      verificadoEm: a.verificadoEm,
+    };
+  };
+
+  const rutiloDistrito = (nome: string): string => {
+    if (lingua === "en" && nome === "Região Autónoma dos Açores") return t("distritoAcores");
+    if (lingua === "en" && nome === "Região Autónoma da Madeira") return t("distritoMadeira");
+    return nome;
+  };
+
   const painelAvancado = (
     <div className="grid gap-6 sm:grid-cols-2">
       <div>
         <label htmlFor="f-idade" className="mb-2 block text-base font-semibold">
-          Quantos anos tem?
+          {t("fIdade")}
         </label>
         <div className="flex items-center gap-3">
           <input
@@ -216,17 +248,17 @@ function Index() {
             type="number"
             min={0}
             inputMode="numeric"
-            placeholder="Ex.: 22"
+            placeholder={t("exemploIdade")}
             value={filtros.idade}
             onChange={(e) => set({ idade: e.target.value })}
             className={CAMPO}
           />
-          <span className="text-sm text-muted-foreground">anos</span>
+          <span className="text-sm text-muted-foreground">{t("anos")}</span>
         </div>
       </div>
       <div>
         <label htmlFor="f-distrito" className="mb-2 block text-base font-semibold">
-          Onde vive?
+          {t("fDistrito")}
         </label>
         <select
           id="f-distrito"
@@ -234,17 +266,17 @@ function Index() {
           onChange={(e) => set({ distrito: e.target.value })}
           className={CAMPO}
         >
-          <option value="">Todos os distritos</option>
+          <option value="">{t("todosDistritos")}</option>
           {DISTRITOS.map((d) => (
             <option key={d} value={d}>
-              {d}
+              {rutiloDistrito(d)}
             </option>
           ))}
         </select>
       </div>
       <div>
         <label htmlFor="f-agregado" className="mb-2 block text-base font-semibold">
-          Quantas pessoas vivem em sua casa?
+          {t("fAgregado")}
         </label>
         <div className="flex items-center gap-3">
           <input
@@ -252,17 +284,17 @@ function Index() {
             type="number"
             min={1}
             inputMode="numeric"
-            placeholder="Ex.: 3"
+            placeholder={t("exemploAgregado")}
             value={filtros.agregado}
             onChange={(e) => set({ agregado: e.target.value })}
             className={CAMPO}
           />
-          <span className="text-sm text-muted-foreground">pessoas</span>
+          <span className="text-sm text-muted-foreground">{t("pessoas")}</span>
         </div>
       </div>
       <div>
         <label htmlFor="f-rendimento" className="mb-2 block text-base font-semibold">
-          Quanto entra, por ano, em sua casa?
+          {t("fRendimento")}
         </label>
         <div className="flex items-center gap-3">
           <input
@@ -270,7 +302,7 @@ function Index() {
             type="number"
             min={0}
             inputMode="numeric"
-            placeholder="Ex.: 12 000"
+            placeholder={t("exemploRendimento")}
             value={filtros.rendimento}
             onChange={(e) => set({ rendimento: e.target.value })}
             className={CAMPO}
@@ -278,8 +310,9 @@ function Index() {
           <span className="text-sm text-muted-foreground">€</span>
         </div>
         <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-          Rendimento bruto antes dos descontos. O IAS vale{" "}
-          {IAS_VALUE.toLocaleString("pt-PT", { minimumFractionDigits: 2 })} € em 2026.
+          {t("notaRendimentoPrefix")}{" "}
+          {IAS_VALUE.toLocaleString("pt-PT", { minimumFractionDigits: 2 })} €{" "}
+          {t("notaRendimentoSufixo")}
         </p>
       </div>
     </div>
@@ -290,6 +323,7 @@ function Index() {
       {items.map((a) => {
         const extraido = dadosOficiais[a.id];
         const verificadoEm = extraido?.sucesso ? extraido.consultadoEm : a.verificadoEm;
+        const texto = textoApoio(a);
         return (
           <details
             key={a.id}
@@ -304,23 +338,23 @@ function Index() {
                 </span>
               )}
               <div className="min-w-0 flex-1">
-                <h3 className="text-xl font-semibold leading-tight">{a.titulo}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{a.entidade}</p>
+                <h3 className="text-xl font-semibold leading-tight">{texto.titulo}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">{texto.entidade}</p>
                 <p
                   className={`mt-2 text-sm ${disponivel ? "text-detail" : "text-muted-foreground"}`}
                 >
                   {disponivel
-                    ? "Pode aplicar-se · confirmar condições"
-                    : `Não corresponde ao perfil · ${a.resultado.motivo}`}
+                    ? t("podeAplicar")
+                    : `${t("naoCorresponde")} · ${a.resultado.motivo ? traduzMotivo(lingua, a.resultado.motivo) : ""}`}
                 </p>
               </div>
               <div className="hidden max-w-48 shrink-0 text-right sm:block">
                 <p
                   className={`text-base font-semibold ${disponivel ? "text-primary" : "text-muted-foreground"}`}
                 >
-                  {a.valor}
+                  {texto.valor}
                 </p>
-                <span className="text-xs text-muted-foreground">valor estimado</span>
+                <span className="text-xs text-muted-foreground">{t("valorEstimado")}</span>
               </div>
               <ChevronDown
                 aria-hidden="true"
@@ -329,20 +363,21 @@ function Index() {
             </summary>
             <div className="pb-6 pl-8">
               <p className="max-w-xl text-base leading-relaxed text-muted-foreground">
-                {a.descricao}
+                {texto.descricao}
               </p>
-              <p className="mt-3 font-semibold text-primary sm:hidden">{a.valor}</p>
-              <h4 className="mt-4 text-sm font-semibold">Condições a confirmar</h4>
+              <p className="mt-3 font-semibold text-primary sm:hidden">{texto.valor}</p>
+              <h4 className="mt-4 text-sm font-semibold">{t("condicoesTitulo")}</h4>
               <ul className="mt-2 list-disc space-y-1 pl-5 text-sm leading-relaxed text-muted-foreground">
-                {a.condicoes.map((c) => (
+                {texto.condicoes.map((c) => (
                   <li key={c}>{c}</li>
                 ))}
               </ul>
               {extraido?.sucesso && extraido.resumoOficial && (
                 <div className="mt-4 border-l-2 border-primary pl-4">
                   <p className="text-xs font-semibold text-detail">
-                    Excerto oficial sincronizado ({extraido.entidadeOficial ?? "gov.pt"}
-                    {extraido.atualizadoEm ? ` · atualizado em ${extraido.atualizadoEm}` : ""})
+                    {t("excertoOficial")} ({extraido.entidadeOficial ?? "gov.pt"}
+                    {extraido.atualizadoEm ? ` · ${t("atualizadoEm")} ${extraido.atualizadoEm}` : ""}
+                    )
                   </p>
                   <p className="mt-1 max-w-xl text-sm leading-relaxed text-muted-foreground">
                     {extraido.resumoOficial}
@@ -354,9 +389,9 @@ function Index() {
                   )}
                 </div>
               )}
-              <p className="mt-4 text-xs leading-relaxed text-muted-foreground">{a.periodo}</p>
+              <p className="mt-4 text-xs leading-relaxed text-muted-foreground">{texto.periodo}</p>
               <p className="mt-2 text-xs text-muted-foreground">
-                Fonte: {a.entidade} · Consultada em {verificadoEm}
+                {t("fontePrefix")} {texto.entidade} · {t("consultadaEm")} {verificadoEm}
               </p>
               <div className="mt-3 flex flex-wrap items-center gap-4">
                 <Button
@@ -364,18 +399,18 @@ function Index() {
                   variant="link"
                   className="h-auto min-h-11 whitespace-normal px-0 text-detail"
                 >
-                  <a href={a.link} target="_blank" rel="noopener noreferrer">
-                    Saber mais na fonte oficial <ArrowUpRight aria-hidden="true" />
+                  <a href={texto.link} target="_blank" rel="noopener noreferrer">
+                    {t("saberMais")} <ArrowUpRight aria-hidden="true" />
                   </a>
                 </Button>
-                {extraido?.sucesso && extraido.fonteUrl !== a.link && (
+                {extraido?.sucesso && extraido.fonteUrl !== texto.link && (
                   <Button
                     asChild
                     variant="link"
                     className="h-auto min-h-11 whitespace-normal px-0 text-detail"
                   >
                     <a href={extraido.fonteUrl} target="_blank" rel="noopener noreferrer">
-                      Ficha sincronizada em gov.pt <ArrowUpRight aria-hidden="true" />
+                      {t("fichaGov")} <ArrowUpRight aria-hidden="true" />
                     </a>
                   </Button>
                 )}
@@ -397,15 +432,12 @@ function Index() {
               <span className="text-xl font-semibold">WeHelp</span>
             </a>
             <div className="flex items-center gap-2">
-              <span className="mr-2 flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                <LockKeyhole aria-hidden="true" className="size-3.5" />
-                Anónimo
-              </span>
+              <BotaoIdioma />
               <Button
                 variant="ghost"
                 size="icon"
-                aria-label={escuro ? "Ativar modo claro" : "Ativar modo escuro"}
-                title={escuro ? "Modo claro" : "Modo escuro"}
+                aria-label={escuro ? t("temaClaroAria") : t("temaEscuroAria")}
+                title={escuro ? t("temaClaroTitulo") : t("temaEscuroTitulo")}
                 onClick={aoCarregarTema}
               >
                 {escuro ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
@@ -417,11 +449,11 @@ function Index() {
         <div className="mx-auto max-w-6xl px-6 py-10 lg:py-12">
           <main className="min-w-0">
             <div className="mb-4 flex items-center gap-2">
-              <p className="text-sm font-medium text-detail">Guia de Apoios Sociais</p>
+              <p className="text-sm font-medium text-detail">{t("guiaApoios")}</p>
               <span className="group relative inline-flex">
                 <button
                   type="button"
-                  aria-label="Sobre esta informação"
+                  aria-label={t("sobreInfo")}
                   aria-expanded={infoAberto}
                   onClick={() => setInfoAberto((v) => !v)}
                   onBlur={() => setInfoAberto(false)}
@@ -433,13 +465,16 @@ function Index() {
                   role="tooltip"
                   className={`absolute left-0 top-full z-10 mt-2 w-72 rounded-xl border border-border bg-card p-3 text-sm leading-relaxed text-muted-foreground shadow-md ${infoAberto ? "block" : "hidden"} group-hover:block`}
                 >
-                  Informação de fontes oficiais. As respostas orientam a pesquisa, mas não confirmam
-                  o direito aos apoios.
+                  {t("tooltipInfo")}
                 </span>
               </span>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2.5" role="group" aria-label="Filtros rápidos">
+            <div
+              className="flex flex-wrap items-center gap-2.5"
+              role="group"
+              aria-label={t("filtrosRapidos")}
+            >
               {SITUACOES.map((s) => (
                 <button
                   key={s}
@@ -448,23 +483,23 @@ function Index() {
                   onClick={() => set({ situacao: filtros.situacao === s ? "" : s })}
                   className={`inline-flex min-h-9 items-center gap-1.5 rounded-full border px-4 text-xs font-medium backdrop-blur-sm transition-colors ${filtros.situacao === s ? "border-primary/70 bg-secondary/70 text-foreground" : "border-input/60 bg-card/40 text-muted-foreground hover:text-foreground"}`}
                 >
-                  {s}
+                  {t(`situacao${s}`)}
                   {filtros.situacao === s && (
                     <Check aria-hidden="true" className="size-3.5 text-primary" />
                   )}
                 </button>
               ))}
               {temasDisponiveis.length > 2 &&
-                temasDisponiveis.map((t) => (
+                temasDisponiveis.map((temaFiltro) => (
                   <button
-                    key={t}
+                    key={temaFiltro}
                     type="button"
-                    aria-pressed={temaSelecionado === t}
-                    onClick={() => setTemaSelecionado(t)}
-                    className={`inline-flex min-h-9 items-center gap-1.5 rounded-full border px-4 text-xs font-medium backdrop-blur-sm transition-colors ${temaSelecionado === t ? "border-primary/70 bg-secondary/70 text-foreground" : "border-input/60 bg-card/40 text-muted-foreground hover:text-foreground"}`}
+                    aria-pressed={temaSelecionado === temaFiltro}
+                    onClick={() => setTemaSelecionado(temaFiltro)}
+                    className={`inline-flex min-h-9 items-center gap-1.5 rounded-full border px-4 text-xs font-medium backdrop-blur-sm transition-colors ${temaSelecionado === temaFiltro ? "border-primary/70 bg-secondary/70 text-foreground" : "border-input/60 bg-card/40 text-muted-foreground hover:text-foreground"}`}
                   >
-                    {t}
-                    {temaSelecionado === t && (
+                    {rotuloTema(lingua, temaFiltro)}
+                    {temaSelecionado === temaFiltro && (
                       <Check aria-hidden="true" className="size-3.5 text-primary" />
                     )}
                   </button>
@@ -481,7 +516,7 @@ function Index() {
                 ) : (
                   <SlidersHorizontal aria-hidden="true" className="size-3.5" />
                 )}
-                Mais filtros
+                {t("maisFiltros")}
                 {avancadosAtivos > 0 && (
                   <span className="flex size-4 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">
                     {avancadosAtivos}
@@ -495,7 +530,7 @@ function Index() {
                   onClick={() => setFiltros(FILTROS_VAZIOS)}
                 >
                   <RotateCcw aria-hidden="true" className="size-3.5" />
-                  Limpar filtros
+                  {t("limparFiltros")}
                 </Button>
               )}
             </div>
@@ -503,7 +538,7 @@ function Index() {
             {filtrosAbertos && (
               <section
                 id="filtros-avancados"
-                aria-label="Mais filtros"
+                aria-label={t("maisFiltros")}
                 className="mt-4 rounded-2xl border border-border bg-card p-6"
               >
                 {painelAvancado}
@@ -516,29 +551,30 @@ function Index() {
             >
               <div>
                 <h2 className="text-xl font-semibold">
-                  {temFiltrosAtivos ? "Apoios recomendados" : "Apoios a explorar"}
+                  {temFiltrosAtivos ? t("apoiosRecomendados") : t("apoiosExplorar")}
                 </h2>
                 <p className="mt-1 text-sm font-medium text-detail">
                   {temFiltrosAtivos
-                    ? `${elegiveis.length} ${elegiveis.length === 1 ? "possível apoio que pode aplicar-se" : "possíveis apoios que podem aplicar-se"}`
-                    : `${todosApoios.length} apoios no catálogo total`}
+                    ? `${elegiveis.length} ${t(elegiveis.length === 1 ? "possivelApoio1" : "possivelApoios")}`
+                    : `${todosApoios.length} ${t("contagemCatalogo")}`}
                 </p>
               </div>
             </div>
 
-
             {lista(elegiveis, true)}
+            {lingua === "en" && apoiosDescobertos.length > 0 && (
+              <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                {t("notaConteudoOficial")}
+              </p>
+            )}
 
             {temFiltrosAtivos && outros.length > 0 && (
               <details className="mt-10 rounded-xl border border-border bg-card p-4">
                 <summary className="cursor-pointer text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground">
-                  Ver apoios descartados pelos filtros ({outros.length})
+                  {t("verDescartados")} ({outros.length})
                 </summary>
                 <div className="mt-4">
-                  <p className="mb-4 text-xs text-muted-foreground">
-                    Estes apoios não são compatíveis com a sua idade, situação profissional ou
-                    composição da casa.
-                  </p>
+                  <p className="mb-4 text-xs text-muted-foreground">{t("descartadosNota")}</p>
                   {lista(outros, false)}
                 </div>
               </details>
@@ -549,11 +585,10 @@ function Index() {
               className="mt-10 border-t border-border pt-8"
             >
               <h2 id="pesquisa-gov-heading" className="text-xl font-semibold">
-                Procurar outros serviços e apoios em gov.pt
+                {t("pesquisaGovTitulo")}
               </h2>
               <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                Pesquise diretamente no catálogo público do portal gov.pt para encontrar outras
-                medidas, licenças ou apoios específicos.
+                {t("pesquisaGovDesc")}
               </p>
               <form
                 className="mt-4 flex flex-col gap-3 sm:flex-row"
@@ -563,12 +598,12 @@ function Index() {
                 }}
               >
                 <label htmlFor="campo-pesquisa-gov" className="sr-only">
-                  Termo a pesquisar em gov.pt
+                  {t("termoPesquisaAria")}
                 </label>
                 <input
                   id="campo-pesquisa-gov"
                   type="search"
-                  placeholder="Ex.: parentalidade, arrendamento, bolsa, deficiência"
+                  placeholder={t("placeholderPesquisa")}
                   value={termoGov}
                   onChange={(e) => setTermoGov(e.target.value)}
                   className={CAMPO}
@@ -579,23 +614,23 @@ function Index() {
                   className="h-14 shrink-0 px-6"
                 >
                   <Search aria-hidden="true" />
-                  {pesquisandoGov ? "A pesquisar..." : "Pesquisar em gov.pt"}
+                  {pesquisandoGov ? t("aPesquisar") : t("pesquisarGov")}
                 </Button>
               </form>
               <div className="mt-3 flex flex-wrap gap-2">
-                {["Habitação", "Parentalidade", "Deficiência", "Bolsa de estudo"].map((sugestao) => (
+                {SUGESTOES_GOV.map(({ termo, chave }) => (
                   <Button
-                    key={sugestao}
+                    key={termo}
                     type="button"
                     variant="outline"
                     size="sm"
                     className="bg-card text-xs"
                     onClick={() => {
-                      setTermoGov(sugestao);
-                      void executarPesquisaGov(sugestao);
+                      setTermoGov(termo);
+                      void executarPesquisaGov(termo);
                     }}
                   >
-                    {sugestao}
+                    {t(chave)}
                   </Button>
                 ))}
               </div>
@@ -618,16 +653,14 @@ function Index() {
                           className="mt-2 h-auto min-h-11 whitespace-normal px-0 text-detail"
                         >
                           <a href={item.url} target="_blank" rel="noopener noreferrer">
-                            Abrir ficha oficial em gov.pt <ArrowUpRight aria-hidden="true" />
+                            {t("abrirFicha")} <ArrowUpRight aria-hidden="true" />
                           </a>
                         </Button>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="mt-4 text-sm text-muted-foreground">
-                    Não foram encontrados serviços em gov.pt para essa pesquisa.
-                  </p>
+                  <p className="mt-4 text-sm text-muted-foreground">{t("semResultados")}</p>
                 ))}
             </section>
           </main>
