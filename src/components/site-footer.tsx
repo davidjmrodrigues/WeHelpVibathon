@@ -28,7 +28,7 @@ export function SiteFooter() {
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_auto] lg:gap-14">
           <div>
             <a href="/" className="inline-flex" aria-label="WeHelp — início">
-              <LogoWeHelp className="h-24 w-auto" />
+              <LogoWeHelp className="h-16 w-auto" />
             </a>
             <div className="mt-7">
               <h2 className="text-xs font-semibold uppercase tracking-widest text-secondary-foreground/60">{t("sigaNos")}</h2>
