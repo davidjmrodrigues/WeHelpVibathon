@@ -12,7 +12,6 @@ import {
   RotateCcw,
   Check,
   Info,
-  Search,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BotaoIdioma } from "@/components/botao-idioma";
@@ -76,13 +75,6 @@ const FILTROS_VAZIOS: Filtros = {
 };
 const CAMPO = "w-full rounded-xl border border-input bg-card px-4 py-3 text-base text-foreground";
 
-const SUGESTOES_GOV: Array<{ termo: string; chave: string }> = [
-  { termo: "Habitação", chave: "sugestaoHabitação" },
-  { termo: "Parentalidade", chave: "sugestaoParentalidade" },
-  { termo: "Deficiência", chave: "sugestaoDeficiência" },
-  { termo: "Bolsa de estudo", chave: "sugestaoBolsaDeEstudo" },
-];
-
 function Azulejo() {
   return (
     <div className="azulejo-band" aria-hidden="true">
@@ -111,10 +103,6 @@ function Index() {
   const [dadosOficiais, setDadosOficiais] = useState<Record<string, DadosOficiaisExtraidos>>({});
   const [apoiosDescobertos, setApoiosDescobertos] = useState<ApoioDescoberto[]>([]);
   const [temaSelecionado, setTemaSelecionado] = useState<string>("Todos");
-  const [termoGov, setTermoGov] = useState("");
-  const [pesquisandoGov, setPesquisandoGov] = useState(false);
-  const [resultadosGov, setResultadosGov] = useState<ResultadoPesquisaGov[]>([]);
-  const [pesquisaGovRealizada, setPesquisaGovRealizada] = useState(false);
   const escuro = tema === "escuro";
 
   const aoCarregarTema = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -139,23 +127,6 @@ function Index() {
   useEffect(() => {
     void sincronizarComFontes(false);
   }, []);
-
-  const executarPesquisaGov = async (termo: string) => {
-    const limpo = termo.trim();
-    if (!limpo) return;
-    setPesquisandoGov(true);
-    setPesquisaGovRealizada(true);
-    try {
-      const res = await fetch(`/api/pesquisar-gov?q=${encodeURIComponent(limpo)}`);
-      if (!res.ok) throw new Error("Falha na pesquisa");
-      const json = (await res.json()) as { resultados?: ResultadoPesquisaGov[] };
-      setResultadosGov(json.resultados ?? []);
-    } catch {
-      setResultadosGov([]);
-    } finally {
-      setPesquisandoGov(false);
-    }
-  };
 
   const perfil: Perfil = useMemo(
     () => ({
