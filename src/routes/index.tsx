@@ -593,7 +593,21 @@ function Index() {
               </p>
             </div>
 
-            {lista(elegiveis, true)}
+            {lista(visiveis, true)}
+            {!temFiltrosAtivos && elegiveis.length > LIMITE_INICIAL && (
+              <div className="mt-6 flex justify-center">
+                <button
+                  type="button"
+                  aria-expanded={verTodos}
+                  onClick={() => setVerTodos((v) => !v)}
+                  className={classePilula(verTodos)}
+                >
+                  {verTodos
+                    ? t("verMenos")
+                    : `${t("verTodos")} (${elegiveis.length})`}
+                </button>
+              </div>
+            )}
             {lingua === "en" && apoiosDescobertos.length > 0 && (
               <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
                 {t("notaConteudoOficial")}
