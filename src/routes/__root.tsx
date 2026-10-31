@@ -78,14 +78,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Guia de Apoios Sociais" },
+      { title: "WeHelp — Apoios sociais" },
       { name: "description", content: "Descubra os apoios do Estado a que tem direito." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Guia de Apoios Sociais" },
+      { property: "og:title", content: "WeHelp — Apoios sociais" },
       { property: "og:description", content: "Descubra os apoios do Estado a que tem direito." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
@@ -93,8 +91,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@600;700&display=swap" },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" },
+      { rel: "icon", href: "/wehelp-icon.svg", type: "image/svg+xml" },
     ],
   }),
   shellComponent: RootShell,

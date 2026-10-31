@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep eligibility rules in the browser-only support engine; presentation changes must not change matching rules.
+- Define visual roles centrally in src/styles.css and use the shared Button for controls so the supplied identity remains consistent across views.
