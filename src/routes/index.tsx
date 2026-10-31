@@ -329,6 +329,27 @@ function Index() {
           {t("notaRendimentoSufixo")}
         </p>
       </div>
+      {temasDisponiveis.length > 2 && (
+        <div className="sm:col-span-2">
+          <p className="mb-2 text-base font-semibold">{t("fTemas")}</p>
+          <div className="flex flex-wrap gap-2">
+            {temasDisponiveis.map((temaFiltro) => (
+              <button
+                key={temaFiltro}
+                type="button"
+                aria-pressed={temaSelecionado === temaFiltro}
+                onClick={() => setTemaSelecionado(temaFiltro)}
+                className={classePilula(temaSelecionado === temaFiltro)}
+              >
+                {rotuloTema(lingua, temaFiltro)}
+                {temaSelecionado === temaFiltro && (
+                  <Check aria-hidden="true" className="size-3.5 text-primary" />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 
