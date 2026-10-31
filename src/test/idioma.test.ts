@@ -24,8 +24,8 @@ describe("Idioma: cobertura das traduções PT/EN", () => {
 
   it("cobre com inglês todos os apoios do catálogo verificado", () => {
     for (const apoio of APOIOS) {
-      const en = APOIOS_EN[apoio.id];
-      expect(en, `Falta tradução EN para o apoio ${apoio.id}`).toBeDefined();
+      expect(APOIOS_EN[apoio.id], `Falta tradução EN para o apoio ${apoio.id}`).toBeDefined();
+      const en = APOIOS_EN[apoio.id]!;
       expect(en.titulo.length).toBeGreaterThan(3);
       expect(en.descricao.length).toBeGreaterThan(20);
       expect(en.valor.length).toBeGreaterThan(3);
