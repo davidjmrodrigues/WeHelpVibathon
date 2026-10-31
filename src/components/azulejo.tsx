@@ -21,3 +21,4 @@ export function Azulejo({ id = "azulejo" }: { id?: string }) {
     </div>
   );
 }
+
