@@ -96,11 +96,9 @@ function Index() {
   const [filtrosAbertos, setFiltrosAbertos] = useState(false);
   const [infoAberto, setInfoAberto] = useState(false);
   const [tema, setTema] = useState<Tema>(() => temaAtual());
-  const [sincronizando, setSincronizando] = useState(false);
   const [dadosOficiais, setDadosOficiais] = useState<Record<string, DadosOficiaisExtraidos>>({});
   const [apoiosDescobertos, setApoiosDescobertos] = useState<ApoioDescoberto[]>([]);
   const [temaSelecionado, setTemaSelecionado] = useState<string>("Todos");
-  const [estadoSincronizacao, setEstadoSincronizacao] = useState<string>("");
   const [termoGov, setTermoGov] = useState("");
   const [pesquisandoGov, setPesquisandoGov] = useState(false);
   const [resultadosGov, setResultadosGov] = useState<ResultadoPesquisaGov[]>([]);
