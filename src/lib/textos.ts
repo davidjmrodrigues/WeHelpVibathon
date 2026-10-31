@@ -179,7 +179,7 @@ export const TEXTOS: Record<string, { pt: string; en: string }> = {
     pt: "Ir para perguntas e respostas",
     en: "Go to questions and answers",
   },
-  iasFaqTitulo: { pt: "IAS e dúvidas frequentes", en: "IAS and frequently asked questions" },
+  iasFaqTitulo: { pt: "Dúvidas frequentes", en: "Frequently asked questions" },
   iasQ1: { pt: "O que é o IAS e quanto vale em 2026?", en: "What is the IAS and what is it worth in 2026?" },
   iasSignifica: { pt: "significa", en: "means" },
   iasNomeCompleto: {
@@ -254,8 +254,8 @@ export const TEXTOS: Record<string, { pt: string; en: string }> = {
   },
   priv3Titulo: { pt: "Contacto por email", en: "Contact by email" },
   priv3Texto: {
-    pt: "Se nos contactar através da caixa \"Fale connosco\", a mensagem é enviada a partir do seu próprio programa de email para contacto@wehelp.pt. Nesse caso, ficamos com o seu endereço de email apenas para responder ao seu pedido.",
-    en: "If you contact us through the \"Get in touch\" box, the message is sent from your own email program to contacto@wehelp.pt. In that case we keep your email address only to reply to your request.",
+    pt: 'Se nos contactar através da caixa "Fale connosco", a mensagem é enviada a partir do seu próprio programa de email para contacto@wehelp.pt. Nesse caso, ficamos com o seu endereço de email apenas para responder ao seu pedido.',
+    en: 'If you contact us through the "Get in touch" box, the message is sent from your own email program to contacto@wehelp.pt. In that case we keep your email address only to reply to your request.',
   },
   priv4Titulo: { pt: "Ligações externas", en: "External links" },
   priv4Texto: {
