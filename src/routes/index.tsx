@@ -203,6 +203,9 @@ function Index() {
   const temFiltrosAtivos =
     filtros.situacao !== "" || filtros.idade !== "" || avancadosAtivos > 0;
 
+  const visiveis =
+    temFiltrosAtivos || verTodos ? elegiveis : elegiveis.slice(0, LIMITE_INICIAL);
+
   const limparTudo = () => {
     setFiltros(FILTROS_VAZIOS);
     setTemaSelecionado("Todos");
